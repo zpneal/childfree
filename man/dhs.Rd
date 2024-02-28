@@ -64,7 +64,7 @@ The United Nations Demographic and Health Surveys (DHS) program regularly collec
 population-representative samples in many countries using standardized surveys. The "individual
 recode" data files contain women's responses, and are available in SPSS, SAS, and Stata formats
 from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/}. Access to these data requires
-a free application, however a sample datafile can be obtained \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{here}
+a free application, however a sample data file can be obtained \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{here}
 without an application. The \code{dhs()} function reads one or more of these files, extracts and
 recodes selected variables useful for studying childfree adults and other family statuses, then returns
 a single data frame.
