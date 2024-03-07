@@ -22,17 +22,18 @@ A data frame containing:
 \item \code{cf_ideal} (factor) - Is the respondent childfree according to an "ideal" variable
 \item \code{famstat} (factor) - Respondent's family status based on all available information:
 \itemize{
-\item "Parent - unclassified" has children
-\item "Parent - Fulfilled" has exactly the number of children that is ideal
-\item "Parent - Unfulfilled" has fewer children than is ideal
-\item "Parent - Reluctant" has more children than is ideal
-\item "Parent - Ambivalent" has children but does not know how many is ideal
-\item "Not yet parent" does not have children but wants children
-\item "Childless" does not have children and is infecund but ideally would have liked to have children
-\item "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
-\item "Undecided" does not have children and does not know if they ideally would have liked to have children
-\item "Childfree" does not have children and either does not want children or
-ideally would like zero children.
+\item A "Parent - unclassified" has children
+\item A "Parent - Fulfilled" has exactly the number of children that is ideal
+\item A "Parent - Unfulfilled" has fewer children than is ideal
+\item A "Parent - Reluctant" has more children than is ideal
+\item A "Parent - Ambivalent" has children but does not know how many is ideal
+\item A "Not yet parent" does not have children but wants children
+\item A "Childless" respondent does not have children and is infecund but ideally would have liked to have children
+\item An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
+\item An "Undecided" respondent does not have children and is undecided whether they want children, or provided
+inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
+\item A "Childfree" respondent does not have children and does not want children or ideally would like zero children. If the respondent
+provided responses to \emph{both} the want and ideal questions, these responses are consistent (i.e., want = no \emph{and} ideal = 0).
 }
 }
 \item \emph{Demographic Variables}
