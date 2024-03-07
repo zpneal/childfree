@@ -27,17 +27,18 @@
 #'   * `cf_want` (factor) - Is the respondent childfree according to a "want" variable
 #'   * `cf_ideal` (factor) - Is the respondent childfree according to an "ideal" variable
 #'   * `famstat` (factor) - Respondent's family status based on all available information:
-#'      * "Parent - unclassified" has children
-#'      * "Parent - Fulfilled" has exactly the number of children that is ideal
-#'      * "Parent - Unfulfilled" has fewer children than is ideal
-#'      * "Parent - Reluctant" has more children than is ideal
-#'      * "Parent - Ambivalent" has children but does not know how many is ideal
-#'      * "Not yet parent" does not have children but wants children
-#'      * "Childless" does not have children and is infecund but ideally would have liked to have children
-#'      * "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
-#'      * "Undecided" does not have children and does not know if they ideally would have liked to have children
-#'      * "Childfree" does not have children and either does not want children or
-#'   ideally would like zero children.
+#'      * A "Parent - unclassified" has children
+#'      * A "Parent - Fulfilled" has exactly the number of children that is ideal
+#'      * A "Parent - Unfulfilled" has fewer children than is ideal
+#'      * A "Parent - Reluctant" has more children than is ideal
+#'      * A "Parent - Ambivalent" has children but does not know how many is ideal
+#'      * A "Not yet parent" does not have children but wants children
+#'      * A "Childless" respondent does not have children and is infecund but ideally would have liked to have children
+#'      * An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
+#'      * An "Undecided" respondent does not have children and is undecided whether they want children, or provided
+#'         inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
+#'      * A "Childfree" respondent does not have children and does not want children or ideally would like zero children. If the respondent
+#'         provided responses to *both* the want and ideal questions, these responses are consistent (i.e., want = no *and* ideal = 0).
 #' * *Demographic Variables*
 #'   * `sex` (factor) - Respondent's sex (*The DHS data include only female respondents*)
 #'   * `age` (numeric) - Respondent's age in years
@@ -138,6 +139,13 @@ dhs <- function(files, extra.vars, progress = TRUE) {
                       !is.na(dat$want) & dat$want=="No (more)")] <- 9  #Childfree (do not want children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal==0)] <- 9  #Childfree (zero children is ideal)
+    
+    dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
+                      !is.na(dat$ideal) & dat$ideal==0) &
+                      !is.na(dat$want) & dat$want!="No (more)"] <- 8  #Undecided, ideal and want responses are inconsistent
+    dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
+                      !is.na(dat$ideal) & dat$ideal>0) &
+                      !is.na(dat$want) & dat$want=="No (more)"] <- 8  #Undecided, ideal and want responses are inconsistent
 
     dat$famstat <- factor(dat$famstat, levels = c(0:9),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
