@@ -3,7 +3,7 @@ Welcome to the `childfree` package\! The childfree package reads demographic dat
 
 The `childfree` package can be cited as:
 
-**Neal, Z. P. and Neal, J. W. (2024). childfree: An R package for generating childfree demographic data. *GitHub*.**
+**Neal, Z. P. and Neal, J. W. (2024). childfree: An R package for aggregating and harmonizing childfree demographic data. *GitHub*.**
 
 ## Installation
 The /release branch ***will eventually contain*** the current CRAN release of the incidentally package. You can install it from [CRAN](https://CRAN.R-project.org) with:
