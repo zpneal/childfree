@@ -61,9 +61,9 @@
 #'
 #' @examples
 #' \dontrun{data <- dhs(files = c("AFIR71FL.SAV", "ALIR51FL.SAV"), extra.vars = c("v201")}
-dhs <- function(files, extra.vars, progress = TRUE) {
+dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
-  extra.vars <- tolower(extra.vars)  #Make requested extra variables lowercase
+  if (!is.null(extra.vars)) {extra.vars <- tolower(extra.vars)}  #Make requested extra variables lowercase
 
   if (progress) {message("Processing DHS data files -")}
   if (progress) {pb = txtProgressBar(min = 0, max = length(files), initial = 0, style = 3)} #Initialize progress bar
@@ -227,14 +227,19 @@ dhs <- function(files, extra.vars, progress = TRUE) {
     }
 
     #Reduce data
-    dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
-                  "sex", "age", "education", "partnered", "residence",  #Demographics
-                  "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
-                  extra.vars)]
+    if (!is.null(extra.vars)) {
+      dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
+                    "sex", "age", "education", "partnered", "residence",  #Demographics
+                    "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
+                    extra.vars)]
+    } else {
+      dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
+                    "sex", "age", "education", "partnered", "residence",  #Demographics
+                    "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
+    }
 
     #Start data file, or append to existing data file
-    if (file==1) {data <- dat}
-    if (file>1) {data <- rbind(data, dat)}
+    if (file==1) {data <- dat} else {data <- rbind(data, dat)}
 
   }
 
