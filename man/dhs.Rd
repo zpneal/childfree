@@ -4,7 +4,7 @@
 \alias{dhs}
 \title{Read and recode UN Demographic and Health Surveys (DHS) individual data}
 \usage{
-dhs(files, extra.vars, progress = TRUE)
+dhs(files, extra.vars = NULL, progress = TRUE)
 }
 \arguments{
 \item{files}{vector: a character vector containing the paths for one or more Individual Recode DSH data files (see details)}
