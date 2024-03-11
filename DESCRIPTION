@@ -10,5 +10,8 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: R (>= 2.10)
+Imports:
+   rio,
+   utils,
 URL: https://www.zacharyneal.com/childfree, https://www.jennawneal.com/childfree-adults, https://github.com/zpneal/childfree
 BugReports: https://github.com/zpneal/childfree/issues
