@@ -66,13 +66,13 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
   if (!is.null(extra.vars)) {extra.vars <- tolower(extra.vars)}  #Make requested extra variables lowercase
 
   if (progress) {message("Processing DHS data files -")}
-  if (progress) {pb = txtProgressBar(min = 0, max = length(files), initial = 0, style = 3)} #Initialize progress bar
+  if (progress) {pb <- utils::txtProgressBar(min = 0, max = length(files), initial = 0, style = 3)} #Initialize progress bar
 
   #Loop over each supplied data file
   for (file in 1:length(files)) {
 
     #Increment progress bar
-    if (progress) {setTxtProgressBar(pb,file)}
+    if (progress) {utils::setTxtProgressBar(pb,file)}
 
     #Import raw data
     dat <- rio::import(files[file])
@@ -139,7 +139,7 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
                       !is.na(dat$want) & dat$want=="No (more)")] <- 9  #Childfree (do not want children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal==0)] <- 9  #Childfree (zero children is ideal)
-    
+
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal==0) &
                       !is.na(dat$want) & dat$want!="No (more)"] <- 8  #Undecided, ideal and want responses are inconsistent

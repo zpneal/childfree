@@ -64,14 +64,14 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
   if (!is.null(extra.vars)) {extra.vars <- tolower(extra.vars)}  #Make requested extra variables lowercase
 
   if (progress) {message("Processing SOSS data files -")}
-  if (progress) {pb = txtProgressBar(min = 0, max = length(waves), initial = 0, style = 3)} #Initialize progress bar
+  if (progress) {pb <- utils::txtProgressBar(min = 0, max = length(waves), initial = 0, style = 3)} #Initialize progress bar
   wave.num <- 1
 
   #Loop over each supplied data file
   for (wave in waves) {
 
     #Increment progress bar
-    if (progress) {setTxtProgressBar(pb,wave.num)}
+    if (progress) {utils::setTxtProgressBar(pb,wave.num)}
 
     #Import raw data
     if (wave==79) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/soss79b.sav")}
