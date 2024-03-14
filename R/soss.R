@@ -162,29 +162,29 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
     #Family status
     dat$famstat <- NA
-    dat$famstat[which(dat$havekid=="Yes")] <- 0  #Parent - Unclassified
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="Yes")] <- 5  #Not yet parent
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="DK")] <- 8  #Undecided
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="Yes")] <- 6  #Childless
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="DK")] <- 7  #Ambivalent non-parent
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="No")] <- 9  #Childfree
-    dat$famstat <- factor(dat$famstat, levels = c(0:9),
+    dat$famstat[which(dat$havekid=="Yes")] <- 1  #Parent - Unclassified
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="Yes")] <- 6  #Not yet parent
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="DK")] <- 9  #Undecided
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="Yes")] <- 7  #Childless
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="DK")] <- 8  #Ambivalent non-parent
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="No")] <- 10  #Childfree
+    dat$famstat <- factor(dat$famstat, levels = c(1:10),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless", "Ambivalent non-parent", "Undecided", "Childfree"))
 
     #Childfree (want)
     dat$cf_want <- NA
-    dat$cf_want[which(dat$famstat=="Childfree")] <- 1
-    dat$cf_want[which(dat$famstat!="Childfree")] <- 0
-    dat$cf_want <- factor(dat$cf_want, levels = c(0,1), labels = c("No", "Yes"))
+    dat$cf_want[which(dat$famstat=="Childfree")] <- 2
+    dat$cf_want[which(dat$famstat!="Childfree")] <- 1
+    dat$cf_want <- factor(dat$cf_want, levels = c(1,2), labels = c("No", "Yes"))
 
     #### Demographics ####
     #Sex
     dat$sex <- NA
-    dat$sex[which(dat$cd1==2)] <- 0  #Female
-    dat$sex[which(dat$cd1==1)] <- 1  #Male
-    dat$sex[which(dat$cd1==3)] <- 2  #Intersex
-    dat$sex <- factor(dat$sex, levels = c(0,1,2), labels = c("female", "male", "intersex"))
+    dat$sex[which(dat$cd1==2)] <- 1  #Female
+    dat$sex[which(dat$cd1==1)] <- 2  #Male
+    dat$sex[which(dat$cd1==3)] <- 3  #Intersex
+    dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
     #Age in years
     if (wave==79) {dat$age <- 2020 - dat$cd2}
@@ -205,19 +205,19 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
     #Partnership status
     dat$partnered <- NA
-    dat$partnered[which(dat$cd8==6)] <- 0  #Single, never married
-    dat$partnered[which(dat$cd8==1 | dat$cd8==5)] <- 1  #Currently partnered
-    dat$partnered[which(dat$cd8==2 | dat$cd8==3 | dat$cd8==4)] <- 2  #Formerly partnered
-    dat$partnered <- factor(dat$partnered, levels = c(0,1,2), labels = c("Never", "Currently", "Formerly"))
+    dat$partnered[which(dat$cd8==6)] <- 1  #Single, never married
+    dat$partnered[which(dat$cd8==1 | dat$cd8==5)] <- 2  #Currently partnered
+    dat$partnered[which(dat$cd8==2 | dat$cd8==3 | dat$cd8==4)] <- 3  #Formerly partnered
+    dat$partnered <- factor(dat$partnered, levels = c(1,2,3), labels = c("Never", "Currently", "Formerly"))
 
     #Residence
     dat$residence <- dat$x1
     dat$residence[which(dat$residence==5 | dat$residence==8)] <- NA
-    dat$residence <- factor(dat$residence, levels = c(1,2,3,4), labels = c("Rural", "Town", "Suburb", "Urban"))
+    dat$residence <- factor(dat$residence, levels = c(1,2,3,4), labels = c("Rural", "Town", "Suburb", "Urban"), ordered = TRUE)
 
     #### Design ####
     #Identifier
-    dat$id <- dat$caseid
+    dat$id <- as.character(dat$caseid)
 
     #Country
     dat$country <- "United States"
@@ -242,6 +242,9 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     if (wave==84) {dat$month <- 4}
     if (wave==85) {dat$month <- 9}
     if (wave==86) {dat$month <- 12}
+    dat$month <- factor(dat$month, levels = c(1:12), labels = c("January", "February", "March", "April", "May", "June",
+                                                                "July", "August", "September", "October", "November", "December"),
+                        ordered = TRUE)
 
     #Source file
     if (wave==79) {dat$file <- "soss79b.sav"}

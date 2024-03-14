@@ -96,65 +96,65 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$want) & dat$want=="No (more)")] <- 1  #Childfree if (a) have no children and (b) want no children
-    dat$cf_want[which(!is.na(dat$numkid) & dat$numkid>0)] <- 0  #Not childfree if have children
-    dat$cf_want[which(!is.na(dat$want) & (dat$want=="Have (another)" | dat$want=="Undecided"))] <- 0  #Not childfree if want or may want children
-    dat$cf_want <- factor(dat$cf_want, levels = c(0,1), labels = c("No", "Yes"))
+                      !is.na(dat$want) & dat$want=="No (more)")] <- 2  #Childfree if (a) have no children and (b) want no children
+    dat$cf_want[which(!is.na(dat$numkid) & dat$numkid>0)] <- 1  #Not childfree if have children
+    dat$cf_want[which(!is.na(dat$want) & (dat$want=="Have (another)" | dat$want=="Undecided"))] <- 1  #Not childfree if want or may want children
+    dat$cf_want <- factor(dat$cf_want, levels = c(1,2), labels = c("No", "Yes"))
 
     #Childfree (ideal)
     dat$cf_ideal <- NA
     dat$cf_ideal[which(!is.na(dat$numkid) & dat$numkid==0 &
-                       !is.na(dat$ideal) & dat$ideal==0)] <- 1  #Childfree if (a) have no children and (b) zero children is ideal
-    dat$cf_ideal[which(!is.na(dat$numkid) & dat$numkid>0)] <- 0  #Not childfree if have children
-    dat$cf_ideal[which(!is.na(dat$ideal) & (dat$ideal==-1 | dat$ideal>0))] <- 0  #Not childfree if it is ideal to have some number of children, or the ideal number of children is unknown
-    dat$cf_ideal <- factor(dat$cf_ideal, levels = c(0,1), labels = c("No", "Yes"))
+                       !is.na(dat$ideal) & dat$ideal==0)] <- 2  #Childfree if (a) have no children and (b) zero children is ideal
+    dat$cf_ideal[which(!is.na(dat$numkid) & dat$numkid>0)] <- 1  #Not childfree if have children
+    dat$cf_ideal[which(!is.na(dat$ideal) & (dat$ideal==-1 | dat$ideal>0))] <- 1  #Not childfree if it is ideal to have some number of children, or the ideal number of children is unknown
+    dat$cf_ideal <- factor(dat$cf_ideal, levels = c(1,2), labels = c("No", "Yes"))
 
     #Family status
     dat$famstat <- NA
-    dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0)] <- 0  #Parent - Unclassified (known number of children greater than zero)
+    dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0)] <- 1  #Parent - Unclassified (known number of children greater than zero)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0 &
-                      !is.na(dat$ideal) & dat$numkid==dat$ideal)] <- 1  #Parent - Fulfilled (has ideal number of children)
+                      !is.na(dat$ideal) & dat$numkid==dat$ideal)] <- 2  #Parent - Fulfilled (has ideal number of children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0 &
-                      !is.na(dat$ideal) & dat$numkid<dat$ideal)] <- 2  #Parent - Unfulfilled (has less than ideal number of children)
+                      !is.na(dat$ideal) & dat$numkid<dat$ideal)] <- 3  #Parent - Unfulfilled (has less than ideal number of children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0 &
-                      !is.na(dat$ideal) & dat$numkid>dat$ideal & dat$ideal!=-1)] <- 3  #Parent - Reluctant (has more than ideal number of children)
+                      !is.na(dat$ideal) & dat$numkid>dat$ideal & dat$ideal!=-1)] <- 4  #Parent - Reluctant (has more than ideal number of children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0 &
-                      !is.na(dat$ideal) & dat$ideal==-1)] <- 4  #Parent - Ambivalent (unsure how many children is ideal)
+                      !is.na(dat$ideal) & dat$ideal==-1)] <- 5  #Parent - Ambivalent (unsure how many children is ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$want) & dat$want=="Have (another)")] <- 5  #Not yet parent (wants child(ren), regardless of how many is ideal)
+                      !is.na(dat$want) & dat$want=="Have (another)")] <- 6  #Not yet parent (wants child(ren), regardless of how many is ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Infecund" &
-                      !is.na(dat$ideal) & dat$ideal>0)] <- 6  #Childless (cannot have children, but a specific number would have been ideal)
+                      !is.na(dat$ideal) & dat$ideal>0)] <- 7  #Childless (cannot have children, but a specific number would have been ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Infecund" &
-                      !is.na(dat$ideal) & dat$ideal==-1)] <- 7  #Ambivalent non-parent (cannot have children, ideal number is unknown)
+                      !is.na(dat$ideal) & dat$ideal==-1)] <- 8  #Ambivalent non-parent (cannot have children, ideal number is unknown)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                        !is.na(dat$want) & dat$want=="Undecided")] <- 8  #Undecided (unsure if want children)
+                        !is.na(dat$want) & dat$want=="Undecided")] <- 9  #Undecided (unsure if want children)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$want) & dat$want=="No (more)")] <- 9  #Childfree (do not want children)
+                      !is.na(dat$want) & dat$want=="No (more)")] <- 10  #Childfree (do not want children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$ideal) & dat$ideal==0)] <- 9  #Childfree (zero children is ideal)
+                      !is.na(dat$ideal) & dat$ideal==0)] <- 10  #Childfree (zero children is ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal==0) &
-                      !is.na(dat$want) & dat$want!="No (more)"] <- 8  #Undecided, ideal and want responses are inconsistent
+                      !is.na(dat$want) & dat$want!="No (more)"] <- 9  #Undecided, ideal and want responses are inconsistent
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal>0) &
-                      !is.na(dat$want) & dat$want=="No (more)"] <- 8  #Undecided, ideal and want responses are inconsistent
+                      !is.na(dat$want) & dat$want=="No (more)"] <- 9  #Undecided, ideal and want responses are inconsistent
 
-    dat$famstat <- factor(dat$famstat, levels = c(0:9),
+    dat$famstat <- factor(dat$famstat, levels = c(1:10),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless", "Ambivalent non-parent", "Undecided", "Childfree"))
 
     #### Demographics ####
     #Sex
-    dat$sex <- 0
-    dat$sex <- factor(dat$sex, levels = c(0,1), labels = c("Woman", "Man"))
+    dat$sex <- 1
+    dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
     #Age in years
     dat$age <- dat$v012
@@ -164,8 +164,8 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     dat$education[dat$education>=40] <- NA
 
     #Partnership status
-    dat$partnered <- dat$v502
-    dat$partnered <- factor(dat$partnered, levels = c(0,1,2), labels = c("Never", "Currently", "Formerly"))
+    dat$partnered <- dat$v502 + 1
+    dat$partnered <- factor(dat$partnered, levels = c(1,2,3), labels = c("Never", "Currently", "Formerly"))
 
     #Residence
     dat$residence <- dat$v102
@@ -173,11 +173,12 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
       dat$residence[which(dat$residence<4)] <- 2  #Code as rural (1) Less than 2500, (2) 2500-19999, and (3) 20000+
       dat$residence[which(dat$residence==4)] <- 1  #Code as urban (4) Areas Metropolitanas
     }
-    dat$residence <- factor(dat$residence, levels = c(1,2), labels = c("Urban", "Rural"))
+    dat$residence <- factor(dat$residence, levels = c(2,1), labels = c("Rural", "Urban"), ordered = TRUE)
 
     #### Design ####
     #Identifier (non-standard variable name in Egypt 1988-89)
     if (dat$v000[1]=="EG" & (dat$v007[1]==88 | dat$v007[1]==89)) {dat$id <- dat$`case$id`} else {dat$id <- dat$caseid}
+    dat$id <- as.character(dat$id)
 
     #Country
     country.codes <- c("AF", "AL", "AO", "AM", "AZ", "BD", "BJ", "BO", "BT", "BR", "BF", "BU", "KH", "CM", "CV", "CF", "TD", "CO", "KM", "CG",
@@ -211,6 +212,9 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
     #Month of data collection
     dat$month <- dat$v006
+    dat$month <- factor(dat$month, levels = c(1:12), labels = c("January", "February", "March", "April", "May", "June",
+                                                                "July", "August", "September", "October", "November", "December"),
+                        ordered = TRUE)
 
     #Source file
     dat$file <- files[file]
