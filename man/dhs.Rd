@@ -43,6 +43,7 @@ provided responses to \emph{both} the want and ideal questions, these responses 
 \item \code{education} (numeric) - Respondent's years of education
 \item \code{partnered} (factor) - Respondent's partnership status (\emph{Partnership includes both marriage and cohabitation})
 \item \code{residence} (factor) - Urbanicity of respondent's place of residence
+\item \code{employed} (factor) - Whether respondent is currently employed
 }
 \item \emph{Design Variables}
 \itemize{
