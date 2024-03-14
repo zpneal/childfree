@@ -45,6 +45,7 @@
 #'   * `education` (numeric) - Respondent's years of education
 #'   * `partnered` (factor) - Respondent's partnership status (*Partnership includes both marriage and cohabitation*)
 #'   * `residence` (factor) - Urbanicity of respondent's place of residence
+#'   * `employed` (factor) - Whether respondent is currently employed
 #' * *Design Variables*
 #'   * `id` (string) - Unique respondent ID
 #'   * `country` (string) - Respondent's country of residence
@@ -175,6 +176,12 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     }
     dat$residence <- factor(dat$residence, levels = c(2,1), labels = c("Rural", "Urban"), ordered = TRUE)
 
+    #Employed
+    dat$employed <- NA
+    dat$employed[which(dat$v714==0)] <- 1  #Not employed
+    dat$employed[which(dat$v714==1)] <- 2  #Employed
+    dat$employed <- factor(dat$employed, levels = c(1,2), labels = c("Not employed", "Employed"))
+    
     #### Design ####
     #Identifier (non-standard variable name in Egypt 1988-89)
     if (dat$v000[1]=="EG" & (dat$v007[1]==88 | dat$v007[1]==89)) {dat$id <- dat$`case$id`} else {dat$id <- dat$caseid}
@@ -233,12 +240,12 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     #Reduce data
     if (!is.null(extra.vars)) {
       dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
-                    "sex", "age", "education", "partnered", "residence",  #Demographics
+                    "sex", "age", "education", "partnered", "residence", "employed",  #Demographics
                     "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
-                    "sex", "age", "education", "partnered", "residence",  #Demographics
+                    "sex", "age", "education", "partnered", "residence", "employed",  #Demographics
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }
 
