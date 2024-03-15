@@ -206,7 +206,7 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
         if (x$l[i] %in% c("Bektashi", "Islam", "Islamic", "Islamic (Mu\U2021ulman)", "Moslem", "Mulsim", "Muslem", "Muslim",
                           "muslim", "Muslim/Islam", "Muslin", "Muslman", "Muslum", "Musulman", "Musulmane")) {x$n[i] <- 3}  #Muslim
   
-        if (x$l[i] %in% c("Jew or Isreaeli", "Jewish", "Judaica ou israelita", "Judaism", "Zion", "Zionist")) {x$n[i] < 4}  #Jewish
+        if (x$l[i] %in% c("Jew or Isreaeli", "Jewish", "Judaica ou israelita", "Judaism", "Zion", "Zionist")) {x$n[i] <- 4}  #Jewish
   
         if (x$l[i] %in% c("\"Celestes\"", "7th Day adventist", "Adventist", "Adventist/Jehova", "Adventiste", "Adventiste/Jehova",
                           "African instituted churches", "Aglipay", "Anglican", "Anglican Church", "Apostolic sect", "Apostolic Sect",
@@ -236,27 +236,24 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
                           "Other", "other", "Other (Outra)", "Other non-Christian", "Other religion", "Other religions", "Others", "Outras",
                           "Parsi / Zoroastrian", "Parsi/Zoroastrian", "Religioes orientais", "Revival church", "Sect", "Sikh", "Spiritual",
                           "Spiritual kardecista", "Spiritualist", "Zephirin/Matsouaniste/Ngunza", "Zephirrin/Matsouanist/Ngunza",
-                          "Zoroastian/Parsi")) {x$n[i] <- 6}  #Other
+                          "Zoroastian/Parsi", "Animalist", "Animist", "Animiste", "Cao Dai", "Doni-Polo", "Donyi polo", "Espirita Afro-Bras.",
+                          "Espiritista afro-bra", "Indigenous spirituality", "Kirat", "Mayan", "Nature worship", "Other traditional",
+                          "Religion traditionelle", "Sanamahi", "Taditional", "Tradition/animist", "Traditional", "Traditional (Vodoun)",
+                          "Traditional / animist", "Traditional Mayan", "Traditional religion", "Traditional Religion", "Traditional/animist",
+                          "Traditional/Animist", "Traditional/spiritualist", "Traditionalist", "Traditionelle", "Traditionists", "Traditionnal",
+                          "Traditionnal/animist", "Umbanda /Candomble", "Vaudou", "Vaudousant", "Vodoun")) {x$n[i] <- 6}  #Other
   
         if(x$l[i] %in% c("Buddhism", "Buddhist", "Buddhist / Neo-Buddhist", "Buddhist/Neo Buddhist", "Buddhist/Neo-Buddhist",
                          "Budhist", "Hoa Hao")) {x$n[i] <- 7}  #Buddhist
   
         if (x$l[i] %in% c("Hindu", "Hinduism")) {x$n[i] <- 8}  #Hindu
-  
-        if (x$l[i] %in% c("Animalist", "Animist", "Animiste", "Cao Dai", "Doni-Polo", "Donyi polo", "Espirita Afro-Bras.",
-                          "Espiritista afro-bra", "Indigenous spirituality", "Kirat", "Mayan", "Nature worship", "Other traditional",
-                          "Religion traditionelle", "Sanamahi", "Taditional", "Tradition/animist", "Traditional", "Traditional (Vodoun)",
-                          "Traditional / animist", "Traditional Mayan", "Traditional religion", "Traditional Religion", "Traditional/animist",
-                          "Traditional/Animist", "Traditional/spiritualist", "Traditionalist", "Traditionelle", "Traditionists", "Traditionnal",
-                          "Traditionnal/animist", "Umbanda /Candomble", "Vaudou", "Vaudousant", "Vodoun")) {x$n[i] <- 9}  #Folk
-  
+
         dat$religion[which(dat$v130==x$o[i])] <- x$n[i]  #Insert new value into recoded religion variable
       }
     }
 
-    dat$religion <- factor(dat$religion, levels = c(1:9), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish",
-                                                                     "Protestant / Christian", "Other", "Buddhist",
-                                                                     "Hindu", "Folk"))
+    dat$religion <- factor(dat$religion, levels = c(1:8), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish",
+                                                                     "Protestant / Christian", "Other", "Buddhist", "Hindu"))
 
     #### Design ####
     #Identifier (non-standard variable name in Egypt 1988-89)
