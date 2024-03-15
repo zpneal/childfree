@@ -35,7 +35,7 @@ A data frame containing:
 \item \code{race} (factor) - Respondent's race, 7 categories
 \item \code{ethnicity} (factor) - Respondent's hispanicity
 \item \code{age} (numeric) - Respondent's age in years
-\item \code{education} (numeric) - Respondent's education on a 10-point ordinal scale
+\item \code{education} (factor) - Respondent's education on a 7-point ordinal scale
 \item \code{partnered} (factor) - Respondent's partnership status (\emph{Partnership includes both marriage and cohabitation})
 \item \code{residence} (factor) - Urbanicity of respondent's place of residence
 \item \code{employed} (factor) - Whether respondent is currently employed

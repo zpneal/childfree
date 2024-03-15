@@ -42,8 +42,12 @@ provided responses to \emph{both} the want and ideal questions, these responses 
 \item \code{age} (numeric) - Respondent's age in years
 \item \code{education} (numeric) - Respondent's years of education
 \item \code{partnered} (factor) - Respondent's partnership status (\emph{Partnership includes both marriage and cohabitation})
-\item \code{residence} (factor) - Urbanicity of respondent's place of residence
+\item \code{residence} (factor) - Urbanicity of respondent's place of residence, 2 categories
 \item \code{employed} (factor) - Whether respondent is currently employed
+}
+\item \emph{Attitude and Behavior Variables}
+\itemize{
+\item \code{religion} (factor) - Respondent's religious affiliation, 9 categories
 }
 \item \emph{Design Variables}
 \itemize{
