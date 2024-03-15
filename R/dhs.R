@@ -44,8 +44,10 @@
 #'   * `age` (numeric) - Respondent's age in years
 #'   * `education` (numeric) - Respondent's years of education
 #'   * `partnered` (factor) - Respondent's partnership status (*Partnership includes both marriage and cohabitation*)
-#'   * `residence` (factor) - Urbanicity of respondent's place of residence
+#'   * `residence` (factor) - Urbanicity of respondent's place of residence, 2 categories
 #'   * `employed` (factor) - Whether respondent is currently employed
+#' * *Attitude and Behavior Variables*
+#'   * `religion` (factor) - Respondent's religious affiliation, 9 categories
 #' * *Design Variables*
 #'   * `id` (string) - Unique respondent ID
 #'   * `country` (string) - Respondent's country of residence
@@ -174,14 +176,86 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
       dat$residence[which(dat$residence<4)] <- 2  #Code as rural (1) Less than 2500, (2) 2500-19999, and (3) 20000+
       dat$residence[which(dat$residence==4)] <- 1  #Code as urban (4) Areas Metropolitanas
     }
-    dat$residence <- factor(dat$residence, levels = c(2,1), labels = c("Rural", "Urban"), ordered = TRUE)
+    dat$residence <- factor(dat$residence, levels = c(2,98,99,1), labels = c("Rural", "Urban"), ordered = TRUE)  #98 and 99 are dummy values to ensure 4-point scale
 
     #Employed
     dat$employed <- NA
     dat$employed[which(dat$v714==0)] <- 1  #Not employed
     dat$employed[which(dat$v714==1)] <- 2  #Employed
     dat$employed <- factor(dat$employed, levels = c(1,2), labels = c("Not employed", "Employed"))
-    
+
+    #### Attitude ####
+    #Religion
+    dat$religion <- NA
+
+    x <- as.data.frame(attr(dat$v130, "labels"))  #Get file-specific dictionary (o = old value, l = label, n = new value)
+    x$label <- rownames(x)
+    colnames(x) <- c("o", "l")
+    x$n <- NA
+
+    for (i in 1:nrow(x)) {  #For each old label, identify new value
+      if (x$l[i] %in% c("Agnostic", "Atheist", "DK", "Don t know", "Don't know", "No religion", "No Religion", "No religion (Sem religiao)",
+                        "No religion/atheists", "No religion/none", "None", "NONE", "Not religion", "Not Religious", "Not religious",
+                        "Sans", "Sem religio")) {x$n[i] <- 1}  #None
+
+      if (x$l[i] %in% c("Catholic", "Catholic (Cat\U00A2lica)", "Catholic/greek cath.", "Catholicism", "Catholique", "Catolica romana",
+                        "Christian Catholic", "Christian Orthodox", "Orthodox", "Roman Catholic", "Roman catholic",
+                        "Roman Catholic church")) {x$n[i] <- 2}  #Catholic/Orthodox
+
+      if (x$l[i] %in% c("Bektashi", "Islam", "Islamic", "Islamic (Mu\U2021ulman)", "Moslem", "Mulsim", "Muslem", "Muslim",
+                        "muslim", "Muslim/Islam", "Muslin", "Muslman", "Muslum", "Musulman", "Musulmane")) {x$n[i] <- 3}  #Muslim
+
+      if (x$l[i] %in% c("Jew or Isreaeli", "Jewish", "Judaica ou israelita", "Judaism", "Zion", "Zionist")) {x$n[i] < 4}  #Jewish
+
+      if (x$l[i] %in% c("\"Celestes\"", "7th Day adventist", "Adventist", "Adventist/Jehova", "Adventiste", "Adventiste/Jehova",
+                        "African instituted churches", "Aglipay", "Anglican", "Anglican Church", "Apostolic sect", "Apostolic Sect",
+                        "Arm,e du Salut", "Assembly of god", "Assembly of God", "Aventist", "Baptist", "Born Again Christian (other recode)",
+                        "Born-again/Jehovah's Witness/SDA", "Budu", "CCAP", "Celestes", "Celestes (Celestial Church of Christ)", "Charismatic",
+                        "Chistiane", "Christan", "Christian", "christian", "Christian Protestant", "Christian/protestant", "Christianity",
+                        "Christrian", "Eglise de r\U00E9veil", "Eglise du 7e jour", "Elcin", "Evangelic", "Evangelica (Crente)", "Evangelical",
+                        "Evangelical / Protestant", "Evangelical Alliance", "Evangelical churches", "Evangelical Lutheran", "Evangelical presbyterian",
+                        "Evangelical/pentecostal", "Evangelist", "FJKM/FLM/Anglikana", "Iglesia ni Cristo", "Iglesia ni kristo", "Iglesia Ni Kristo",
+                        "Jahovai", "JEHOVAH witness", "Jehovah witness", "Jehovah Witness", "Jehovah's Witness", "Jehovah's Witness (other recode)",
+                        "Jehovah's witnesses", "Jeova witness", "Kibanguist", "Kimbanguist", "Kimbanguiste", "Lesotho Evangelical church",
+                        "Method., Advent., ..", "Methodist", "Methodist/Baptist", "New apostolic", "Other Christian", "Other christian",
+                        "other Christian", "Other Christian (not otherwise categorisable)", "Other Christian Church", "Other Christian religion",
+                        "Other christians", "Other Christians", "Other chritians", "Other protestant", "Other Protestant", "Other Protestants",
+                        "Pentecostal", "Pentecostal/Born Again/Evangelical", "Pentecostal/Charismatic", "Pentecostal/charismatic", "Pentecotist",
+                        "Presbyterian", "Prostestant", "Protest /Oth Cristian", "Protestant", "Protestant (ex. evangelical, baptist, jehovah witness)",
+                        "Protestant (Protestante)", "Protestant / Evangelic", "Protestant /Christian", "Protestant methodist", "Protestant Methodist",
+                        "Protestant presbyterian, methodist", "Protestant, methodist, adventist, witness of Jesus", "Protestant/ methodist/adventist/Jehova witness",
+                        "Protestant/ other Christian", "Protestant/ Other Christian", "Protestant/Anglican", "Protestant/FLM", "Protestant/other Christian",
+                        "Protestant/other christian", "Protestanta", "Protestante", "Protestantism", "Protestants", "Rastafarian", "Salvation Army",
+                        "Salvation army", "SDA", "Seventh Day Advent", "Seventh day advent.", "Seventh Day Advent./Baptist", "Seventh Day Advent/ Baptist",
+                        "Seventh Day Adventist", "Seventh Day Adventist (other recode)", "Seventh Day Adventist / Baptist", "Seventh Day Adventist/Baptist",
+                        "Seventh-day adventist", "Trad. prosestant", "Tradit. protestant", "United Church", "Universal")) {x$n[i] <- 5}  #Protestant
+
+      if (x$l[i] %in% c("Aucune", "Autre", "Autres", "Baha'i", "Bahai", "Confucian", "Espirita Kardecista", "Espiritista kardecis",
+                        "Jain", "Mammon", "Mana", "New Religions (Eglises Rebeillees)", "Non-Christian", "Only god", "Oriental religions",
+                        "Other", "other", "Other (Outra)", "Other non-Christian", "Other religion", "Other religions", "Others", "Outras",
+                        "Parsi / Zoroastrian", "Parsi/Zoroastrian", "Religioes orientais", "Revival church", "Sect", "Sikh", "Spiritual",
+                        "Spiritual kardecista", "Spiritualist", "Zephirin/Matsouaniste/Ngunza", "Zephirrin/Matsouanist/Ngunza",
+                        "Zoroastian/Parsi")) {x$n[i] <- 6}  #Other
+
+      if(x$l[i] %in% c("Buddhism", "Buddhist", "Buddhist / Neo-Buddhist", "Buddhist/Neo Buddhist", "Buddhist/Neo-Buddhist",
+                       "Budhist", "Hoa Hao")) {x$n[i] <- 7}  #Buddhist
+
+      if (x$l[i] %in% c("Hindu", "Hinduism")) {x$n[i] <- 8}  #Hindu
+
+      if (x$l[i] %in% c("Animalist", "Animist", "Animiste", "Cao Dai", "Doni-Polo", "Donyi polo", "Espirita Afro-Bras.",
+                        "Espiritista afro-bra", "Indigenous spirituality", "Kirat", "Mayan", "Nature worship", "Other traditional",
+                        "Religion traditionelle", "Sanamahi", "Taditional", "Tradition/animist", "Traditional", "Traditional (Vodoun)",
+                        "Traditional / animist", "Traditional Mayan", "Traditional religion", "Traditional Religion", "Traditional/animist",
+                        "Traditional/Animist", "Traditional/spiritualist", "Traditionalist", "Traditionelle", "Traditionists", "Traditionnal",
+                        "Traditionnal/animist", "Umbanda /Candomble", "Vaudou", "Vaudousant", "Vodoun")) {x$n[i] <- 9}  #Folk
+
+      dat$religion[which(dat$v130==x$o[i])] <- x$n[i]  #Insert new value into recoded religion variable
+    }
+
+    dat$religion <- factor(dat$religion, levels = c(1:9), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish",
+                                                                     "Protestant / Christian", "Other", "Buddhist",
+                                                                     "Hindu", "Folk"))
+
     #### Design ####
     #Identifier (non-standard variable name in Egypt 1988-89)
     if (dat$v000[1]=="EG" & (dat$v007[1]==88 | dat$v007[1]==89)) {dat$id <- dat$`case$id`} else {dat$id <- dat$caseid}
@@ -241,11 +315,13 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     if (!is.null(extra.vars)) {
       dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
                     "sex", "age", "education", "partnered", "residence", "employed",  #Demographics
+                    "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "cf_ideal", "famstat",  #Family status
                     "sex", "age", "education", "partnered", "residence", "employed",  #Demographics
+                    "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }
 

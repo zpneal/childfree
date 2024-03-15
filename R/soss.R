@@ -39,7 +39,7 @@
 #'   * `race` (factor) - Respondent's race, 7 categories
 #'   * `ethnicity` (factor) - Respondent's hispanicity
 #'   * `age` (numeric) - Respondent's age in years
-#'   * `education` (numeric) - Respondent's education on a 10-point ordinal scale
+#'   * `education` (factor) - Respondent's education on a 7-point ordinal scale
 #'   * `partnered` (factor) - Respondent's partnership status (*Partnership includes both marriage and cohabitation*)
 #'   * `residence` (factor) - Urbanicity of respondent's place of residence
 #'   * `employed` (factor) - Whether respondent is currently employed
@@ -228,13 +228,18 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     if (wave==86) {dat$age <- 2022 - dat$cd2}
 
     #Education in years
-    dat$education <- dat$cd3
-    dat$education[which(dat$education>0 & dat$education<12)] <- 19
+    dat$education <- NA
+    dat$education[which(dat$cd3==0)] <- 1  #No education
+    dat$education[which(dat$cd3>=1 & dat$cd3<=11)] <- 2  #No high school
+    dat$education[which(dat$cd3==12)] <- 3  #High school graduate
+    dat$education[which(dat$cd3==13 | dat$cd3==14 | dat$cd3==15 | dat$cd3==20)] <- 4  #Some college
+    dat$education[which(dat$cd3==16)] <- 5  #College graduate
+    dat$education[which(dat$cd3==17)] <- 6  #Some post-grad
+    dat$education[which(dat$cd3==18)] <- 7  #Graduate degree
     dat$education <- factor(dat$education,
-                            levels = c(0, 19, 12, 13, 14, 20, 15, 16, 17, 18),
+                            levels = c(1:7),
                             labels = c("No education", "Did not graduate high school", "High School graduate",
-                                       "1st year college", "2nd year college", "Junior college graduate",
-                                       "3rd year college", "College graduate", "Some post-graduate", "Graduate degree"),
+                                       "Some college", "College graduate", "Some post-graduate", "Graduate degree"),
                             ordered = TRUE)
 
     #Partnership status
@@ -265,7 +270,7 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     #Religion
     dat$religion <- dat$cd6
     dat$religion[which(dat$religion==8)] <- NA  #8 = Skipped
-    dat$religion <- factor(dat$religion, levels = c(0:5), labels = c("None", "Catholic", "Muslim", "Jewish", "Protestant", "Other"))
+    dat$religion <- factor(dat$religion, levels = c(0:5), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish", "Protestant / Christian", "Other"))
 
     #### Design ####
     #Identifier
