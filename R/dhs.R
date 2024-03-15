@@ -176,7 +176,7 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
       dat$residence[which(dat$residence<4)] <- 2  #Code as rural (1) Less than 2500, (2) 2500-19999, and (3) 20000+
       dat$residence[which(dat$residence==4)] <- 1  #Code as urban (4) Areas Metropolitanas
     }
-    dat$residence <- factor(dat$residence, levels = c(2,98,99,1), labels = c("Rural", "Urban"), ordered = TRUE)  #98 and 99 are dummy values to ensure 4-point scale
+    dat$residence <- factor(dat$residence, levels = c(2,98,99,1), labels = c("Rural", "Town", "Suburb", "Urban"), ordered = TRUE)  #98 and 99 are dummy values; "Town" and "Suburb" categories are not used by DHS
 
     #Employed
     dat$employed <- NA
