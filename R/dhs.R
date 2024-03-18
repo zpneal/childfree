@@ -40,21 +40,21 @@
 #'      * A "Childfree" respondent does not have children and does not want children or ideally would like zero children. If the respondent
 #'         provided responses to *both* the want and ideal questions, these responses are consistent (i.e., want = no *and* ideal = 0).
 #' * *Demographic Variables*
-#'   * `sex` (factor) - Respondent's sex (*The DHS data include only female respondents*)
+#'   * `sex` (factor) - Respondent's sex
 #'   * `age` (numeric) - Respondent's age in years
 #'   * `education` (numeric) - Respondent's years of education
-#'   * `partnered` (factor) - Respondent's partnership status (*Partnership includes both marriage and cohabitation*)
-#'   * `residence` (factor) - Urbanicity of respondent's place of residence, 2 categories
+#'   * `partnered` (factor) - Respondent's partnership status
+#'   * `residence` (factor) - Urbanicity of respondent's place of residence
 #'   * `employed` (factor) - Whether respondent is currently employed
 #' * *Attitude and Behavior Variables*
-#'   * `religion` (factor) - Respondent's religious affiliation, 9 categories
+#'   * `religion` (factor) - Respondent's religious affiliation
 #' * *Design Variables*
 #'   * `id` (string) - Unique respondent ID
 #'   * `country` (string) - Respondent's country of residence
 #'   * `weight` (numeric) - Sampling weight (*Exercise caution using weights when data are pooled from multiple countries or waves*)
 #'   * `file` (string) - Source data file
-#'   * `survey` (string) - Source survey (*Equal to "DHS" for all data generated using the `dhs()` function*)
-#'   * `wave` (numeric) - Wave of data collection (*In the DHS, "waves" are called "recodes"*)
+#'   * `survey` (string) - Source survey
+#'   * `wave` (numeric) - Wave of data collection
 #'   * `year` (numeric) - Year of data collection
 #'   * `month` (numeric) - Month of data collection
 #'
@@ -99,18 +99,16 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$want) & dat$want=="No (more)")] <- 2  #Childfree if (a) have no children and (b) want no children
-    dat$cf_want[which(!is.na(dat$numkid) & dat$numkid>0)] <- 1  #Not childfree if have children
-    dat$cf_want[which(!is.na(dat$want) & (dat$want=="Have (another)" | dat$want=="Undecided"))] <- 1  #Not childfree if want or may want children
-    dat$cf_want <- factor(dat$cf_want, levels = c(1,2), labels = c("No", "Yes"))
+                      !is.na(dat$want) & dat$want=="No (more)")] <- 1  #Childfree if (a) have no children and (b) want no children
+    dat$cf_want[which(!is.na(dat$numkid) & dat$numkid>0)] <- 0  #Not childfree if have children
+    dat$cf_want[which(!is.na(dat$want) & (dat$want=="Have (another)" | dat$want=="Undecided"))] <- 0  #Not childfree if want or may want children
 
     #Childfree (ideal)
     dat$cf_ideal <- NA
     dat$cf_ideal[which(!is.na(dat$numkid) & dat$numkid==0 &
-                       !is.na(dat$ideal) & dat$ideal==0)] <- 2  #Childfree if (a) have no children and (b) zero children is ideal
-    dat$cf_ideal[which(!is.na(dat$numkid) & dat$numkid>0)] <- 1  #Not childfree if have children
-    dat$cf_ideal[which(!is.na(dat$ideal) & (dat$ideal==-1 | dat$ideal>0))] <- 1  #Not childfree if it is ideal to have some number of children, or the ideal number of children is unknown
-    dat$cf_ideal <- factor(dat$cf_ideal, levels = c(1,2), labels = c("No", "Yes"))
+                       !is.na(dat$ideal) & dat$ideal==0)] <- 1  #Childfree if (a) have no children and (b) zero children is ideal
+    dat$cf_ideal[which(!is.na(dat$numkid) & dat$numkid>0)] <- 0  #Not childfree if have children
+    dat$cf_ideal[which(!is.na(dat$ideal) & (dat$ideal==-1 | dat$ideal>0))] <- 0  #Not childfree if it is ideal to have some number of children, or the ideal number of children is unknown
 
     #Family status
     dat$famstat <- NA
@@ -180,9 +178,8 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
     #Employed
     dat$employed <- NA
-    dat$employed[which(dat$v714==0)] <- 1  #Not employed
-    dat$employed[which(dat$v714==1)] <- 2  #Employed
-    dat$employed <- factor(dat$employed, levels = c(1,2), labels = c("Not employed", "Employed"))
+    dat$employed[which(dat$v714==0)] <- 0  #Not employed
+    dat$employed[which(dat$v714==1)] <- 1  #Employed
 
     #### Attitude ####
     #Religion

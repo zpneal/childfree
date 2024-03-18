@@ -36,22 +36,22 @@
 #'      * A "Childfree" respondent does not have children and does not want children
 #' * *Demographic Variables*
 #'   * `sex` (factor) - Respondent's sex
-#'   * `race` (factor) - Respondent's race, 7 categories
-#'   * `ethnicity` (factor) - Respondent's hispanicity
+#'   * `race` (factor) - Respondent's race
+#'   * `hispanic` (factor) - Respondent's hispanicity
 #'   * `age` (numeric) - Respondent's age in years
-#'   * `education` (factor) - Respondent's education on a 7-point ordinal scale
-#'   * `partnered` (factor) - Respondent's partnership status (*Partnership includes both marriage and cohabitation*)
+#'   * `education` (factor) - Respondent's education
+#'   * `partnered` (factor) - Respondent's partnership status
 #'   * `residence` (factor) - Urbanicity of respondent's place of residence
 #'   * `employed` (factor) - Whether respondent is currently employed
 #' * *Attitude and Behavior Variables*
-#'   * `ideology` (factor) - Respondent's political ideology on a 7-point ordinal scale
-#'   * `religion` (factor) - Respondent's religious affiliation, 6 categories
+#'   * `ideology` (factor) - Respondent's political ideology
+#'   * `religion` (factor) - Respondent's religious affiliation
 #' * *Design Variables*
 #'   * `id` (string) - Unique respondent ID
-#'   * `country` (string) - Respondent's country of residence (*The SOSS is collected only in the United States, specifically, Michigan*)
-#'   * `weight` (numeric) - Sampling weight (*Exercise caution using weights when data are pooled from multiple waves*)
+#'   * `country` (string) - Respondent's country of residence
+#'   * `weight` (numeric) - Sampling weight
 #'   * `file` (string) - Source data file
-#'   * `survey` (string) - Source survey (*Equal to "SOSS" for all data generated using the `soss()` function*)
+#'   * `survey` (string) - Source survey
 #'   * `wave` (numeric) - Wave of data collection
 #'   * `year` (numeric) - Year of data collection
 #'   * `month` (numeric) - Month of data collection
@@ -180,9 +180,8 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
     #Childfree (want)
     dat$cf_want <- NA
-    dat$cf_want[which(dat$famstat=="Childfree")] <- 2
-    dat$cf_want[which(dat$famstat!="Childfree")] <- 1
-    dat$cf_want <- factor(dat$cf_want, levels = c(1,2), labels = c("No", "Yes"))
+    dat$cf_want[which(dat$famstat=="Childfree")] <- 1
+    dat$cf_want[which(dat$famstat!="Childfree")] <- 0
 
     #### Demographics ####
     #Sex
@@ -214,11 +213,10 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     }
     dat$race <- factor(dat$race, levels = c(1:7), labels = c("White", "Black", "Hawaiian", "Asian", "American Indian", "Other", "Multi-racial"))
 
-    #Ethnicity
-    dat$ethnicity <- NA
-    dat$ethnicity[which(dat$cd5a==5)] <- 1  #Not hispanic
-    dat$ethnicity[which(dat$cd5a==1)] <- 2  #Hispanic
-    dat$ethnicity <- factor(dat$ethnicity, levels = c(1,2), labels = c("Not hispanic", "Hispanic"))
+    #Hispanic
+    dat$hispanic <- NA
+    dat$hispanic[which(dat$cd5a==5)] <- 0  #Not hispanic
+    dat$hispanic[which(dat$cd5a==1)] <- 1  #Hispanic
 
     #Age in years
     if (wave==79) {dat$age <- 2020 - dat$cd2}
@@ -256,9 +254,8 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
     #Employed
     dat$employed <- NA
-    dat$employed[which(dat$cd15==6 | dat$cd15==7 | dat$cd15==8 | dat$cd15==9 | dat$cd15==10)] <- 1  #Not employed
-    dat$employed[which(dat$cd15==1 | dat$cd15==2 | dat$cd15==3 | dat$cd15==4 | dat$cd15==5 | dat$cd15==11)] <- 2  #Employed
-    dat$employed <- factor(dat$employed, levels = c(1,2), labels = c("Not employed", "Employed"))
+    dat$employed[which(dat$cd15==6 | dat$cd15==7 | dat$cd15==8 | dat$cd15==9 | dat$cd15==10)] <- 0  #Not employed
+    dat$employed[which(dat$cd15==1 | dat$cd15==2 | dat$cd15==3 | dat$cd15==4 | dat$cd15==5 | dat$cd15==11)] <- 1  #Employed
 
     #### Attitude ####
     #Ideology
@@ -326,13 +323,13 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     #Reduce data
     if (!is.null(extra.vars)) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "ethnicity", "age", "education", "partnered", "residence", "employed",  #Demographics
+                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "ethnicity", "age", "education", "partnered", "residence", "employed",  #Demographics
+                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }
