@@ -32,26 +32,26 @@ A data frame containing:
 \item \emph{Demographic Variables}
 \itemize{
 \item \code{sex} (factor) - Respondent's sex
-\item \code{race} (factor) - Respondent's race, 7 categories
-\item \code{ethnicity} (factor) - Respondent's hispanicity
+\item \code{race} (factor) - Respondent's race
+\item \code{hispanic} (factor) - Respondent's hispanicity
 \item \code{age} (numeric) - Respondent's age in years
-\item \code{education} (factor) - Respondent's education on a 7-point ordinal scale
-\item \code{partnered} (factor) - Respondent's partnership status (\emph{Partnership includes both marriage and cohabitation})
+\item \code{education} (factor) - Respondent's education
+\item \code{partnered} (factor) - Respondent's partnership status
 \item \code{residence} (factor) - Urbanicity of respondent's place of residence
 \item \code{employed} (factor) - Whether respondent is currently employed
 }
 \item \emph{Attitude and Behavior Variables}
 \itemize{
-\item \code{ideology} (factor) - Respondent's political ideology on a 7-point ordinal scale
-\item \code{religion} (factor) - Respondent's religious affiliation, 6 categories
+\item \code{ideology} (factor) - Respondent's political ideology
+\item \code{religion} (factor) - Respondent's religious affiliation
 }
 \item \emph{Design Variables}
 \itemize{
 \item \code{id} (string) - Unique respondent ID
-\item \code{country} (string) - Respondent's country of residence (\emph{The SOSS is collected only in the United States, specifically, Michigan})
-\item \code{weight} (numeric) - Sampling weight (\emph{Exercise caution using weights when data are pooled from multiple waves})
+\item \code{country} (string) - Respondent's country of residence
+\item \code{weight} (numeric) - Sampling weight
 \item \code{file} (string) - Source data file
-\item \code{survey} (string) - Source survey (\emph{Equal to "SOSS" for all data generated using the \code{soss()} function})
+\item \code{survey} (string) - Source survey
 \item \code{wave} (numeric) - Wave of data collection
 \item \code{year} (numeric) - Year of data collection
 \item \code{month} (numeric) - Month of data collection

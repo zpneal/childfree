@@ -38,16 +38,16 @@ provided responses to \emph{both} the want and ideal questions, these responses 
 }
 \item \emph{Demographic Variables}
 \itemize{
-\item \code{sex} (factor) - Respondent's sex (\emph{The DHS data include only female respondents})
+\item \code{sex} (factor) - Respondent's sex
 \item \code{age} (numeric) - Respondent's age in years
 \item \code{education} (numeric) - Respondent's years of education
-\item \code{partnered} (factor) - Respondent's partnership status (\emph{Partnership includes both marriage and cohabitation})
-\item \code{residence} (factor) - Urbanicity of respondent's place of residence, 2 categories
+\item \code{partnered} (factor) - Respondent's partnership status
+\item \code{residence} (factor) - Urbanicity of respondent's place of residence
 \item \code{employed} (factor) - Whether respondent is currently employed
 }
 \item \emph{Attitude and Behavior Variables}
 \itemize{
-\item \code{religion} (factor) - Respondent's religious affiliation, 9 categories
+\item \code{religion} (factor) - Respondent's religious affiliation
 }
 \item \emph{Design Variables}
 \itemize{
@@ -55,8 +55,8 @@ provided responses to \emph{both} the want and ideal questions, these responses 
 \item \code{country} (string) - Respondent's country of residence
 \item \code{weight} (numeric) - Sampling weight (\emph{Exercise caution using weights when data are pooled from multiple countries or waves})
 \item \code{file} (string) - Source data file
-\item \code{survey} (string) - Source survey (\emph{Equal to "DHS" for all data generated using the \code{dhs()} function})
-\item \code{wave} (numeric) - Wave of data collection (\emph{In the DHS, "waves" are called "recodes"})
+\item \code{survey} (string) - Source survey
+\item \code{wave} (numeric) - Wave of data collection
 \item \code{year} (numeric) - Year of data collection
 \item \code{month} (numeric) - Month of data collection
 }
