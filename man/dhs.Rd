@@ -22,13 +22,13 @@ A data frame containing:
 \item \code{cf_ideal} (factor) - Is the respondent childfree according to an "ideal" variable
 \item \code{famstat} (factor) - Respondent's family status based on all available information:
 \itemize{
-\item A "Parent - unclassified" has children
+\item A "Parent - Unclassified" has children
 \item A "Parent - Fulfilled" has exactly the number of children that is ideal
 \item A "Parent - Unfulfilled" has fewer children than is ideal
 \item A "Parent - Reluctant" has more children than is ideal
 \item A "Parent - Ambivalent" has children but does not know how many is ideal
 \item A "Not yet parent" does not have children but wants children
-\item A "Childless" respondent does not have children and is infecund but ideally would have liked to have children
+\item A "Childless - Unclassified" respondent does not have children and is infecund but ideally would have liked to have children
 \item An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
 \item An "Undecided" respondent does not have children and is undecided whether they want children, or provided
 inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
@@ -75,7 +75,7 @@ without an application. The \code{dhs()} function reads one or more of these fil
 recodes selected variables useful for studying childfree adults and other family statuses, then returns
 a single data frame.
 
-\strong{Known DHS data file issues}
+\strong{Known issues}
 \itemize{
 \item The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV)
 contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT and TRIR41FL.SAS7BDAT) instead.

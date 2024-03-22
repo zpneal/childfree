@@ -21,9 +21,9 @@ A data frame containing:
 \item \code{cf_want} (factor) - Is the respondent childfree according to a "want" variable
 \item \code{famstat} (factor) - Respondent's family status based on all available information:
 \itemize{
-\item A "Parent - unclassified" has children
+\item A "Parent - Unclassified" has children
 \item A "Not yet parent" does not have children but wants children
-\item A "Childless" respondent does not have children, are not planning to have children, but wished they had children
+\item A "Childless - Unclassified" respondent does not have children, is not planning to have children, but wished they had children
 \item An "Ambivalent non-parent" does not have children, are not planning to have children, and do not know if they wished they had children
 \item An "Undecided" respondent does not have children and is undecided whether they want children
 \item A "Childfree" respondent does not have children and does not want children
@@ -78,7 +78,7 @@ that may be of interest:
 \item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 }
 
-\strong{Known SOSS data file issues}
+\strong{Known issues}
 \itemize{
 \item Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
