@@ -19,7 +19,7 @@
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
-#' **Known SOSS data file issues**
+#' **Known issues**
 #'   * Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
 #'   * Wave 82 originally included a 500 person oversample of parents. These respondents are omitted if `wave == 82`.
@@ -28,9 +28,9 @@
 #' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
 #'   * `cf_want` (factor) - Is the respondent childfree according to a "want" variable
 #'   * `famstat` (factor) - Respondent's family status based on all available information:
-#'      * A "Parent - unclassified" has children
+#'      * A "Parent - Unclassified" has children
 #'      * A "Not yet parent" does not have children but wants children
-#'      * A "Childless" respondent does not have children, are not planning to have children, but wished they had children
+#'      * A "Childless - Unclassified" respondent does not have children, is not planning to have children, but wished they had children
 #'      * An "Ambivalent non-parent" does not have children, are not planning to have children, and do not know if they wished they had children
 #'      * An "Undecided" respondent does not have children and is undecided whether they want children
 #'      * A "Childfree" respondent does not have children and does not want children
@@ -170,14 +170,14 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     dat$famstat <- NA
     dat$famstat[which(dat$havekid=="Yes")] <- 1  #Parent - Unclassified
     dat$famstat[which(dat$havekid=="No" & dat$plankid=="Yes")] <- 6  #Not yet parent
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="DK")] <- 9  #Undecided
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="Yes")] <- 7  #Childless
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="DK")] <- 8  #Ambivalent non-parent
-    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="No")] <- 10  #Childfree
-    dat$famstat <- factor(dat$famstat, levels = c(1:10),
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="DK")] <- 11  #Undecided
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="Yes")] <- 7  #Childless - Unclassified
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="DK")] <- 10  #Ambivalent non-parent
+    dat$famstat[which(dat$havekid=="No" & dat$plankid=="No" & dat$wishkid=="No")] <- 12  #Childfree
+    dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
-                                     "Not yet parent", "Childless", "Ambivalent non-parent", "Undecided", "Childfree"))
-
+                                     "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
+    
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(dat$famstat=="Childfree")] <- 1

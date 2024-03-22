@@ -14,7 +14,7 @@
 #'    recodes selected variables useful for studying childfree adults and other family statuses, then returns
 #'    a single data frame.
 #'
-#' **Known DHS data file issues**
+#' **Known issues**
 #'   * The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV)
 #'     contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT and TRIR41FL.SAS7BDAT) instead.
 #'   * In some cases, DHS makes available individual recode data files for specific states. For example, data from Ondo
@@ -27,13 +27,13 @@
 #'   * `cf_want` (factor) - Is the respondent childfree according to a "want" variable
 #'   * `cf_ideal` (factor) - Is the respondent childfree according to an "ideal" variable
 #'   * `famstat` (factor) - Respondent's family status based on all available information:
-#'      * A "Parent - unclassified" has children
+#'      * A "Parent - Unclassified" has children
 #'      * A "Parent - Fulfilled" has exactly the number of children that is ideal
 #'      * A "Parent - Unfulfilled" has fewer children than is ideal
 #'      * A "Parent - Reluctant" has more children than is ideal
 #'      * A "Parent - Ambivalent" has children but does not know how many is ideal
 #'      * A "Not yet parent" does not have children but wants children
-#'      * A "Childless" respondent does not have children and is infecund but ideally would have liked to have children
+#'      * A "Childless - Unclassified" respondent does not have children and is infecund but ideally would have liked to have children
 #'      * An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
 #'      * An "Undecided" respondent does not have children and is undecided whether they want children, or provided
 #'         inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
@@ -127,31 +127,31 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Infecund" &
-                      !is.na(dat$ideal) & dat$ideal>0)] <- 7  #Childless (cannot have children, but a specific number would have been ideal)
+                      !is.na(dat$ideal) & dat$ideal>0)] <- 7  #Childless - Unclassified (cannot have children, but a specific number would have been ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Infecund" &
-                      !is.na(dat$ideal) & dat$ideal==-1)] <- 8  #Ambivalent non-parent (cannot have children, ideal number is unknown)
+                      !is.na(dat$ideal) & dat$ideal==-1)] <- 10  #Ambivalent non-parent (cannot have children, ideal number is unknown)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                        !is.na(dat$want) & dat$want=="Undecided")] <- 9  #Undecided (unsure if want children)
+                        !is.na(dat$want) & dat$want=="Undecided")] <- 11  #Undecided (unsure if want children)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$want) & dat$want=="No (more)")] <- 10  #Childfree (do not want children)
+                      !is.na(dat$want) & dat$want=="No (more)")] <- 12  #Childfree (do not want children)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
-                      !is.na(dat$ideal) & dat$ideal==0)] <- 10  #Childfree (zero children is ideal)
+                      !is.na(dat$ideal) & dat$ideal==0)] <- 12  #Childfree (zero children is ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal==0 &
-                      !is.na(dat$want) & dat$want!="No (more)")] <- 9  #Undecided, ideal and want responses are inconsistent
+                      !is.na(dat$want) & dat$want!="No (more)")] <- 11  #Undecided, ideal and want responses are inconsistent
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$ideal) & dat$ideal>0 &
-                      !is.na(dat$want) & dat$want=="No (more)")] <- 9  #Undecided, ideal and want responses are inconsistent
+                      !is.na(dat$want) & dat$want=="No (more)")] <- 11  #Undecided, ideal and want responses are inconsistent
 
-    dat$famstat <- factor(dat$famstat, levels = c(1:10),
+    dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
-                                     "Not yet parent", "Childless", "Ambivalent non-parent", "Undecided", "Childfree"))
-
+                                     "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
+    
     #### Demographics ####
     #Sex
     dat$sex <- 1
