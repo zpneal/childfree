@@ -28,7 +28,7 @@ A data frame containing:
 \item A "Parent - Reluctant" has more children than is ideal
 \item A "Parent - Ambivalent" has children but does not know how many is ideal
 \item A "Not yet parent" does not have children but wants children
-\item A "Childless - Unclassified" respondent does not have children and is infecund but ideally would have liked to have children
+\item A "Childless - Biological" respondent does not have children and is infecund but ideally would have liked to have children
 \item An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
 \item An "Undecided" respondent does not have children and is undecided whether they want children, or provided
 inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
