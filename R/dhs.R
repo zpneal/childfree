@@ -33,7 +33,7 @@
 #'      * A "Parent - Reluctant" has more children than is ideal
 #'      * A "Parent - Ambivalent" has children but does not know how many is ideal
 #'      * A "Not yet parent" does not have children but wants children
-#'      * A "Childless - Unclassified" respondent does not have children and is infecund but ideally would have liked to have children
+#'      * A "Childless - Biological" respondent does not have children and is infecund but ideally would have liked to have children
 #'      * An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
 #'      * An "Undecided" respondent does not have children and is undecided whether they want children, or provided
 #'         inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
@@ -122,12 +122,13 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid>0 &
                       !is.na(dat$ideal) & dat$ideal==-1)] <- 5  #Parent - Ambivalent (unsure how many children is ideal)
 
+    #This may include a small number of "childless - unclassified/social" (respondent wants children, but does not intend to have them for non-medical/social reasons)
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Have (another)")] <- 6  #Not yet parent (wants child(ren), regardless of how many is ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Infecund" &
-                      !is.na(dat$ideal) & dat$ideal>0)] <- 7  #Childless - Unclassified (cannot have children, but a specific number would have been ideal)
+                      !is.na(dat$ideal) & dat$ideal>0)] <- 9  #Childless - Biological (cannot have children, but a specific number would have been ideal)
 
     dat$famstat[which(!is.na(dat$numkid) & dat$numkid==0 &
                       !is.na(dat$want) & dat$want=="Infecund" &
