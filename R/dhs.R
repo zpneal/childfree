@@ -24,8 +24,8 @@
 #'
 #' @return A data frame containing:
 #' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-#'   * `cf_want` (factor) - Is the respondent childfree according to a "want" variable
-#'   * `cf_ideal` (factor) - Is the respondent childfree according to an "ideal" variable
+#'   * `cf_want` (binary) - Is the respondent childfree according to a "want" variable
+#'   * `cf_ideal` (binary) - Is the respondent childfree according to an "ideal" variable
 #'   * `famstat` (factor) - Respondent's family status based on all available information:
 #'      * A "Parent - Unclassified" has children
 #'      * A "Parent - Fulfilled" has exactly the number of children that is ideal
@@ -45,7 +45,7 @@
 #'   * `education` (numeric) - Respondent's years of education
 #'   * `partnered` (factor) - Respondent's partnership status
 #'   * `residence` (factor) - Urbanicity of respondent's place of residence
-#'   * `employed` (factor) - Whether respondent is currently employed
+#'   * `employed` (binary) - Whether respondent is currently employed
 #' * *Attitude and Behavior Variables*
 #'   * `religion` (factor) - Respondent's religious affiliation
 #' * *Design Variables*

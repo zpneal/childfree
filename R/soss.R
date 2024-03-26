@@ -26,7 +26,7 @@
 #'
 #' @return A data frame containing:
 #' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-#'   * `cf_want` (factor) - Is the respondent childfree according to a "want" variable
+#'   * `cf_want` (binary) - Is the respondent childfree according to a "want" variable
 #'   * `famstat` (factor) - Respondent's family status based on all available information:
 #'      * A "Parent - Unclassified" has children
 #'      * A "Not yet parent" does not have children but wants children
@@ -37,12 +37,13 @@
 #' * *Demographic Variables*
 #'   * `sex` (factor) - Respondent's sex
 #'   * `race` (factor) - Respondent's race
-#'   * `hispanic` (factor) - Respondent's hispanicity
+#'   * `hispanic` (binary) - Respondent's hispanicity
 #'   * `age` (numeric) - Respondent's age in years
 #'   * `education` (factor) - Respondent's education
 #'   * `partnered` (factor) - Respondent's partnership status
 #'   * `residence` (factor) - Urbanicity of respondent's place of residence
-#'   * `employed` (factor) - Whether respondent is currently employed
+#'   * `employed` (binary) - Whether respondent is currently employed
+#'   * `inschool` (binary) - Whether respondent is currently in school
 #' * *Attitude and Behavior Variables*
 #'   * `ideology` (factor) - Respondent's political ideology
 #'   * `religion` (factor) - Respondent's religious affiliation
@@ -257,6 +258,11 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     dat$employed[which(dat$cd15==6 | dat$cd15==7 | dat$cd15==8 | dat$cd15==9 | dat$cd15==10)] <- 0  #Not employed
     dat$employed[which(dat$cd15==1 | dat$cd15==2 | dat$cd15==3 | dat$cd15==4 | dat$cd15==5 | dat$cd15==11)] <- 1  #Employed
 
+    #In school
+    dat$inschool <- 0  #Not in school
+    dat$inschool[which(dat$cd15==3 | dat$cd15==8)] <- 1  #In school
+    dat$inschool[which(dat$cd15==98)] <- NA
+
     #### Attitude ####
     #Ideology
     dat$ideology[which(dat$ideology==8 | dat$ideology==98 | dat$ideology==99)] <- NA  #8 = Don't know, 98 = Skipped, 99 = Not asked
@@ -323,13 +329,13 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     #Reduce data
     if (!is.null(extra.vars)) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed",  #Demographics
+                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed",  #Demographics
+                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }

@@ -11,7 +11,7 @@
 #'
 #' @return A data frame containing:
 #' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-#'   * `cf_want` (factor) - Is the respondent childfree according to a "want" variable
+#'   * `cf_want` (binary) - Is the respondent childfree according to a "want" variable
 #'   * `famstat` (factor) - Respondent's family status based on all available information:
 #'      * A "Parent - Unclassified" has children
 #'      * A "Parent - Unfulfilled" has children, but wants more
@@ -25,12 +25,13 @@
 #' * *Demographic Variables*
 #'   * `sex` (factor) - Respondent's sex
 #'   * `race` (factor) - Respondent's race
-#'   * `hispanic` (factor) - Respondent's hispanicity
+#'   * `hispanic` (binary) - Respondent's hispanicity
 #'   * `age` (numeric) - Respondent's age in years
 #'   * `education` (factor) - Respondent's education
 #'   * `partnered` (factor) - Respondent's partnership status
 #'   * `residence` (factor) - Urbanicity of respondent's place of residence
-#'   * `employed` (factor) - Whether respondent is currently employed
+#'   * `employed` (binary) - Whether respondent is currently employed
+#'   * `inschool` (binary) - Whether respondent is currently in school
 #' * *Attitude and Behavior Variables*
 #'   * `religion` (factor) - Respondent's religious affiliation
 #' * *Design Variables*
@@ -203,10 +204,17 @@ nsfg <- function(years, progress = TRUE) {
     dat$residence <- factor(dat$residence, levels = c(1,2,3,4), labels = c("Rural", "Town", "Suburb", "Urban"), ordered = TRUE)
 
     #Employed
-    dat$employed <- as.numeric(substring(raw,2663,2663))
-    dat$employed[which(dat$employed==1)] <- 1  #Employed
-    dat$employed[which(dat$employed==5)] <- 0  #Not employed
+    dat$emp <- as.numeric(substring(raw,2663,2663))
+    dat$employed <- NA
+    dat$employed[which(dat$emp==1)] <- 1  #Employed
+    dat$employed[which(dat$emp==5)] <- 0  #Not employed
 
+    #In school
+    dat$insch <- as.numeric(substring(raw,34,34))
+    dat$inschool <- NA
+    dat$inschool[which(dat$insch==1)] <- 1  #In school
+    dat$inschool[which(dat$insch==5)] <- 0  #Not in school
+    
     #### Attitude ####
     #Religion
     dat$rel <- as.numeric(substring(raw,3773,3773))
@@ -250,7 +258,7 @@ nsfg <- function(years, progress = TRUE) {
 
     #Reduce data
     dat <- dat[,c("cf_want", "famstat",  #Family status
-                  "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed",  #Demographics
+                  "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                   "religion",  #Attitude
                   "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
 
