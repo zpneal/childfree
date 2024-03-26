@@ -18,8 +18,8 @@ A data frame containing:
 \itemize{
 \item \emph{Family Status Variables} (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
 \itemize{
-\item \code{cf_want} (factor) - Is the respondent childfree according to a "want" variable
-\item \code{cf_ideal} (factor) - Is the respondent childfree according to an "ideal" variable
+\item \code{cf_want} (binary) - Is the respondent childfree according to a "want" variable
+\item \code{cf_ideal} (binary) - Is the respondent childfree according to an "ideal" variable
 \item \code{famstat} (factor) - Respondent's family status based on all available information:
 \itemize{
 \item A "Parent - Unclassified" has children
@@ -43,7 +43,7 @@ provided responses to \emph{both} the want and ideal questions, these responses 
 \item \code{education} (numeric) - Respondent's years of education
 \item \code{partnered} (factor) - Respondent's partnership status
 \item \code{residence} (factor) - Urbanicity of respondent's place of residence
-\item \code{employed} (factor) - Whether respondent is currently employed
+\item \code{employed} (binary) - Whether respondent is currently employed
 }
 \item \emph{Attitude and Behavior Variables}
 \itemize{
