@@ -7,7 +7,7 @@
 nsfg(years, progress = TRUE)
 }
 \arguments{
-\item{years}{vector: a numeric vector containing the years of the NSFG to include (2017)}
+\item{years}{vector: a numeric vector containing the years of the NSFG to include (2017, 2015)}
 
 \item{progress}{boolean: display a progress bar}
 }
@@ -63,7 +63,8 @@ A data frame containing:
 Read and recode National Survey of Family Growth (NSFG) data
 }
 \details{
-The National Survey of Family Growth (NSFG) is...
+The National Survey of Family Growth (NSFG) is regularly collected by the U.S. Centers for Disease Control.
+NOTE THAT \code{years} REFERS TO FIRST YEAR IN MULTI-YEAR WAVE
 
 \strong{Known issues}
 \itemize{
