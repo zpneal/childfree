@@ -7,7 +7,7 @@
 nsfg(years, progress = TRUE)
 }
 \arguments{
-\item{years}{vector: a numeric vector containing the years of the NSFG to include (2017, 2015)}
+\item{years}{vector: a numeric vector containing the starting year of NSFG waves include (2013, 2015, 2017)}
 
 \item{progress}{boolean: display a progress bar}
 }
@@ -63,8 +63,12 @@ A data frame containing:
 Read and recode National Survey of Family Growth (NSFG) data
 }
 \details{
-The National Survey of Family Growth (NSFG) is regularly collected by the U.S. Centers for Disease Control.
-NOTE THAT \code{years} REFERS TO FIRST YEAR IN MULTI-YEAR WAVE
+The U.S. Centers for Disease Control \href{https://www.cdc.gov/nchs/nsfg/index.htm}{National Survey of Family Growth} (NSFG)
+regularly collects fertility and other health information from a population-representative sample of adults in the
+United States. Between 1973 and 2002, the NSFG was conducted periodically. Starting in 2002, the NSFG transitioned to
+continuous data collection, releasing data in three-year waves (e.g., the 2013-2015, 2015-2017). The \code{nsfg()} function reads
+the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
+statuses, then returns a single data frame.
 
 \strong{Known issues}
 \itemize{

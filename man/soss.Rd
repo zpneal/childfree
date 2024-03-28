@@ -63,14 +63,14 @@ A data frame containing:
 Read and recode Michigan State of the State (SOSS) data
 }
 \details{
-The State of the State Survey (SOSS) is regularly collected by the Institute for Public Policy and
-Social Research (IPPSR) at Michigan State University (MSU). Each wave is collected from a sample
-of 1000 adults in the US state of Michigan, and includes sampling weights to obtain a sample that
-is representative of the state's population with respect to age, gender, race, and education. The
-\code{soss()} function reads the raw data from IPPSR's website, extracts and recodes selected variables
-useful for studying childfree adults and other family statuses, then returns a single data frame. Questions
-necessary for identifying childfree adults were asked in five waves, which each include unique questions
-that may be of interest:
+The \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss}{State of the State Survey} (SOSS) is
+regularly collected by the Institute for Public Policy and Social Research (IPPSR) at Michigan State
+University (MSU). Each wave is collected from a sample of 1000 adults in the US state of Michigan, and
+includes sampling weights to obtain a sample that is representative of the state's population with respect
+to age, gender, race, and education. The \code{soss()} function reads the raw data from IPPSR's website, extracts
+and recodes selected variables useful for studying childfree adults and other family statuses, then returns a
+single data frame. Questions necessary for identifying childfree adults were asked in five waves, which each
+include unique questions that may be of interest:
 \itemize{
 \item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
 \item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
