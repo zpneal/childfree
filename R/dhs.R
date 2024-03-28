@@ -5,7 +5,7 @@
 #' @param progress boolean: display a progress bar
 #'
 #' @details
-#' The United Nations Demographic and Health Surveys (DHS) program regularly collects health data from
+#' The United Nations \href{https://www.dhsprogram.com/}{Demographic and Health Surveys} (DHS) program regularly collects health data from
 #'    population-representative samples in many countries using standardized surveys. The "individual
 #'    recode" data files contain women's responses, and are available in SPSS, SAS, and Stata formats
 #'    from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/}. Access to these data requires
