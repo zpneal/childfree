@@ -12,5 +12,7 @@ individuals.
 Data can be generated from:
 \itemize{
 \item UN Demographic and Health Surveys data using \code{\link[=dhs]{dhs()}}
+\item Michigan State University State of the State data using \code{\link[=soss]{soss()}}
+\item US CDC National Survey of Family Growth data using \code{\link[=nsfg]{nsfg()}}
 }
 }
