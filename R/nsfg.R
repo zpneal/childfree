@@ -71,8 +71,8 @@ nsfg <- function(years, progress = TRUE) {
     if (progress) {utils::setTxtProgressBar(pb,year.num)}
 
     #Import raw data
-    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")}
-    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemRespData.dat")}
+    if (year==2002) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")}
+    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemResp.dat")}
     if (year==2011) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat")}
     if (year==2013) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat")}
     if (year==2015) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat")}
@@ -363,7 +363,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2017) {dat$wave <- "2017-2019"}
 
     #Year of data collection
-    if (year==2006) {dat$year <- 2002}
+    if (year==2002) {dat$year <- 2002}
     if (year==2006) {
       dat$quarter <- as.numeric(substring(raw,6243,6244))
       dat$year <- NA
