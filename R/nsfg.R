@@ -1,6 +1,6 @@
 #' Read and recode National Survey of Family Growth (NSFG) data
 #'
-#' @param years vector: a numeric vector containing the starting year of NSFG waves include (2013, 2015, 2017)
+#' @param years vector: a numeric vector containing the starting year of NSFG waves include (2002, 2006, 2011, 2013, 2015, 2017)
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -57,7 +57,7 @@
 #' data <- nsfg(years = 2017)
 nsfg <- function(years, progress = TRUE) {
 
-  if (!all(years %in%c(2013, 2015, 2017))) {stop("Only the following NSFG years are available: 2017, 2015")}  #Check for valid years
+  if (!all(years %in%c(2002, 2006, 2011, 2013, 2015, 2017))) {stop("Only the following NSFG years are available: 2002, 2006, 2011, 2013, 2015, 2017")}  #Check for valid years
   years <- sort(years)  #Put years in order
 
   if (progress) {message("Processing NSFG data files -")}
@@ -71,15 +71,49 @@ nsfg <- function(years, progress = TRUE) {
     if (progress) {utils::setTxtProgressBar(pb,year.num)}
 
     #Import raw data
+    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")}
+    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemRespData.dat")}
+    if (year==2011) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat")}
     if (year==2013) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat")}
     if (year==2015) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat")}
     if (year==2017) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_FemRespData.dat")}
 
     #Initialize dataframe with id variable
-    if (year==2013 | year==2015 | year==2017) {dat <- data.frame(id = as.character(substring(raw,1,5)))}
+    if (year==2002) {dat <- data.frame(id = as.character(substring(raw,1,12)))}
+    if (year==2006 | year==2011 | year==2013 | year==2015 | year==2017) {dat <- data.frame(id = as.character(substring(raw,1,5)))}
 
     #### Family Status ####
     #Source variables
+    if (year==2002) {
+      dat$hasbabes <- as.numeric(substring(raw,79,79)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$everadpt <- as.numeric(substring(raw,306,306)) #Adoption experience: 1 = Yes, 3 = Trying, 5 = No
+      dat$seekadpt <- as.numeric(substring(raw,307,307))  #Are you seeking to adopt: 1 = Yes, 5 = No, 9 = Don't know
+      dat$rwant <- as.numeric(substring(raw,3512,3512)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$rstrstat <- as.numeric(substring(raw,1463,1463)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
+      dat$pstrstat <- as.numeric(substring(raw,1464,1464)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3522,3522)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3515,3515)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+    }
+    if (year==2006) {
+      dat$hasbabes <- as.numeric(substring(raw,118,118)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$everadpt <- as.numeric(substring(raw,696,696)) #Adoption experience: 1 = Yes, 3 = Trying, 5 = No
+      dat$seekadpt <- as.numeric(substring(raw,697,697))  #Are you seeking to adopt: 1 = Yes, 5 = No, 9 = Don't know
+      dat$rwant <- as.numeric(substring(raw,4539,4539)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$rstrstat <- as.numeric(substring(raw,1902,1902)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
+      dat$pstrstat <- as.numeric(substring(raw,1903,1903)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,4550,4550)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,4542,4542)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+    }
+    if (year==2011) {
+      dat$hasbabes <- as.numeric(substring(raw,123,123)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$everadpt <- as.numeric(substring(raw,623,623)) #Adoption experience: 1 = Yes, 3 = Trying, 5 = No
+      dat$seekadpt <- as.numeric(substring(raw,624,624))  #Are you seeking to adopt: 1 = Yes, 5 = No, 9 = Don't know
+      dat$rwant <- as.numeric(substring(raw,3282,3282)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$rstrstat <- as.numeric(substring(raw,1754,1754)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
+      dat$pstrstat <- as.numeric(substring(raw,1755,1755)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3293,3293)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3285,3285)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+    }
     if (year==2013) {
       dat$hasbabes <- as.numeric(substring(raw,118,118)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$everadpt <- as.numeric(substring(raw,551,551)) #Adoption experience: 1 = Yes, 3 = Trying, 5 = No
@@ -169,7 +203,11 @@ nsfg <- function(years, progress = TRUE) {
     dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
     #Race
-    if (year==2013) {
+    if (year==2002) {
+      dat$race <- as.numeric(substring(raw,17,17))
+      dat$race <- factor(dat$race, levels = c(5,4,3,2,1,99,98), labels = c("White", "Black", "Hawaiian", "Asian", "American Indian", "Other", "Multi-racial"))
+    }
+    if (year==2006 | year==2011 | year==2013) {
       dat$race <- as.numeric(substring(raw,10,10))
       dat$race[which(dat$race==6)] <- NA  #Hispanic, unknown race
       dat$race[which(dat$race==7)] <- NA  #Not asked
@@ -187,41 +225,45 @@ nsfg <- function(years, progress = TRUE) {
     }
 
     #Hispanic
-    if (year==2013 | year==2015 | year==2017) {
-      dat$hispanic <- as.numeric(substring(raw,9,9))
-      dat$hispanic[which(dat$hispanic==7)] <- NA  #Not asked
-      dat$hispanic[which(dat$hispanic==8)] <- NA  #Refused
-      dat$hispanic[which(dat$hispanic==9)] <- NA  #Don't know
-      dat$hispanic[which(dat$hispanic==5)] <- 0  #Not hispanic
-      dat$hispanic[which(dat$hispanic==1)] <- 1  #Hispanic
-    }
+    if (year==2002) {dat$hispanic <- as.numeric(substring(raw,16,16))}
+    if (year==2006 | year==2011 | year==2013 | year==2015 | year==2017) {dat$hispanic <- as.numeric(substring(raw,9,9))}
+    dat$hispanic[which(dat$hispanic==7)] <- NA  #Not asked
+    dat$hispanic[which(dat$hispanic==8)] <- NA  #Refused
+    dat$hispanic[which(dat$hispanic==9)] <- NA  #Don't know
+    dat$hispanic[which(dat$hispanic==5)] <- 0  #Not hispanic
+    dat$hispanic[which(dat$hispanic==1)] <- 1  #Hispanic
 
     #Age in years
-    if (year==2013 | year==2015 | year==2017) {
-      dat$age <- as.numeric(substring(raw,13,14))
-      dat$age[which(dat$age==98)] <- NA  #Refused
-      dat$age[which(dat$age==99)] <- NA  #Don't know
-    }
+    if (year==2002) {dat$age <- as.numeric(substring(raw,20,21))}
+    if (year==2006 | year==2011 | year==2013 | year==2015 | year==2017) {dat$age <- as.numeric(substring(raw,13,14))}
+    dat$age[which(dat$age==98)] <- NA  #Refused
+    dat$age[which(dat$age==99)] <- NA  #Don't know
 
     #Education in years
+    if (year==2006) {dat$higrade <- as.numeric(substring(raw,39,40))}
+    if (year==2002 | year==2011) {dat$higrade <- as.numeric(substring(raw,43,44))}
     if (year==2013) {dat$higrade <- as.numeric(substring(raw,40,41))}
     if (year==2015 | year==2017) {dat$higrade <- as.numeric(substring(raw,36,37))}
     dat$higrade[which(dat$higrade==98)] <- NA  #Refused
     dat$higrade[which(dat$higrade==99)] <- NA  #Don't know
 
-    if (year==2013) {dat$dipged <- as.numeric(substring(raw,43,43))}
+    if (year==2002) {dat$dipged <- as.numeric(substring(raw,47,47))}
+    if (year==2011) {dat$dipged <- as.numeric(substring(raw,46,46))}
+    if (year==2006 | year==2013) {dat$dipged <- as.numeric(substring(raw,43,43))}
     if (year==2015 | year==2017) {dat$dipged <- as.numeric(substring(raw,39,39))}
     dat$dipged[which(dat$dipged==8)] <- NA  #Refused
     dat$dipged[which(dat$dipged==9)] <- NA  #Don't know
 
-    if (year==2013) {dat$havedeg <- as.numeric(substring(raw,68,68))}
-    if (year==2015 | year==2017) {dat$havedeg <- as.numeric(substring(raw,52,52))}
+    if (year==2011) {dat$havedeg <- as.numeric(substring(raw,71,71))}
+    if (year==2006 | year==2013) {dat$havedeg <- as.numeric(substring(raw,68,68))}
+    if (year==2002 | year==2015 | year==2017) {dat$havedeg <- as.numeric(substring(raw,52,52))}
     dat$havedeg[which(dat$havedeg==7)] <- NA  #Not asked
     dat$havedeg[which(dat$havedeg==8)] <- NA  #Refused
     dat$havedeg[which(dat$havedeg==9)] <- NA  #Don't know
 
-    if (year==2013) {dat$degrees <- as.numeric(substring(raw,69,69))}
-    if (year==2015 | year==2017) {dat$degrees <- as.numeric(substring(raw,53,53))}
+    if (year==2011) {dat$degrees <- as.numeric(substring(raw,72,72))}
+    if (year==2006 | year==2013) {dat$degrees <- as.numeric(substring(raw,69,69))}
+    if (year==2002 | year==2015 | year==2017) {dat$degrees <- as.numeric(substring(raw,53,53))}
     dat$degrees[which(dat$degrees==8)] <- NA  #Refused
     dat$degrees[which(dat$degrees==9)] <- NA  #Don't know
 
@@ -238,8 +280,8 @@ nsfg <- function(years, progress = TRUE) {
                             ordered = TRUE)
 
     #Partnership status
-    if (year==2013) {dat$marstat <- as.numeric(substring(raw,21,21))}
-    if (year==2015 | year==2017) {dat$marstat <- as.numeric(substring(raw,28,28))}
+    if (year==2006 | year==2011 | year==2013) {dat$marstat <- as.numeric(substring(raw,21,21))}
+    if (year==2002 | year==2015 | year==2017) {dat$marstat <- as.numeric(substring(raw,28,28))}
     dat$partnered <- NA
     dat$partnered[which(dat$marstat==6)] <- 1  #Single, never married
     dat$partnered[which(dat$marstat==1 | dat$marstat==2)] <- 2  #Currently partnered
@@ -247,6 +289,9 @@ nsfg <- function(years, progress = TRUE) {
     dat$partnered <- factor(dat$partnered, levels = c(1,2,3), labels = c("Never", "Currently", "Formerly"))
 
     #Residence
+    if (year==2002) {dat$metro <- as.numeric(substring(raw,4821,4821))}
+    if (year==2006) {dat$metro <- as.numeric(substring(raw,6116,6116))}
+    if (year==2011) {dat$metro <- as.numeric(substring(raw,4890,4890))}
     if (year==2013) {dat$metro <- as.numeric(substring(raw,5016,5016))}
     if (year==2015) {dat$metro <- as.numeric(substring(raw,4454,4454))}
     if (year==2017) {dat$metro <- as.numeric(substring(raw,3772,3772))}
@@ -257,6 +302,9 @@ nsfg <- function(years, progress = TRUE) {
     dat$residence <- factor(dat$residence, levels = c(1,2,3,4), labels = c("Rural", "Town", "Suburb", "Urban"), ordered = TRUE)
 
     #Employed
+    if (year==2002) {dat$rwrkst <- as.numeric(substring(raw,3674,3674))}
+    if (year==2006) {dat$rwrkst <- as.numeric(substring(raw,4758,4758))}
+    if (year==2011) {dat$rwrkst <- as.numeric(substring(raw,3511,3511))}
     if (year==2013) {dat$rwrkst <- as.numeric(substring(raw,3461,3461))}
     if (year==2015) {dat$rwrkst <- as.numeric(substring(raw,3008,3008))}
     if (year==2017) {dat$rwrkst <- as.numeric(substring(raw,2663,2663))}
@@ -265,6 +313,8 @@ nsfg <- function(years, progress = TRUE) {
     dat$employed[which(dat$rwrkst==5)] <- 0  #Not employed
 
     #In school
+    if (year==2006) {dat$goschol <- as.numeric(substring(raw,37,37))}
+    if (year==2002 | year==2011) {dat$goschol <- as.numeric(substring(raw,41,41))}
     if (year==2013) {dat$goschol <- as.numeric(substring(raw,38,38))}
     if (year==2015 | year==2017) {dat$goschol <- as.numeric(substring(raw,34,34))}
     dat$inschool <- NA
@@ -273,6 +323,9 @@ nsfg <- function(years, progress = TRUE) {
 
     #### Attitude ####
     #Religion
+    if (year==2002) {dat$relcurr <- as.numeric(substring(raw,3653,3653))}
+    if (year==2006) {dat$relcurr <- as.numeric(substring(raw,4728,4728))}
+    if (year==2011) {dat$relcurr <- as.numeric(substring(raw,3493,3494))}
     if (year==2013) {dat$relcurr <- as.numeric(substring(raw,3444,3445))}
     if (year==2015) {dat$relcurr <- as.numeric(substring(raw,2990,2991))}
     if (year==2017) {dat$relcurr <- as.numeric(substring(raw,2644,2645))}
@@ -294,21 +347,41 @@ nsfg <- function(years, progress = TRUE) {
     dat$country <- "United States"
 
     #Sampling weight
+    if (year==2002) {dat$weight <- as.numeric(substring(raw,4873,4891))}
+    if (year==2006) {dat$weight <- as.numeric(substring(raw,6150,6168))}
+    if (year==2011) {dat$weight <- as.numeric(substring(raw,4906,4922))}
     if (year==2013) {dat$weight <- as.numeric(substring(raw,5032,5048))}
     if (year==2015) {dat$weight <- as.numeric(substring(raw,4470,4486))}
     if (year==2017) {dat$weight <- as.numeric(substring(raw,3787,3803))}
 
     #Wave
+    if (year==2002) {dat$wave <- "2002"}
+    if (year==2006) {dat$wave <- "2006-2010"}
+    if (year==2011) {dat$wave <- "2011-2013"}
     if (year==2013) {dat$wave <- "2013-2015"}
     if (year==2015) {dat$wave <- "2015-2017"}
     if (year==2017) {dat$wave <- "2017-2019"}
 
     #Year of data collection
+    if (year==2006) {dat$year <- 2002}
+    if (year==2006) {
+      dat$quarter <- as.numeric(substring(raw,6243,6244))
+      dat$year <- NA
+      dat$year[which(dat$quarter==1 | dat$quarter==2)] <- 2006
+      dat$year[which(dat$quarter==3 | dat$quarter==4 | dat$quarter==5 | dat$quarter==6)] <- 2007
+      dat$year[which(dat$quarter==7 | dat$quarter==8 | dat$quarter==9 | dat$quarter==10)] <- 2008
+      dat$year[which(dat$quarter==11 | dat$quarter==12 | dat$quarter==13 | dat$quarter==14)] <- 2009
+      dat$year[which(dat$quarter==15 | dat$quarter==16)] <- 2010
+      }
+    if (year==2011) {dat$year <- as.numeric(substring(raw,4948,4951))}
     if (year==2013) {dat$year <- as.numeric(substring(raw,5075,5078))}
     if (year==2015) {dat$year <- as.numeric(substring(raw,4513,4516))}
     if (year==2017) {dat$year <- as.numeric(substring(raw,3830,3833))}
 
     #Month of data collection
+    if (year==2002) {dat$month <- as.numeric(substring(raw,4894,4897))}
+    if (year==2006) {dat$month <- as.numeric(substring(raw,6226,6229))}
+    if (year==2011) {dat$month <- as.numeric(substring(raw,4926,4929))}
     if (year==2013) {dat$month <- as.numeric(substring(raw,5052,5055))}
     if (year==2015) {dat$month <- as.numeric(substring(raw,4490,4493))}
     if (year==2017) {dat$month <- as.numeric(substring(raw,3807,3810))}
@@ -318,6 +391,9 @@ nsfg <- function(years, progress = TRUE) {
                         ordered = TRUE)
 
     #Source file
+    if (year==2002) {dat$file <- "2002FemResp.dat"}
+    if (year==2006) {dat$file <- "2006_2010_FemRespData.dat"}
+    if (year==2011) {dat$file <- "2011_2013_FemRespData.dat"}
     if (year==2013) {dat$file <- "2013_2015_FemRespData.dat"}
     if (year==2015) {dat$file <- "2015_2017_FemRespData.dat"}
     if (year==2017) {dat$file <- "2017_2019_FemRespData.dat"}
