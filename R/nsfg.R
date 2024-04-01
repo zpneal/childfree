@@ -1,6 +1,6 @@
 #' Read and recode National Survey of Family Growth (NSFG) data
 #'
-#' @param years vector: a numeric vector containing the starting year of NSFG waves include (2002, 2006, 2011, 2013, 2015, 2017)
+#' @param years vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -207,13 +207,9 @@ nsfg <- function(years, progress = TRUE) {
       dat$race <- as.numeric(substring(raw,17,17))
       dat$race <- factor(dat$race, levels = c(5,4,3,2,1,99,98), labels = c("White", "Black", "Hawaiian", "Asian", "American Indian", "Other", "Multi-racial"))
     }
-    if (year==2006 | year==2011 | year==2013) {
+    if (year==2006 | year==2011 | year==2013) {  #Coding assumes that 1/2/3 mean the same here as in 2002, despite not being labeled in the provided Stata .do code
       dat$race <- as.numeric(substring(raw,10,10))
-      dat$race[which(dat$race==6)] <- NA  #Hispanic, unknown race
-      dat$race[which(dat$race==7)] <- NA  #Not asked
-      dat$race[which(dat$race==8)] <- NA  #Refused
-      dat$race[which(dat$race==9)] <- NA  #Don't know
-      dat$race <- factor(dat$race, levels = c(5,4,99,98,97,96,99), labels = c("White", "Black", "Hawaiian", "Asian", "American Indian", "Other", "Multi-racial"))
+      dat$race <- factor(dat$race, levels = c(5,4,3,2,1,96,99), labels = c("White", "Black", "Hawaiian", "Asian", "American Indian", "Other", "Multi-racial"))
     }
     if (year==2015 | year==2017) {
       dat$race <- as.numeric(substring(raw,10,10))
@@ -297,7 +293,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2017) {dat$metro <- as.numeric(substring(raw,3772,3772))}
     dat$residence <- NA
     dat$residence[which(dat$metro==1)] <- 4  #Principal city of MSA = Urban
-    dat$residence[which(dat$metro==2)] <- 4  #Other part of MSA = Urban
+    dat$residence[which(dat$metro==2)] <- 3  #Other part of MSA = Urban
     dat$residence[which(dat$metro==3)] <- 1  #Not in MSA = Rural
     dat$residence <- factor(dat$residence, levels = c(1,2,3,4), labels = c("Rural", "Town", "Suburb", "Urban"), ordered = TRUE)
 
@@ -318,8 +314,8 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2013) {dat$goschol <- as.numeric(substring(raw,38,38))}
     if (year==2015 | year==2017) {dat$goschol <- as.numeric(substring(raw,34,34))}
     dat$inschool <- NA
-    dat$inschool[which(dat$insch==1)] <- 1  #In school
-    dat$inschool[which(dat$insch==5)] <- 0  #Not in school
+    dat$inschool[which(dat$goschol==1)] <- 1  #In school
+    dat$inschool[which(dat$goschol==5)] <- 0  #Not in school
 
     #### Attitude ####
     #Religion
@@ -331,13 +327,13 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2017) {dat$relcurr <- as.numeric(substring(raw,2644,2645))}
     dat$religion <- NA
     dat$religion[which(dat$relcurr==1)] <- 1  #None
-    dat$religion[which(dat$rel==2)] <- 2  #Catholic
-    dat$religion[which(dat$rel==3)] <- 5  #Baptist/Southern Baptist ==> Protestant
-    dat$religion[which(dat$rel==4)] <- 5  #Methodist, Lutheran, Presbyterian, Episcopal ==> Protestant
-    dat$religion[which(dat$rel==5)] <- 5  #Fundamentalist Protestant ==> Protestant
-    dat$religion[which(dat$rel==6)] <- 5  #Other Protestant denomination ==> Protestant
-    dat$religion[which(dat$rel==7)] <- 5  #Protestant - No specific denomination ==> Protestant
-    dat$religion[which(dat$rel==8)] <- 6  #Other
+    dat$religion[which(dat$relcurr==2)] <- 2  #Catholic
+    dat$religion[which(dat$relcurr==3)] <- 5  #Baptist/Southern Baptist ==> Protestant
+    dat$religion[which(dat$relcurr==4)] <- 5  #Methodist, Lutheran, Presbyterian, Episcopal ==> Protestant
+    dat$religion[which(dat$relcurr==5)] <- 5  #Fundamentalist Protestant ==> Protestant
+    dat$religion[which(dat$relcurr==6)] <- 5  #Other Protestant denomination ==> Protestant
+    dat$religion[which(dat$relcurr==7)] <- 5  #Protestant - No specific denomination ==> Protestant
+    dat$religion[which(dat$relcurr==8)] <- 6  #Other
     dat$religion <- factor(dat$religion, levels = c(1:6), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish", "Protestant / Christian", "Other"))
 
     #### Design ####
@@ -363,29 +359,16 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2017) {dat$wave <- "2017-2019"}
 
     #Year of data collection
-    if (year==2002) {dat$year <- 2002}
-    if (year==2006) {
-      dat$quarter <- as.numeric(substring(raw,6243,6244))
-      dat$year <- NA
-      dat$year[which(dat$quarter==1 | dat$quarter==2)] <- 2006
-      dat$year[which(dat$quarter==3 | dat$quarter==4 | dat$quarter==5 | dat$quarter==6)] <- 2007
-      dat$year[which(dat$quarter==7 | dat$quarter==8 | dat$quarter==9 | dat$quarter==10)] <- 2008
-      dat$year[which(dat$quarter==11 | dat$quarter==12 | dat$quarter==13 | dat$quarter==14)] <- 2009
-      dat$year[which(dat$quarter==15 | dat$quarter==16)] <- 2010
-      }
-    if (year==2011) {dat$year <- as.numeric(substring(raw,4948,4951))}
-    if (year==2013) {dat$year <- as.numeric(substring(raw,5075,5078))}
-    if (year==2015) {dat$year <- as.numeric(substring(raw,4513,4516))}
-    if (year==2017) {dat$year <- as.numeric(substring(raw,3830,3833))}
+    if (year==2002) {dat$cmintvw <- as.numeric(substring(raw,4894,4897))}
+    if (year==2006) {dat$cmintvw <- as.numeric(substring(raw,6226,6229))}
+    if (year==2011) {dat$cmintvw <- as.numeric(substring(raw,4926,4929))}
+    if (year==2013) {dat$cmintvw <- as.numeric(substring(raw,5052,5055))}
+    if (year==2015) {dat$cmintvw <- as.numeric(substring(raw,4490,4493))}
+    if (year==2017) {dat$cmintvw <- as.numeric(substring(raw,3807,3810))}
+    dat$year <- 1900+floor((dat$cmintvw-1)/12)
 
     #Month of data collection
-    if (year==2002) {dat$month <- as.numeric(substring(raw,4894,4897))}
-    if (year==2006) {dat$month <- as.numeric(substring(raw,6226,6229))}
-    if (year==2011) {dat$month <- as.numeric(substring(raw,4926,4929))}
-    if (year==2013) {dat$month <- as.numeric(substring(raw,5052,5055))}
-    if (year==2015) {dat$month <- as.numeric(substring(raw,4490,4493))}
-    if (year==2017) {dat$month <- as.numeric(substring(raw,3807,3810))}
-    dat$month <- dat$month - (12 * (dat$year - 1900))
+    dat$month <- dat$cmintvw - (12 * (dat$year - 1900))
     dat$month <- factor(dat$month, levels = c(1:12), labels = c("January", "February", "March", "April", "May", "June",
                                                                 "July", "August", "September", "October", "November", "December"),
                         ordered = TRUE)
