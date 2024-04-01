@@ -12,7 +12,8 @@
 #'    statuses, then returns a single data frame.
 #'
 #' **Known issues**
-#'   * ...
+#'   * Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
+#'     When a respondent chose this option, their actual race is unknown.
 #'
 #' @return A data frame containing:
 #' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
@@ -319,8 +320,8 @@ nsfg <- function(years, progress = TRUE) {
 
     #### Attitude ####
     #Religion
-    if (year==2002) {dat$relcurr <- as.numeric(substring(raw,3653,3653))}
-    if (year==2006) {dat$relcurr <- as.numeric(substring(raw,4728,4728))}
+    if (year==2002) {dat$relcurr <- as.numeric(substring(raw,3653,3654))}
+    if (year==2006) {dat$relcurr <- as.numeric(substring(raw,4728,4729))}
     if (year==2011) {dat$relcurr <- as.numeric(substring(raw,3493,3494))}
     if (year==2013) {dat$relcurr <- as.numeric(substring(raw,3444,3445))}
     if (year==2015) {dat$relcurr <- as.numeric(substring(raw,2990,2991))}
