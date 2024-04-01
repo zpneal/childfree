@@ -7,7 +7,7 @@
 nsfg(years, progress = TRUE)
 }
 \arguments{
-\item{years}{vector: a numeric vector containing the starting year of NSFG waves include (2002, 2006, 2011, 2013, 2015, 2017)}
+\item{years}{vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)}
 
 \item{progress}{boolean: display a progress bar}
 }
