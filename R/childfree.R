@@ -1,4 +1,4 @@
-#' childfree: Aggregate and harmonize demographic data to study childfree individuals
+#' childfree: Access and harmonize demographic data to study childfree individuals
 #'
 #' @description Reads demographic data from a variety of public data sources,
 #'    extracting and harmonizing variables useful for the study of childfree
