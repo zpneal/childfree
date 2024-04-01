@@ -72,7 +72,8 @@ statuses, then returns a single data frame.
 
 \strong{Known issues}
 \itemize{
-\item ...
+\item Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
+When a respondent chose this option, their actual race is unknown.
 }
 }
 \examples{
