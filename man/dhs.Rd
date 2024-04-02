@@ -75,6 +75,11 @@ without an application. The \code{dhs()} function reads one or more of these fil
 recodes selected variables useful for studying childfree adults and other family statuses, then returns
 a single data frame.
 
+Although access to DHS data requires an application, the DHS program provides \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model datasets}
+for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains
+fictitious data, but has the same structure as real DHS data files. The example can be run without
+prior application for data access.
+
 \strong{Known issues}
 \itemize{
 \item The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV)
@@ -86,7 +91,7 @@ individual recode data files, and not these state-specific data files.
 }
 }
 \examples{
-\dontrun{data <- dhs(files = c("AFIR71FL.SAV", "ALIR51FL.SAV"), extra.vars = c("v201")}
+\dontrun{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
 }
 \references{
 {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. \emph{The Family Journal, 32}, 121-130. \href{https://doi.org/10.1177/10664807231198869}{https://doi.org/10.1177/10664807231198869}}
