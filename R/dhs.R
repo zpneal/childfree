@@ -27,41 +27,7 @@
 #'     files named XXIR42FL.SAV, where the "XX" is a two-letter state code. This function only accepts whole-country
 #'     individual recode data files, and not these state-specific data files.
 #'
-#' @return A data frame containing:
-#' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-#'   * `cf_want` (binary) - Is the respondent childfree according to a "want" variable
-#'   * `cf_ideal` (binary) - Is the respondent childfree according to an "ideal" variable
-#'   * `famstat` (factor) - Respondent's family status based on all available information:
-#'      * A "Parent - Unclassified" has children
-#'      * A "Parent - Fulfilled" has exactly the number of children that is ideal
-#'      * A "Parent - Unfulfilled" has fewer children than is ideal
-#'      * A "Parent - Reluctant" has more children than is ideal
-#'      * A "Parent - Ambivalent" has children but does not know how many is ideal
-#'      * A "Not yet parent" does not have children but wants children
-#'      * A "Childless - Biological" respondent does not have children and is infecund but ideally would have liked to have children
-#'      * An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
-#'      * An "Undecided" respondent does not have children and is undecided whether they want children, or provided
-#'         inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
-#'      * A "Childfree" respondent does not have children and does not want children or ideally would like zero children. If the respondent
-#'         provided responses to *both* the want and ideal questions, these responses are consistent (i.e., want = no *and* ideal = 0).
-#' * *Demographic Variables*
-#'   * `sex` (factor) - Respondent's sex
-#'   * `age` (numeric) - Respondent's age in years
-#'   * `education` (numeric) - Respondent's years of education
-#'   * `partnered` (factor) - Respondent's partnership status
-#'   * `residence` (factor) - Urbanicity of respondent's place of residence
-#'   * `employed` (binary) - Whether respondent is currently employed
-#' * *Attitude and Behavior Variables*
-#'   * `religion` (factor) - Respondent's religious affiliation
-#' * *Design Variables*
-#'   * `id` (string) - Unique respondent ID
-#'   * `country` (string) - Respondent's country of residence
-#'   * `weight` (numeric) - Sampling weight (*Exercise caution using weights when data are pooled from multiple countries or waves*)
-#'   * `file` (string) - Source data file
-#'   * `survey` (string) - Source survey
-#'   * `wave` (numeric) - Wave of data collection
-#'   * `year` (numeric) - Year of data collection
-#'   * `month` (numeric) - Month of data collection
+#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 #'
 #' @export
 #'

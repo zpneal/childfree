@@ -15,40 +15,7 @@
 #'   * Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 #'     When a respondent chose this option, their actual race is unknown.
 #'
-#' @return A data frame containing:
-#' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-#'   * `cf_want` (binary) - Is the respondent childfree according to a "want" variable
-#'   * `famstat` (factor) - Respondent's family status based on all available information:
-#'      * A "Parent - Unclassified" has children
-#'      * A "Parent - Unfulfilled" has children, but wants more
-#'      * A "Parent - Ambivalent" has children, and does not know if they want more
-#'      * A "Not yet parent" does not have children but wants children
-#'      * A "Childless - Social" respondent does not have children, is not planning to have children, but wished they had children
-#'      * A "Childless - Biological" respondent does not have children, is not planning to have children due to infertility, but wished they had children
-#'      * An "Ambivalent non-parent" does not have children, are not planning to have children, and do not know if they wished they had children
-#'      * An "Undecided" respondent does not have children and is undecided whether they want children
-#'      * A "Childfree" respondent does not have children and does not want children
-#' * *Demographic Variables*
-#'   * `sex` (factor) - Respondent's sex
-#'   * `race` (factor) - Respondent's race
-#'   * `hispanic` (binary) - Respondent's hispanicity
-#'   * `age` (numeric) - Respondent's age in years
-#'   * `education` (factor) - Respondent's education
-#'   * `partnered` (factor) - Respondent's partnership status
-#'   * `residence` (factor) - Urbanicity of respondent's place of residence
-#'   * `employed` (binary) - Whether respondent is currently employed
-#'   * `inschool` (binary) - Whether respondent is currently in school
-#' * *Attitude and Behavior Variables*
-#'   * `religion` (factor) - Respondent's religious affiliation
-#' * *Design Variables*
-#'   * `id` (string) - Unique respondent ID
-#'   * `country` (string) - Respondent's country of residence
-#'   * `weight` (numeric) - Sampling weight
-#'   * `file` (string) - Source data file
-#'   * `survey` (string) - Source survey
-#'   * `wave` (numeric) - Wave of data collection
-#'   * `year` (numeric) - Year of data collection
-#'   * `month` (numeric) - Month of data collection
+#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 #'
 #' @export
 #'

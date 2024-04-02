@@ -24,38 +24,7 @@
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
 #'   * Wave 82 originally included a 500 person oversample of parents. These respondents are omitted if `wave == 82`.
 #'
-#' @return A data frame containing:
-#' * *Family Status Variables* (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-#'   * `cf_want` (binary) - Is the respondent childfree according to a "want" variable
-#'   * `famstat` (factor) - Respondent's family status based on all available information:
-#'      * A "Parent - Unclassified" has children
-#'      * A "Not yet parent" does not have children but wants children
-#'      * A "Childless - Unclassified" respondent does not have children, is not planning to have children, but wished they had children
-#'      * An "Ambivalent non-parent" does not have children, are not planning to have children, and do not know if they wished they had children
-#'      * An "Undecided" respondent does not have children and is undecided whether they want children
-#'      * A "Childfree" respondent does not have children and does not want children
-#' * *Demographic Variables*
-#'   * `sex` (factor) - Respondent's sex
-#'   * `race` (factor) - Respondent's race
-#'   * `hispanic` (binary) - Respondent's hispanicity
-#'   * `age` (numeric) - Respondent's age in years
-#'   * `education` (factor) - Respondent's education
-#'   * `partnered` (factor) - Respondent's partnership status
-#'   * `residence` (factor) - Urbanicity of respondent's place of residence
-#'   * `employed` (binary) - Whether respondent is currently employed
-#'   * `inschool` (binary) - Whether respondent is currently in school
-#' * *Attitude and Behavior Variables*
-#'   * `ideology` (factor) - Respondent's political ideology
-#'   * `religion` (factor) - Respondent's religious affiliation
-#' * *Design Variables*
-#'   * `id` (string) - Unique respondent ID
-#'   * `country` (string) - Respondent's country of residence
-#'   * `weight` (numeric) - Sampling weight
-#'   * `file` (string) - Source data file
-#'   * `survey` (string) - Source survey
-#'   * `wave` (numeric) - Wave of data collection
-#'   * `year` (numeric) - Year of data collection
-#'   * `month` (numeric) - Month of data collection
+#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 #'
 #' @export
 #'
@@ -178,7 +147,7 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
-    
+
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(dat$famstat=="Childfree")] <- 1
