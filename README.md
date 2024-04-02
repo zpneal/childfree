@@ -1,3 +1,13 @@
+# childfree <img src='man/figures/logo.png' align="right" height="139" />
+
+<!-- badges: start -->
+
+[![](https://www.r-pkg.org/badges/version/childfree?color=orange)](https://cran.r-project.org/package=childfree)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/childfree?color=blue)](https://cran.r-project.org/package=childfree)
+[![](http://cranlogs.r-pkg.org/badges/last-month/childfree?color=green)](https://cran.r-project.org/package=childfree)
+[![status](https://tinyverse.netlify.com/badge/childfree)](https://CRAN.R-project.org/package=childfree)
+<!-- badges: end -->
+
 ## Welcome
 Welcome to the `childfree` package\! The childfree package reads demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals.
 
