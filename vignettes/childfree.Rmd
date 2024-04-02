@@ -8,7 +8,7 @@ output:
 bibliography: childfree.bib
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{Introduction to Childfree}
+  %\VignetteIndexEntry{childfree}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
