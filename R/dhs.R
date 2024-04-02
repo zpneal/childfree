@@ -14,6 +14,11 @@
 #'    recodes selected variables useful for studying childfree adults and other family statuses, then returns
 #'    a single data frame.
 #'
+#' Although access to DHS data requires an application, the DHS program provides \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model datasets}
+#'    for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains
+#'    fictitious data, but has the same structure as real DHS data files. The example can be run without
+#'    prior application for data access.
+#'
 #' **Known issues**
 #'   * The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV)
 #'     contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT and TRIR41FL.SAS7BDAT) instead.
@@ -63,7 +68,7 @@
 #' @references {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. \href{https://doi.org/10.1177/10664807231198869}{https://doi.org/10.1177/10664807231198869}}
 #'
 #' @examples
-#' \dontrun{data <- dhs(files = c("AFIR71FL.SAV", "ALIR51FL.SAV"), extra.vars = c("v201")}
+#' \dontrun{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
 dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
   if (!is.null(extra.vars)) {extra.vars <- tolower(extra.vars)}  #Make requested extra variables lowercase
@@ -78,7 +83,12 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     if (progress) {utils::setTxtProgressBar(pb,file)}
 
     #Import raw data
-    dat <- rio::import(files[file])
+    if (files=="ZZIR62FL.SAV") {  #Model file from https://dhsprogram.com/data/Download-Model-Datasets.cfm
+      temp <- tempfile()
+      utils::download.file(url = "https://osf.io/download/hk23e", destfile = temp)
+      dat <- rio::import(temp, format = "sav")
+    }
+    if (files!="ZZIR62FL.SAV") {dat <- rio::import(files[file])}
     colnames(dat) <- tolower(colnames(dat))  #Make all variables lowercase
 
     #### Family Status ####
@@ -152,7 +162,7 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
-    
+
     #### Demographics ####
     #Sex
     dat$sex <- 1
@@ -191,21 +201,21 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
       x$label <- rownames(x)
       colnames(x) <- c("o", "l")
       x$n <- NA
-  
+
       for (i in 1:nrow(x)) {  #For each old label, identify new value
         if (x$l[i] %in% c("Agnostic", "Atheist", "DK", "Don t know", "Don't know", "No religion", "No Religion", "No religion (Sem religiao)",
                           "No religion/atheists", "No religion/none", "None", "NONE", "Not religion", "Not Religious", "Not religious",
                           "Sans", "Sem religio")) {x$n[i] <- 1}  #None
-  
+
         if (x$l[i] %in% c("Catholic", "Catholic (Cat\U00A2lica)", "Catholic/greek cath.", "Catholicism", "Catholique", "Catolica romana",
                           "Christian Catholic", "Christian Orthodox", "Orthodox", "Roman Catholic", "Roman catholic",
                           "Roman Catholic church")) {x$n[i] <- 2}  #Catholic/Orthodox
-  
+
         if (x$l[i] %in% c("Bektashi", "Islam", "Islamic", "Islamic (Mu\U2021ulman)", "Moslem", "Mulsim", "Muslem", "Muslim",
                           "muslim", "Muslim/Islam", "Muslin", "Muslman", "Muslum", "Musulman", "Musulmane")) {x$n[i] <- 3}  #Muslim
-  
+
         if (x$l[i] %in% c("Jew or Isreaeli", "Jewish", "Judaica ou israelita", "Judaism", "Zion", "Zionist")) {x$n[i] <- 4}  #Jewish
-  
+
         if (x$l[i] %in% c("\"Celestes\"", "7th Day adventist", "Adventist", "Adventist/Jehova", "Adventiste", "Adventiste/Jehova",
                           "African instituted churches", "Aglipay", "Anglican", "Anglican Church", "Apostolic sect", "Apostolic Sect",
                           "Arm,e du Salut", "Assembly of god", "Assembly of God", "Aventist", "Baptist", "Born Again Christian (other recode)",
@@ -228,7 +238,7 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
                           "Salvation army", "SDA", "Seventh Day Advent", "Seventh day advent.", "Seventh Day Advent./Baptist", "Seventh Day Advent/ Baptist",
                           "Seventh Day Adventist", "Seventh Day Adventist (other recode)", "Seventh Day Adventist / Baptist", "Seventh Day Adventist/Baptist",
                           "Seventh-day adventist", "Trad. prosestant", "Tradit. protestant", "United Church", "Universal")) {x$n[i] <- 5}  #Protestant
-  
+
         if (x$l[i] %in% c("Aucune", "Autre", "Autres", "Baha'i", "Bahai", "Confucian", "Espirita Kardecista", "Espiritista kardecis",
                           "Jain", "Mammon", "Mana", "New Religions (Eglises Rebeillees)", "Non-Christian", "Only god", "Oriental religions",
                           "Other", "other", "Other (Outra)", "Other non-Christian", "Other religion", "Other religions", "Others", "Outras",
@@ -240,10 +250,10 @@ dhs <- function(files, extra.vars = NULL, progress = TRUE) {
                           "Traditional / animist", "Traditional Mayan", "Traditional religion", "Traditional Religion", "Traditional/animist",
                           "Traditional/Animist", "Traditional/spiritualist", "Traditionalist", "Traditionelle", "Traditionists", "Traditionnal",
                           "Traditionnal/animist", "Umbanda /Candomble", "Vaudou", "Vaudousant", "Vodoun")) {x$n[i] <- 6}  #Other
-  
+
         if(x$l[i] %in% c("Buddhism", "Buddhist", "Buddhist / Neo-Buddhist", "Buddhist/Neo Buddhist", "Buddhist/Neo-Buddhist",
                          "Budhist", "Hoa Hao")) {x$n[i] <- 7}  #Buddhist
-  
+
         if (x$l[i] %in% c("Hindu", "Hinduism")) {x$n[i] <- 8}  #Hindu
 
         dat$religion[which(dat$v130==x$o[i])] <- x$n[i]  #Insert new value into recoded religion variable
