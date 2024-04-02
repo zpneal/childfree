@@ -14,53 +14,7 @@ dhs(files, extra.vars = NULL, progress = TRUE)
 \item{progress}{boolean: display a progress bar}
 }
 \value{
-A data frame containing:
-\itemize{
-\item \emph{Family Status Variables} (based on \href{https://doi.org/10.1177/10664807231198869}{Neal and Neal's (2024)} framework)
-\itemize{
-\item \code{cf_want} (binary) - Is the respondent childfree according to a "want" variable
-\item \code{cf_ideal} (binary) - Is the respondent childfree according to an "ideal" variable
-\item \code{famstat} (factor) - Respondent's family status based on all available information:
-\itemize{
-\item A "Parent - Unclassified" has children
-\item A "Parent - Fulfilled" has exactly the number of children that is ideal
-\item A "Parent - Unfulfilled" has fewer children than is ideal
-\item A "Parent - Reluctant" has more children than is ideal
-\item A "Parent - Ambivalent" has children but does not know how many is ideal
-\item A "Not yet parent" does not have children but wants children
-\item A "Childless - Biological" respondent does not have children and is infecund but ideally would have liked to have children
-\item An "Ambivalent non-parent" does not have children and is infecund but does not know if they ideally would have liked to have children
-\item An "Undecided" respondent does not have children and is undecided whether they want children, or provided
-inconsistent responses to the want and ideal questions (e.g., want = no, ideal > 0; want = yes, ideal = 0).
-\item A "Childfree" respondent does not have children and does not want children or ideally would like zero children. If the respondent
-provided responses to \emph{both} the want and ideal questions, these responses are consistent (i.e., want = no \emph{and} ideal = 0).
-}
-}
-\item \emph{Demographic Variables}
-\itemize{
-\item \code{sex} (factor) - Respondent's sex
-\item \code{age} (numeric) - Respondent's age in years
-\item \code{education} (numeric) - Respondent's years of education
-\item \code{partnered} (factor) - Respondent's partnership status
-\item \code{residence} (factor) - Urbanicity of respondent's place of residence
-\item \code{employed} (binary) - Whether respondent is currently employed
-}
-\item \emph{Attitude and Behavior Variables}
-\itemize{
-\item \code{religion} (factor) - Respondent's religious affiliation
-}
-\item \emph{Design Variables}
-\itemize{
-\item \code{id} (string) - Unique respondent ID
-\item \code{country} (string) - Respondent's country of residence
-\item \code{weight} (numeric) - Sampling weight (\emph{Exercise caution using weights when data are pooled from multiple countries or waves})
-\item \code{file} (string) - Source data file
-\item \code{survey} (string) - Source survey
-\item \code{wave} (numeric) - Wave of data collection
-\item \code{year} (numeric) - Year of data collection
-\item \code{month} (numeric) - Month of data collection
-}
-}
+A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 }
 \description{
 Read and recode UN Demographic and Health Surveys (DHS) individual data
