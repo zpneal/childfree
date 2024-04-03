@@ -3,7 +3,7 @@
 \docType{package}
 \name{childfree}
 \alias{childfree}
-\title{childfree: Access and harmonize demographic data to study childfree individuals}
+\title{childfree: Access and harmonize childfree demographic data}
 \description{
 Reads demographic data from a variety of public data sources,
 extracting and harmonizing variables useful for the study of childfree individuals.
