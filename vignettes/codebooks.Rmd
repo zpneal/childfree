@@ -123,5 +123,3 @@ This table summarizes the variables that are contained in dataframes generated f
 | `month` | documentation | ordinal |
 
 [back to Table of Contents](#toc)
-
-# References
