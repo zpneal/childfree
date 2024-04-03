@@ -19,8 +19,6 @@
 #'
 #' @export
 #'
-#' @references {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. \href{https://doi.org/10.1177/10664807231198869}{https://doi.org/10.1177/10664807231198869}}
-#'
 #' @examples
 #' data <- nsfg(years = 2017)
 nsfg <- function(years, progress = TRUE) {

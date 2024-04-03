@@ -28,10 +28,8 @@
 #'
 #' @export
 #'
-#' @references {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. \href{https://doi.org/10.1177/10664807231198869}{https://doi.org/10.1177/10664807231198869}}
-#'
 #' @examples
-#' data <- soss(waves = 84, extra.vars = c("inc"))
+#' data <- soss(waves = 84, extra.vars = c("neal1"))
 soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
   if (!all(waves %in%c(79,82,84,85,86))) {stop("Only the following SOSS waves are available: 79, 82, 84, 85, 86")}  #Check for valid waves
