@@ -18,12 +18,6 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 knitr::opts_knit$set(global.par = TRUE)
 ```
 
-```{r, echo = FALSE}
-set.seed(5)
-oldmar <- par()$mar
-par(mar = c(0, 0, 0, 0) + 0.1)
-```
-
 # Table of Contents {#toc}
 
 [<img src='../man/figures/logo.png' align="right" height="250" />](https://www.zacharyneal.com/childfree)
@@ -129,10 +123,5 @@ This table summarizes the variables that are contained in dataframes generated f
 | `month` | documentation | ordinal |
 
 [back to Table of Contents](#toc)
-
-
-```{r, echo = FALSE}
-par(mar = oldmar)
-```
 
 # References
