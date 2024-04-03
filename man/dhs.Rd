@@ -7,7 +7,7 @@
 dhs(files, extra.vars = NULL, progress = TRUE)
 }
 \arguments{
-\item{files}{vector: a character vector containing the paths for one or more Individual Recode DSH data files (see details)}
+\item{files}{vector: a character vector containing the paths for one or more Individual Recode DHS data files (see details)}
 
 \item{extra.vars}{vector: a character vector containing the names of variables to be retained from the raw data}
 
@@ -21,13 +21,12 @@ Read and recode UN Demographic and Health Surveys (DHS) individual data
 }
 \details{
 The United Nations \href{https://www.dhsprogram.com/}{Demographic and Health Surveys} (DHS) program regularly collects health data from
-population-representative samples in many countries using standardized surveys. The "individual
+population-representative samples in many countries using standardized surveys since 1984. The "individual
 recode" data files contain women's responses, and are available in SPSS, SAS, and Stata formats
 from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/}. Access to these data requires
-a free application, however a sample data file can be obtained \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{here}
-without an application. The \code{dhs()} function reads one or more of these files, extracts and
-recodes selected variables useful for studying childfree adults and other family statuses, then returns
-a single data frame.
+a \href{https://dhsprogram.com/data/Access-Instructions.cfm}{free application}. The \code{dhs()} function
+reads one or more of these files, extracts and recodes selected variables useful for studying childfree
+adults and other family statuses, then returns a single data frame.
 
 Although access to DHS data requires an application, the DHS program provides \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model datasets}
 for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains
@@ -46,7 +45,4 @@ individual recode data files, and not these state-specific data files.
 }
 \examples{
 \dontrun{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
-}
-\references{
-{Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. \emph{The Family Journal, 32}, 121-130. \href{https://doi.org/10.1177/10664807231198869}{https://doi.org/10.1177/10664807231198869}}
 }
