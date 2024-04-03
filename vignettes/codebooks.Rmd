@@ -1,6 +1,6 @@
 ---
 title: "Childfree Data Codebooks"
-author: "Zachary Neal & Jennifer Watling Neal, Michigan State University, zpneal@msu.edu"
+author: "Zachary Neal & Jennifer Watling Neal, Michigan State University"
 output: 
   rmarkdown::html_vignette:
   toc: true
