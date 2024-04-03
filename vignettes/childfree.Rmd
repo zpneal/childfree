@@ -1,6 +1,6 @@
 ---
 title: "Introduction to Childfree"
-author: "Zachary Neal & Jennifer Watling Neal, Michigan State University, zpneal@msu.edu"
+author: "Zachary Neal & Jennifer Watling Neal, Michigan State University"
 output: 
   rmarkdown::html_vignette:
   toc: true
@@ -76,12 +76,12 @@ The childfree package uses the theoretical framework and terminology defined by 
 **Family Status**: The terms "childfree" and "childless" are examples of "*family statuses*". The "*ABC*" framework describes how a person's family status is defined by the intersection of:
 
 * An **A**ttitude: Do you want (more) children?
-* A **B**ehavior: Do/have you had children?
+* A **B**ehavior: Have you ever had children?
 * A **C**ircumstance: Are there barriers to you having children?
 
 A "*parent*" has had children (behavior = yes). Parents may be "*fulfilled*" if they have had exactly the number of children they want, "*unfulfilled*" if they have had fewer children than they want, "*reluctant*" if they have had more children than they want, or "*ambivalent*" if they do not know how many children they want(ed).
 
-A non-parent had not had children (behavior = no). However, attitudes and circumstances distinguish different types of non-parents. A "*childfree*" person does not want children (attitude = no), while a "*childless*" person wants children (attitude = yes) but experienced barriers (circumstance = yes), and a "*not-yet-parent*" wants children (attitude = yes) and has not experienced barriers (circumstance = no). Non-parent family statuses are "momentary," which means they describe a person's status *at the moment*. However, a single person may transition between non-parent statuses, or from a non-parent status to a parent status, over time.
+A non-parent had not had children (behavior = no). However, attitudes and circumstances distinguish different types of non-parents. A "*childfree*" person does not want children (attitude = no), while a "*childless*" person wants children (attitude = yes) but experienced barriers (circumstance = yes), and a "*not-yet-parent*" wants children (attitude = yes) and has not experienced barriers (circumstance = no). Non-parent family statuses are "momentary," which means they describe a person's status *at the moment*. However, a person may transition between non-parent statuses, or from a non-parent status to a parent status, over time.
 
 **Questions**: The childfree package is primarily focused on data concerning childfree individuals. Childfree individuals can be identified in survey data using a "*WIDE*" range of questions:
 
@@ -118,16 +118,18 @@ The United Nations [**Demographic and Health Surveys**](https://dhsprogram.com/)
 Although access to DHS data requires an application, the DHS program provides [model datasets]{https://dhsprogram.com/data/Download-Model-Datasets.cfm} containing fictitious data that do not require prior application to access. The "ZZIR62FL.SAV" file is a model individual recode dataset in SPSS format, and provides an example of how the `dhs()` function works. Running
 
 ```{r, results='hide'}
-dat <- dhs(file = "ZZIR62FL.SAV")
+dat <- dhs(file = "ZZIR62FL.SAV", extra.vars = c("v201", "v602", "v613"))
 ```
 
 imports the data, extracts and recodes variables, and returns an R dataframe called `dat`. Inspecting selected variables for a selected observation in `dat`
 
 ```{r}
-t(dat[2368,3:9])
+t(dat[2368,c(3:9,19:21)])
 ```
 
-we see that it contains the record of an unemployed 18 year old female, who has completed 12 years of education, and is currently single, living in an urban area. She is classified as childfree because she does not have or want children.
+we see that it contains the record of an unemployed 18 year old female, who has completed 12 years of education, and is currently single, living in an urban area. She is classified as childfree because she does not have or want children. 
+
+Specifying `extra.vars = c("v201", "v602", "v613")` requests that the function also include these three variables, which are not extracted and recoded by default. The three variables requested in this example are the raw source variables from which `dhs()` determines each respondent's family status: `v201` contains the respondent's number of children, `v602` contains a code indicating whether the respondent wants children (3 = no), and `v613` contains the respondent's ideal number of children. In practice, using the `extra.vars` option can be useful to retain other information collected by DHS, but that is not automatically included.
 
 [back to Table of Contents](#toc)
 
@@ -137,7 +139,7 @@ The [**National Survey of Family Growth**](https://www.cdc.gov/nchs/nsfg/index.h
 For, example, we can obtain data from the NSFG collected between 2017 and 2019 using:
 
 ```{r}
-dat <- nsfg(years = 2017, progress = FALSE)
+dat <- nsfg(years = 2017)
 ```
 
 which returns the data in a dataframe called `dat`. Inspecting selected variables for a selected observation in `dat`
@@ -156,16 +158,18 @@ The [**State of the State Survey**](http://ippsr.msu.edu/survey-research/state-s
 For, example, we can obtain data from the 84th SOSS wave, which was collected in April 2022 using:
 
 ```{r}
-dat <- soss(waves = 84, progress = FALSE)
+dat <- soss(waves = 84, extra.vars = (c("neal1", "neal2", "neal3")))
 ```
 
 which returns the data in a dataframe called `dat`. Inspecting selected variables for a selected observation in `dat`
 
 ```{r}
-t(dat[2,c(2:9,12:13)])
+t(dat[2,c(2:9,12:13,21:24)])
 ```
 
 we see that it contains the record of a 60 year old non-hispanic white female. She is a college graduate living with her partner in the suburbs, and identifies as slightly liberal, but not as religious. She is classified as childfree because she does not have or want children.
+
+Specifying `extra.vars = c("neal1", "neal2", "neal3")` requests that the function also include these three variables, which are not extracted and recoded by default. The three variables requested in this example are the raw source variables from which `soss()` determines each respondent's family status: `neal1` contains a code indicating whether the respondent has children (2 = no), `neal2` contains a code indicating whether the respondent is planning to have children (2 = no), and `neal3` contains a code indicating whether the respondent want(ed) to have children (2 = no). In practice, using the `extra.vars` option can be useful to retain other information collected by IPPSR, but that is not automatically included.
 
 [back to Table of Contents](#toc)
 
