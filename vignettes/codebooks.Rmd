@@ -35,7 +35,7 @@ Thank you for your interest in the childfree package! This vignette contains cod
 
 The `childfree` package can be cited as:
 
-**Neal, Z. P. and Neal, J. W. (2024). childfree: An R package to access and harmonize access and harmonize data on childfree individuals. *Comprehensive R Archive Network*. [https://cran.r-project.org/package=childfree](https://cran.r-project.org/package=childfree)**
+**Neal, Z. P. and Neal, J. W. (2024). childfree: An R package to access and harmonize childfree demographic data. *Comprehensive R Archive Network*. [https://cran.r-project.org/package=childfree](https://cran.r-project.org/package=childfree)**
 
 For additional resources on the childfree package, please see [https://www.zacharyneal.com/childfree](https://www.zacharyneal.com/childfree).
 
