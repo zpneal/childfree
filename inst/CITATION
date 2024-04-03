@@ -1,7 +1,7 @@
 rref <- bibentry(
    bibtype = "Article",
    title = "childfree: Access and Harmonize Demographic Data to Study Childfree Individuals",
-   author = c(person("Zachary P Neal", email = "zpneal@msu.edu"), person("Jennifer Watling Neal"))
+   author = c(person("Zachary P Neal", email = "zpneal@msu.edu"), person("Jennifer Watling Neal")),
    journal  = "Comprehensive R Archive Network",
    year     = "2024",
    textVersion = paste("Neal, Z. P. and Neal, J. W. 2024. childfree: Access and Harmonize Demographic Data to Study Childfree Individuals. Comprehensive R Archive Network")
