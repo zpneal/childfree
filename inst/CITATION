@@ -1,8 +1,8 @@
 rref <- bibentry(
    bibtype = "Article",
-   title = "childfree: Access and Harmonize Demographic Data to Study Childfree Individuals",
+   title = "childfree: An R Package to Access and Harmonize Demographic Data to Study Childfree Individuals",
    author=c(as.person("Zachary P. Neal"), as.person("Jennifer Watling Neal")),
    journal  = "Comprehensive R Archive Network",
    year     = "2024",
-   textVersion = paste("Neal, Z. P. and Neal, J. W. 2024. childfree: Access and Harmonize Demographic Data to Study Childfree Individuals. Comprehensive R Archive Network")
+   textVersion = paste("Neal, Z. P. and Neal, J. W. 2024. childfree: An R Package to Access and Harmonize Demographic Data to Study Childfree Individuals. Comprehensive R Archive Network")
 )
