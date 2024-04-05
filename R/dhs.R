@@ -31,7 +31,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
+#' \donttest{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
 dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
   if (!is.null(extra.vars)) {extra.vars <- tolower(extra.vars)}  #Make requested extra variables lowercase

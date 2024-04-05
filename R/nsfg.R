@@ -20,7 +20,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{data <- nsfg(years = 2017)}
+#' \donttest{data <- nsfg(years = 2017)}
 nsfg <- function(years, progress = TRUE) {
 
   if (!all(years %in%c(2002, 2006, 2011, 2013, 2015, 2017))) {stop("Only the following NSFG years are available: 2002, 2006, 2011, 2013, 2015, 2017")}  #Check for valid years
