@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
 	person("Zachary", "Neal", email = "zpneal@msu.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3076-4995")),
 	person("Jennifer Watling", "Neal", email = "jneal@msu.edu", role = c("aut"), comment = c(ORCID = "0000-0002-7749-8121")))
-Description: Reads demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals. The identification of childfree individuals and those with other family statuses uses the framework described by Neal & Neal (2024, <doi:10.1177/10664807231198869>; preprint: <doi:10.31234/osf.io/fa89m>).
+Description: Reads demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals. The identification of childfree individuals and those with other family statuses uses Neal & Neal's (2024) "A Framework for Studying Adults who Neither have Nor Want Children" <doi:10.1177/10664807231198869>; A pre-print is available at <doi:10.31234/osf.io/fa89m>.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
