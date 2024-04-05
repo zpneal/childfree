@@ -44,5 +44,5 @@ individual recode data files, and not these state-specific data files.
 }
 }
 \examples{
-\dontrun{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
+\donttest{data <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))}
 }

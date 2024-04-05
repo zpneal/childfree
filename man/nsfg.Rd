@@ -32,5 +32,5 @@ When a respondent chose this option, their actual race is unknown.
 }
 }
 \examples{
-\dontrun{data <- nsfg(years = 2017)}
+\donttest{data <- nsfg(years = 2017)}
 }
