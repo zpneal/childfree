@@ -9,14 +9,14 @@
 <!-- badges: end -->
 
 ## Welcome
-Welcome to the `childfree` package\! The childfree package reads demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals.
+Welcome to the `childfree` package\! The childfree package accesses demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals.
 
 The `childfree` package can be cited as:
 
 **Neal, Z. P. and Neal, J. W. (2024). childfree: An R package to access and harmonize childfree demographic data. *GitHub*.**
 
 ## Installation
-The /release branch contains the current CRAN release of the incidentally package. You can install it from [CRAN](https://CRAN.R-project.org) with:
+The /release branch contains the current CRAN release of the childfree package. You can install it from [CRAN](https://CRAN.R-project.org) with:
 ``` r
 install.packages("childfree")
 ```
