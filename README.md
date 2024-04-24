@@ -31,4 +31,4 @@ install_github("zpneal/childfree", ref = "devel", build_vignettes = TRUE)
 The `childfree` package adopts the [tinyverse](https://www.tinyverse.org/) philosophy, and therefore aims to keep dependencies at a minimum.
 
 ## Contribute
-You can support the development of the childfree package by making a tax-deductible contribution to Michigan State University's [Childfree Research Fund][https://givingto.msu.edu/gift/?sid=17582].
+You can support the development of the childfree package by making a tax-deductible contribution to Michigan State University's [Childfree Research Fund](https://givingto.msu.edu/gift/?sid=17582).
