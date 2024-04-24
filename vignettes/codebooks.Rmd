@@ -68,13 +68,13 @@ This table summarizes the variables that are contained in dataframes generated f
 [back to Table of Contents](#toc)
 
 ## National Survey of Family Growth (NSFG) {#nsfg}
-This table summarizes the variables that are contained in dataframes generated from [**National Survey of Family Growth**](https://www.cdc.gov/nchs/nsfg/index.htm) data using `nsfg()`.
+This table summarizes the variables that are contained in dataframes generated from [**National Survey of Family Growth**](https://www.cdc.gov/nchs/nsfg/index.htm) data using `nsfg()`. Variables noted with (F) or (M) are used for female and male respondents, respectively.
 
 | Variable | Source | Format | Coding ______________________________ |
 | :--- | :--- | :--- | --- |
-| `cf_want` | `hasbabes` <br> `everadpt` <br> `seekadpt` <br> `rwant` | Binary | 0 = Not childfree <br> 1 = Childfree |
-| `famstat` | `hasbabes` <br> `everadpt` <br> `seekadpt` <br> `rwant` <br> `rstrstat` <br> `pstrstat` <br> `intend` <br> `jintend` | Categorical | 1 = Parent-Unclassified <br> 3 = Parent-Unfulfilled <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 8 = Childless - Social <br> 9 = Childless - Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
-| `sex` | --- | Categorical | 1 = Female |
+| `cf_want` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` | Binary | 0 = Not childfree <br> 1 = Childfree |
+| `famstat` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` <br> `rstrstat` <br> `pstrstat` <br> `intend` <br> `jintend` | Categorical | 1 = Parent-Unclassified <br> 3 = Parent-Unfulfilled <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 8 = Childless - Social <br> 9 = Childless - Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
+| `sex` | --- | Categorical | 1 = Female <br> 2 = Male |
 | `hispanic` | `rscrhisp` | Binary | 0 = Not hispanic <br> 1 = Hispanic |
 | `race` | `rscrrace` | Categorical | 1 = White <br> 2 = Black <br> 3 = Hawaiian <br> 4 = Asian <br> 5 = American Indian <br> 6 = Other |
 | `age` | `age_r` | Numeric | In years |
