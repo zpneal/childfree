@@ -643,7 +643,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2017) {dat$cluster <- as.numeric(substring(raw,4060,4060))}
 
     #Stratum
-    if (year==2002) {dat$stratum <- as.numeric(substring(raw,2946,2946))}
+    if (year==2002) {dat$stratum <- as.numeric(substring(raw,2946,2947))}
     if (year==2006) {dat$stratum <- as.numeric(substring(raw,4519,4521))}
     if (year==2011) {dat$stratum <- as.numeric(substring(raw,4610,4612))}
     if (year==2013) {dat$stratum <- as.numeric(substring(raw,4453,4455))}
