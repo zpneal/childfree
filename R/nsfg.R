@@ -311,7 +311,23 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2013) {dat$weight <- as.numeric(substring(raw,5032,5048))}
     if (year==2015) {dat$weight <- as.numeric(substring(raw,4470,4486))}
     if (year==2017) {dat$weight <- as.numeric(substring(raw,3787,3803))}
+    
+    #Cluster
+    if (year==2002) {dat$cluster <- as.numeric(substring(raw,4891,4891))}
+    if (year==2006) {dat$cluster <- as.numeric(substring(raw,6222,6222))}
+    if (year==2011) {dat$cluster <- as.numeric(substring(raw,4922,4922))}
+    if (year==2013) {dat$cluster <- as.numeric(substring(raw,5048,5048))}
+    if (year==2015) {dat$cluster <- as.numeric(substring(raw,4486,4486))}
+    if (year==2017) {dat$cluster <- as.numeric(substring(raw,3803,3803))}
 
+    #Stratum
+    if (year==2002) {dat$stratum <- as.numeric(substring(raw,4892,4893))}
+    if (year==2006) {dat$stratum <- as.numeric(substring(raw,6223,6225))}
+    if (year==2011) {dat$stratum <- as.numeric(substring(raw,4923,4923))}
+    if (year==2013) {dat$stratum <- as.numeric(substring(raw,5049,5051))}
+    if (year==2015) {dat$stratum <- as.numeric(substring(raw,4487,4489))}
+    if (year==2017) {dat$stratum <- as.numeric(substring(raw,3804,3806))}
+    
     #Wave
     if (year==2002) {dat$wave <- "2002"}
     if (year==2006) {dat$wave <- "2006-2010"}
@@ -351,7 +367,7 @@ nsfg <- function(years, progress = TRUE) {
     dat <- dat[,c("cf_want", "famstat",  #Family status
                   "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                   "religion",  #Attitude
-                  "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
+                  "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
 
     #Start data file, or append to existing data file
     if (year==min(years)) {data <- dat} else {data <- rbind(data, dat)}
@@ -618,6 +634,22 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2015) {dat$weight <- as.numeric(substring(raw,4126,4141))}
     if (year==2017) {dat$weight <- as.numeric(substring(raw,4044,4059))}
 
+    #Cluster
+    if (year==2002) {dat$cluster <- as.numeric(substring(raw,2945,2945))}
+    if (year==2006) {dat$cluster <- as.numeric(substring(raw,4518,4518))}
+    if (year==2011) {dat$cluster <- as.numeric(substring(raw,4609,4609))}
+    if (year==2013) {dat$cluster <- as.numeric(substring(raw,4452,4452))}
+    if (year==2015) {dat$cluster <- as.numeric(substring(raw,4142,4142))}
+    if (year==2017) {dat$cluster <- as.numeric(substring(raw,4060,4060))}
+
+    #Stratum
+    if (year==2002) {dat$stratum <- as.numeric(substring(raw,2946,2946))}
+    if (year==2006) {dat$stratum <- as.numeric(substring(raw,4519,4521))}
+    if (year==2011) {dat$stratum <- as.numeric(substring(raw,4610,4612))}
+    if (year==2013) {dat$stratum <- as.numeric(substring(raw,4453,4455))}
+    if (year==2015) {dat$stratum <- as.numeric(substring(raw,4143,4145))}
+    if (year==2017) {dat$stratum <- as.numeric(substring(raw,4061,4063))}
+    
     #Wave
     if (year==2002) {dat$wave <- "2002"}
     if (year==2006) {dat$wave <- "2006-2010"}
@@ -657,7 +689,7 @@ nsfg <- function(years, progress = TRUE) {
     dat <- dat[,c("cf_want", "famstat",  #Family status
                   "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                   "religion",  #Attitude
-                  "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
+                  "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
 
     #Append to existing data file from female respondent loop
     data <- rbind(data, dat)
