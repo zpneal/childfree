@@ -446,7 +446,7 @@ nsfg <- function(years, progress = TRUE) {
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(dat$anykids==0 & dat$rwant==5)] <- 1  #Childfree
-    dat$cf_want[which(dat$anykids==1 | dat$rwant==1)] <- 0  #Not childfree
+    dat$cf_want[which(dat$anykids==1 | dat$rwant==1 | dat$rwant==9)] <- 0  #Not childfree
 
     #Childfree (expect) - Unknown because intention question only asked of single respondents if they wanted children
 
