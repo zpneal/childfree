@@ -58,7 +58,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `religion` | `(m)v130` | Categorical | 1 = None, <br> 2 = Catholic / Orthodox <br> 3 = Muslim <br> 4 = Jewish <br> 5 = Protestant / Christian <br> 6 = Other <br> 7 = Buddhist <br> 8 = Hindu |
 | `id` | `(m)caseid` | string |
 | `country` | `(m)v000` | string |
-| `weight` | `(m)v005` | string |
+| `weight` | `(m)v005` | numeric |
 | `file` | user | string |
 | `survey` | "DHS" | string |
 | `wave` | `(m)v000` | numeric |
@@ -86,7 +86,9 @@ This table summarizes the variables that are contained in dataframes generated f
 | `religion` | `relcurr` | Categorical | 1 = None <br> 2 = Catholic / Orthodox <br> 5 = Protestant / Christian <br> 6 = Other |
 | `id` | `caseid` | string |
 | `country` | "United States" | string |
-| `weight` | `wgt2017_2019` <br> `wgt2015_2019` <br> `wtg2013_2015` <br> `wtg2011_2013` <br> `WGTQ1Q16` <br> `finalwgt` | string |
+| `weight` | `wgt2017_2019` <br> `wgt2015_2019` <br> `wtg2013_2015` <br> `wtg2011_2013` <br> `WGTQ1Q16` <br> `finalwgt` | numeric |
+| `cluster` | `secu` | numeric |
+| `stratum` | `sest` | numeric |
 | `file` | user | string |
 | `survey` | "NSFG" | string |
 | `wave` | user | string |
@@ -115,7 +117,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `religion` | `cd6` | Categorical | 1 = None <br> 2 = Catholic / Orthodox <br> 3 = Muslim <br> 4 = Jewish <br> 5 = Protestant / Christian <br> 6 = Other |
 | `id` | `caseid` | string |
 | `country` | "United States" | string |
-| `weight` | `weight` | string |
+| `weight` | `weight` | numeric |
 | `file` | user | string |
 | `survey` | "SOSS" | string |
 | `wave` | user | string |
