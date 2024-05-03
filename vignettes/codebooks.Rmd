@@ -75,6 +75,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `cf_want` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` | Binary | 0 = Not childfree <br> 1 = Childfree |
 | `famstat` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` <br> `rstrstat` <br> `pstrstat` <br> `intend` <br> `jintend` | Categorical | 1 = Parent-Unclassified <br> 3 = Parent-Unfulfilled <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 8 = Childless - Social <br> 9 = Childless - Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
 | `sex` | --- | Categorical | 1 = Female <br> 2 = Male |
+| `orient` | `orient` | Categorical | 1 = Straight <br> 2 = Gay <br> 3 = Bisexual |
 | `hispanic` | `rscrhisp` | Binary | 0 = Not hispanic <br> 1 = Hispanic |
 | `race` | `rscrrace` | Categorical | 1 = White <br> 2 = Black <br> 3 = Hawaiian <br> 4 = Asian <br> 5 = American Indian <br> 6 = Other |
 | `age` | `age_r` | Numeric | In years |
@@ -84,6 +85,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `employed` | `rwrkst` | Binary | 0 = Not employed <br> 1 = Employed |
 | `inschool` | `goschol` | Binary | 0 = Not in school <br> 1 = In school |
 | `religion` | `relcurr` | Categorical | 1 = None <br> 2 = Catholic / Orthodox <br> 5 = Protestant / Christian <br> 6 = Other |
+| `bother` | `chbother` | Ordinal | 1 = Not at all <br> 2 = A little <br> 3 = Some <br> 4 = A great deal |
 | `id` | `caseid` | string |
 | `country` | "United States" | string |
 | `weight` | `wgt2017_2019` <br> `wgt2015_2019` <br> `wtg2013_2015` <br> `wtg2011_2013` <br> `WGTQ1Q16` <br> `finalwgt` | numeric |
