@@ -19,6 +19,12 @@
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
+#' **Weights**
+#'
+#' The \href{https://cran.r-project.org/web/packages/survey/index.html}{`survey`} package can be used to incorporate sampling weights
+#'    and obtain population-representative estimates by wave. After using `soss()` to obtain data for a given wave (see example below), use
+#'    `dat <- svydesign(data = dat, ids = ~1, weights = ~weight)` to incorporate information about the survey design.
+#'
 #' **Known issues**
 #'   * Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
@@ -165,7 +171,7 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
       dat$lgbtq[which(dat$neal11==2)] <- 0  #Not LGBTQ
       dat$lgbtq[which(dat$neal11==1)] <- 1  #LGBTQ
     }
-    
+
     #Race
     dat$race <- NA
     if (wave==79 | wave==82) {

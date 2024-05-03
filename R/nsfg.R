@@ -11,6 +11,13 @@
 #'    the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
 #'    statuses, then returns a single data frame.
 #'
+#' **Weights**
+#'
+#' The \href{https://cran.r-project.org/web/packages/survey/index.html}{`survey`} package can be used to incorporate sampling weights
+#'    and obtain population-representative estimates by wave. After using `nsfg()` to obtain data for a given wave (see example below), use
+#'    `dat <- svydesign(data = dat, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)` to incorporate information about
+#'    the survey design.
+#'
 #' **Known issues**
 #'   * Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 #'     When a respondent chose this option, their actual race is unknown.
@@ -180,7 +187,7 @@ nsfg <- function(years, progress = TRUE) {
       dat$b[which(dat$b==1 | dat$b==2)] <- 3 - dat$b[which(dat$b==1 | dat$b==2)]  #Reverse so 1 straight, 2 gay
       dat$b[is.na(dat$b)] <- 0  #Code missing as zero
       dat$orient <- dat$a + dat$b  #Combine versions a and b
-    }  
+    }
     if (year==2017) {
       dat$a <- as.numeric(substring(raw,2779,2779))  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
       dat$a[is.na(dat$a)] <- 0  #Code missing as zero
@@ -193,7 +200,7 @@ nsfg <- function(years, progress = TRUE) {
     dat$lgbtq[which(dat$orient==2)] <- 1  #LGBTQ, specifically "gay"
     dat$lgbtq[which(dat$orient==3)] <- 1  #LGBTQ, specifically "bi"
     dat$lgbtq[which(dat$orient==4)] <- 1  #LGBTQ, specifically "something else"
-    
+
     #Race
     if (year==2002) {
       dat$race <- as.numeric(substring(raw,17,17))
@@ -332,7 +339,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2015) {dat$bother <- as.numeric(substring(raw,3027,3027))}
     if (year==2017) {dat$bother <- as.numeric(substring(raw,2682,2682))}
     dat$bother <- factor(dat$bother, levels = c(4,3,2,1), labels = c("Not at all", "A little", "Some", "A great deal"), ordered = TRUE)
-    
+
     #### Design ####
     #Identifier - This step is performed above, when initializing the data frame
 
@@ -346,7 +353,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2013) {dat$weight <- as.numeric(substring(raw,5032,5048))}
     if (year==2015) {dat$weight <- as.numeric(substring(raw,4470,4486))}
     if (year==2017) {dat$weight <- as.numeric(substring(raw,3787,3803))}
-    
+
     #Cluster
     if (year==2002) {dat$cluster <- as.numeric(substring(raw,4891,4891))}
     if (year==2006) {dat$cluster <- as.numeric(substring(raw,6222,6222))}
@@ -362,7 +369,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2013) {dat$stratum <- as.numeric(substring(raw,5049,5051))}
     if (year==2015) {dat$stratum <- as.numeric(substring(raw,4487,4489))}
     if (year==2017) {dat$stratum <- as.numeric(substring(raw,3804,3806))}
-    
+
     #Wave
     if (year==2002) {dat$wave <- "2002"}
     if (year==2006) {dat$wave <- "2006-2010"}
@@ -531,7 +538,7 @@ nsfg <- function(years, progress = TRUE) {
       dat$b[which(dat$b==1 | dat$b==2)] <- 3 - dat$b[which(dat$b==1 | dat$b==2)]  #Reverse so 1 straight, 2 gay
       dat$b[is.na(dat$b)] <- 0  #Code missing as zero
       dat$orient <- dat$a + dat$b  #Combine versions a and b
-    }  
+    }
     if (year==2017) {
       dat$a <- as.numeric(substring(raw,3648,3648))  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
       dat$a[is.na(dat$a)] <- 0  #Code missing as zero
@@ -544,7 +551,7 @@ nsfg <- function(years, progress = TRUE) {
     dat$lgbtq[which(dat$orient==2)] <- 1  #LGBTQ, specifically "gay"
     dat$lgbtq[which(dat$orient==3)] <- 1  #LGBTQ, specifically "bi"
     dat$lgbtq[which(dat$orient==4)] <- 1  #LGBTQ, specifically "something else"
-    
+
     #Race
     if (year==2002) {
       dat$race <- as.numeric(substring(raw,17,17))
@@ -689,7 +696,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2015) {dat$bother <- as.numeric(substring(raw,3533,3533))}
     if (year==2017) {dat$bother <- as.numeric(substring(raw,3507,3507))}
     dat$bother <- factor(dat$bother, levels = c(4,3,2,1), labels = c("Not at all", "A little", "Some", "A great deal"), ordered = TRUE)
-    
+
     #### Design ####
     #Identifier - This step is performed above, when initializing the data frame
 
@@ -719,7 +726,7 @@ nsfg <- function(years, progress = TRUE) {
     if (year==2013) {dat$stratum <- as.numeric(substring(raw,4453,4455))}
     if (year==2015) {dat$stratum <- as.numeric(substring(raw,4143,4145))}
     if (year==2017) {dat$stratum <- as.numeric(substring(raw,4061,4063))}
-    
+
     #Wave
     if (year==2002) {dat$wave <- "2002"}
     if (year==2006) {dat$wave <- "2006-2010"}
