@@ -309,7 +309,7 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbtq", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }
