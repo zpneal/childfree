@@ -168,6 +168,28 @@ nsfg <- function(years, progress = TRUE) {
     dat$sex <- 1
     dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
+    #Sexual orientation
+    if (year==2002 | year==2006) {dat$orient <- NA}
+    if (year==2011) {dat$orient <- as.numeric(substring(raw,3704,3704))}  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+    if (year==2013) {dat$orient <- as.numeric(substring(raw,3654,3654))}  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+    if (year==2015) {
+      dat$a <- as.numeric(substring(raw,3184,3184))  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+      dat$a[is.na(dat$a)] <- 0  #Code missing as zero
+      dat$b <- as.numeric(substring(raw,3185,3185))  #1 gay, 2 straight, 3 bi, 4 something else, 7 not asked, 8 refused, 9 don't know
+      dat$b[which(dat$b==1 | dat$b==2)] <- 3 - dat$b[which(dat$b==1 | dat$b==2)]  #Reverse so 1 straight, 2 gay
+      dat$b[is.na(dat$b)] <- 0  #Code missing as zero
+      dat$orient <- dat$a + dat$b  #Combine versions a and b
+    }  
+    if (year==2017) {
+      dat$a <- as.numeric(substring(raw,2779,2779))  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+      dat$a[is.na(dat$a)] <- 0  #Code missing as zero
+      dat$b <- as.numeric(substring(raw,2780,2780))  #1 gay, 2 straight, 3 bi, 4 something else, 7 not asked, 8 refused, 9 don't know
+      dat$b[which(dat$b==1 | dat$b==2)] <- 3 - dat$b[which(dat$b==1 | dat$b==2)]  #Reverse so 1 straight, 2 gay
+      dat$b[is.na(dat$b)] <- 0  #Code missing as zero
+      dat$orient <- dat$a + dat$b  #Combine versions a and b
+    }
+    dat$orient <- factor(dat$orient, levels = c(1,2,3), labels = c("Straight", "Gay", "Bisexual"))
+    
     #Race
     if (year==2002) {
       dat$race <- as.numeric(substring(raw,17,17))
@@ -298,6 +320,15 @@ nsfg <- function(years, progress = TRUE) {
     dat$religion[which(dat$relcurr==8)] <- 6  #Other
     dat$religion <- factor(dat$religion, levels = c(1:6), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish", "Protestant / Christian", "Other"))
 
+    #Bother (If it turns out that you do not have any children, how much would it bother you?)
+    if (year==2002) {dat$bother <- as.numeric(substring(raw,3723,3723))}
+    if (year==2006) {dat$bother <- as.numeric(substring(raw,4806,4806))}
+    if (year==2011) {dat$bother <- as.numeric(substring(raw,3537,3537))}
+    if (year==2013) {dat$bother <- as.numeric(substring(raw,3486,3486))}
+    if (year==2015) {dat$bother <- as.numeric(substring(raw,3027,3027))}
+    if (year==2017) {dat$bother <- as.numeric(substring(raw,2682,2682))}
+    dat$bother <- factor(dat$bother, levels = c(4,3,2,1), labels = c("Not at all", "A little", "Some", "A great deal"), ordered = TRUE)
+    
     #### Design ####
     #Identifier - This step is performed above, when initializing the data frame
 
@@ -365,8 +396,8 @@ nsfg <- function(years, progress = TRUE) {
     #### Clean up ####
     #Reduce data
     dat <- dat[,c("cf_want", "famstat",  #Family status
-                  "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
-                  "religion",  #Attitude
+                  "sex", "orient", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                  "religion", "bother",  #Attitude
                   "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
 
     #Start data file, or append to existing data file
@@ -484,6 +515,28 @@ nsfg <- function(years, progress = TRUE) {
     dat$sex <- 2
     dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
+    #Sexual orientation
+    if (year==2002 | year==2006) {dat$orient <- NA}
+    if (year==2011) {dat$orient <- as.numeric(substring(raw,4175,4175))}  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+    if (year==2013) {dat$orient <- as.numeric(substring(raw,4020,4020))}  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+    if (year==2015) {
+      dat$a <- as.numeric(substring(raw,3737,3737))  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+      dat$a[is.na(dat$a)] <- 0  #Code missing as zero
+      dat$b <- as.numeric(substring(raw,3738,3738))  #1 gay, 2 straight, 3 bi, 4 something else, 7 not asked, 8 refused, 9 don't know
+      dat$b[which(dat$b==1 | dat$b==2)] <- 3 - dat$b[which(dat$b==1 | dat$b==2)]  #Reverse so 1 straight, 2 gay
+      dat$b[is.na(dat$b)] <- 0  #Code missing as zero
+      dat$orient <- dat$a + dat$b  #Combine versions a and b
+    }  
+    if (year==2017) {
+      dat$a <- as.numeric(substring(raw,3648,3648))  #1 straight, 2 gay, 3 bi, 7 not asked, 8 refused, 9 don't know
+      dat$a[is.na(dat$a)] <- 0  #Code missing as zero
+      dat$b <- as.numeric(substring(raw,3649,3649))  #1 gay, 2 straight, 3 bi, 4 something else, 7 not asked, 8 refused, 9 don't know
+      dat$b[which(dat$b==1 | dat$b==2)] <- 3 - dat$b[which(dat$b==1 | dat$b==2)]  #Reverse so 1 straight, 2 gay
+      dat$b[is.na(dat$b)] <- 0  #Code missing as zero
+      dat$orient <- dat$a + dat$b  #Combine versions a and b
+    }
+    dat$orient <- factor(dat$orient, levels = c(1,2,3), labels = c("Straight", "Gay", "Bisexual"))
+    
     #Race
     if (year==2002) {
       dat$race <- as.numeric(substring(raw,17,17))
@@ -620,6 +673,15 @@ nsfg <- function(years, progress = TRUE) {
     dat$religion[which(dat$relcurr==8)] <- 6  #Other
     dat$religion <- factor(dat$religion, levels = c(1:6), labels = c("None", "Catholic / Orthodox", "Muslim", "Jewish", "Protestant / Christian", "Other"))
 
+    #Bother (If it turns out that you do not have any children, how much would it bother you?)
+    if (year==2002) {dat$bother <- as.numeric(substring(raw,2596,2596))}
+    if (year==2006) {dat$bother <- as.numeric(substring(raw,3956,3956))}
+    if (year==2011) {dat$bother <- as.numeric(substring(raw,3969,3969))}
+    if (year==2013) {dat$bother <- as.numeric(substring(raw,3813,3813))}
+    if (year==2015) {dat$bother <- as.numeric(substring(raw,3533,3533))}
+    if (year==2017) {dat$bother <- as.numeric(substring(raw,3507,3507))}
+    dat$bother <- factor(dat$bother, levels = c(4,3,2,1), labels = c("Not at all", "A little", "Some", "A great deal"), ordered = TRUE)
+    
     #### Design ####
     #Identifier - This step is performed above, when initializing the data frame
 
@@ -687,8 +749,8 @@ nsfg <- function(years, progress = TRUE) {
     #### Clean up ####
     #Reduce data
     dat <- dat[,c("cf_want", "famstat",  #Family status
-                  "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
-                  "religion",  #Attitude
+                  "sex", "orient", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                  "religion", "bother", #Attitude
                   "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
 
     #Append to existing data file from female respondent loop
