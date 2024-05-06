@@ -75,7 +75,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `cf_want` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` | Binary | 0 = Not childfree <br> 1 = Childfree |
 | `famstat` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` <br> `rstrstat` <br> `pstrstat` <br> `intend` <br> `jintend` | Categorical | 1 = Parent-Unclassified <br> 3 = Parent-Unfulfilled <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 8 = Childless - Social <br> 9 = Childless - Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
 | `sex` | --- | Categorical | 1 = Female <br> 2 = Male |
-| `lgbtq` | `orient` | Binary | 0 = Not LGBTQ <br> 1 = LGBTQ |
+| `lgbt` | `orient` | Binary | 1 = Straight <br> 2 = Gay/Lesbian <br> 3 = Bisexual <br> 4 = Something else |
 | `hispanic` | `rscrhisp` | Binary | 0 = Not hispanic <br> 1 = Hispanic |
 | `race` | `rscrrace` | Categorical | 1 = White <br> 2 = Black <br> 3 = Hawaiian <br> 4 = Asian <br> 5 = American Indian <br> 6 = Other |
 | `age` | `age_r` | Numeric | In years |
@@ -107,7 +107,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `cf_want` | `neal1` <br> `neal2` <br> `neal3` | Binary | 0 = Not childfree <br> 1 = Childfree |
 | `famstat` | `neal1` <br> `neal2` <br> `neal3` | Categorical | 1 = Parent-Unclassified <br> 6 = Not yet parent <br> 7 = Childless - Unclassified <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
 | `sex` | `cd1` | Categorical | 1 = Female <br> 2 = Male <br> 3 = Other |
-| `lgbtq` | `neal11` <br> (wave 84 only) | Binary | 0 = Not LGBTQ <br> 1 = LGBTQ |
+| `lgbt` | `neal11` <br> (wave 84 only) | Binary | 0 = Not LGBT <br> 1 = LGBT |
 | `hispanic` | `cd5a` | Binary | 0 = Not hispanic <br> 1 = Hispanic |
 | `race` | `cd4_1` <br> `cd4_2` <br> `cd4_3` <br> `cd4_4` <br> `cd4_5` <br> `cd4_6` | Categorical | 1 = White <br> 2 = Black <br> 3 = Hawaiian <br> 4 = Asian <br> 5 = American Indian <br> 6 = Other <br> 7 = Multiracial |
 | `age` | `cd2` | Numeric | In years |
