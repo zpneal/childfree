@@ -166,10 +166,10 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
     #Sexual orientation
-    dat$lgbtq <- NA
+    dat$lgbt <- NA
     if (wave==84) {
-      dat$lgbtq[which(dat$neal11==2)] <- 0  #Not LGBTQ
-      dat$lgbtq[which(dat$neal11==1)] <- 1  #LGBTQ
+      dat$lgbt[which(dat$neal11==2)] <- 0  #Not LGBT
+      dat$lgbt[which(dat$neal11==1)] <- 1  #LGBT
     }
 
     #Race
@@ -309,13 +309,13 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     #Reduce data
     if (!is.null(extra.vars)) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "lgbtq", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "lgbtq", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }
