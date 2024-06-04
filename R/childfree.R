@@ -6,7 +6,7 @@
 #'    uses the framework described by Neal & Neal (2024).
 #'
 #'    Data can be generated from:
-#'    * UN Demographic and Health Surveys data using [dhs()]
+#'    * Demographic and Health Surveys data using [dhs()]
 #'    * Michigan State University State of the State data using [soss()]
 #'    * US CDC National Survey of Family Growth data using [nsfg()]
 #'
