@@ -38,7 +38,7 @@ include unique questions that may be of interest:
 
 \strong{Weights}
 
-The \href{https://cran.r-project.org/web/packages/survey/index.html}{\code{survey}} package can be used to incorporate sampling weights
+The \href{https://cran.r-project.org/package=survey}{\code{survey}} package can be used to incorporate sampling weights
 and obtain population-representative estimates by wave. After using \code{soss()} to obtain data for a given wave (see example below), use
 \code{dat <- svydesign(data = dat, ids = ~1, weights = ~weight)} to incorporate information about the survey design.
 
