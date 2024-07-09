@@ -15,6 +15,6 @@
 #'
 #' @references {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. Version of record: \doi{10.1177/10664807231198869} Preprint: \doi{10.31234/osf.io/fa89m}}
 #'
-#' @docType _PACKAGE
 #' @name childfree
+"_PACKAGE"
 NULL
