@@ -21,7 +21,7 @@
 #'
 #' **Weights**
 #'
-#' The \href{https://cran.r-project.org/web/packages/survey/index.html}{`survey`} package can be used to incorporate sampling weights
+#' The \href{https://cran.r-project.org/package=survey}{`survey`} package can be used to incorporate sampling weights
 #'    and obtain population-representative estimates by wave. After using `soss()` to obtain data for a given wave (see example below), use
 #'    `dat <- svydesign(data = dat, ids = ~1, weights = ~weight)` to incorporate information about the survey design.
 #'

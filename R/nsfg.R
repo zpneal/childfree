@@ -13,7 +13,7 @@
 #'
 #' **Weights**
 #'
-#' The \href{https://cran.r-project.org/web/packages/survey/index.html}{`survey`} package can be used to incorporate sampling weights
+#' The \href{https://cran.r-project.org/package=survey}{`survey`} package can be used to incorporate sampling weights
 #'    and obtain population-representative estimates by wave. After using `nsfg()` to obtain data for a given wave (see example below), use
 #'    `dat <- svydesign(data = dat, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)` to incorporate information about
 #'    the survey design.
