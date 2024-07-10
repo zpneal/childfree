@@ -6,7 +6,7 @@
 #'    uses the framework described by Neal & Neal (2024).
 #'
 #'    Data can be generated from:
-#'    * UN Demographic and Health Surveys data using [dhs()]
+#'    * Demographic and Health Surveys data using [dhs()]
 #'    * Michigan State University State of the State data using [soss()]
 #'    * US CDC National Survey of Family Growth data using [nsfg()]
 #'
@@ -15,6 +15,6 @@
 #'
 #' @references {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. Version of record: \doi{10.1177/10664807231198869} Preprint: \doi{10.31234/osf.io/fa89m}}
 #'
-#' @docType package
 #' @name childfree
+"_PACKAGE"
 NULL

@@ -20,27 +20,28 @@ A data frame containing variables described in the codebook available using \cod
 Read and recode UN Demographic and Health Surveys (DHS) individual data
 }
 \details{
-The United Nations \href{https://www.dhsprogram.com/}{Demographic and Health Surveys} (DHS) program regularly collects health data from
-population-representative samples in many countries using standardized surveys since 1984. The "individual
-recode" data files contain women's responses, and are available in SPSS, SAS, and Stata formats
-from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/}. Access to these data requires
-a \href{https://dhsprogram.com/data/Access-Instructions.cfm}{free application}. The \code{dhs()} function
-reads one or more of these files, extracts and recodes selected variables useful for studying childfree
-adults and other family statuses, then returns a single data frame.
+The \href{https://www.dhsprogram.com/}{Demographic and Health Surveys} (DHS) program regularly collects
+health data from population-representative samples in many countries using standardized surveys since 1984. The
+"individual recode" data files contain women's responses, while the "men recode" files contain men's responses. These
+files are available in SPSS, SAS, and Stata formats from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/},
+however access requires a \href{https://dhsprogram.com/data/Access-Instructions.cfm}{free application}. The \code{dhs()} function
+reads one or more of these files, extracts and recodes selected variables useful for studying childfree adults and other
+family statuses, then returns a single data frame.
 
 Although access to DHS data requires an application, the DHS program provides \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model datasets}
-for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains
-fictitious data, but has the same structure as real DHS data files. The example can be run without
-prior application for data access.
+for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains fictitious women's data,
+but has the same structure as real DHS data files. The example can be run without prior application for data access.
 
 \strong{Known issues}
 \itemize{
-\item The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV)
-contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT and TRIR41FL.SAS7BDAT) instead.
-\item In some cases, DHS makes available individual recode data files for specific states. For example, data from Ondo
-State in Nigeria from Wave 1 is contained in OSIR01FL.SAV, data from states in India from 1999 are contained in
-files named XXIR42FL.SAV, where the "XX" is a two-letter state code. This function only accepts whole-country
-individual recode data files, and not these state-specific data files.
+\item The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV, GAMR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV, TRMR41FL.SAV)
+contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT, GAMR41FL.SAS7BDAT, TRIR41FL.SAS7BDAT, TRMR41FL.SAS7BDAT) instead.
+\item In some cases, DHS makes available individual recode data files for specific regions. For example, women's data from individual states
+in India from 1999 are contained in files named XXIR42FL.SAV, where the "XX" is a two-letter state code. The \code{dhs()} function has only
+been tested using whole-country files, and may not perform as expected for regional files.
+\item Variables containing women's responses in the individual recode files begin with \code{v}, while variables containing men's responses in the
+men recode files begin with \code{mv}. When applying \code{dhs()} to both female and male data, these are automatically harmonized. However, if
+extra variables are requested using the \code{extra.vars} option, be sure to specify both names (e.g. \code{extra.vars = c("v201", "mv201")}).
 }
 }
 \examples{

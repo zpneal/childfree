@@ -19,6 +19,12 @@
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
+#' **Weights**
+#'
+#' The \href{https://cran.r-project.org/package=survey}{`survey`} package can be used to incorporate sampling weights
+#'    and obtain population-representative estimates by wave. After using `soss()` to obtain data for a given wave (see example below), use
+#'    `dat <- svydesign(data = dat, ids = ~1, weights = ~weight)` to incorporate information about the survey design.
+#'
 #' **Known issues**
 #'   * Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
@@ -159,6 +165,13 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     dat$sex[which(dat$cd1==3)] <- 3  #Intersex
     dat$sex <- factor(dat$sex, levels = c(1,2,3), labels = c("Female", "Male", "Other"))
 
+    #Sexual orientation
+    dat$lgbt <- NA
+    if (wave==84) {
+      dat$lgbt[which(dat$neal11==2)] <- 0  #Not LGBT
+      dat$lgbt[which(dat$neal11==1)] <- 1  #LGBT
+    }
+
     #Race
     dat$race <- NA
     if (wave==79 | wave==82) {
@@ -296,13 +309,13 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
     #Reduce data
     if (!is.null(extra.vars)) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month",  #Design
                     extra.vars)]
     } else {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
                     "ideology", "religion",  #Attitude
                     "id", "country", "weight", "file", "survey", "wave", "year", "month")]  #Design
     }

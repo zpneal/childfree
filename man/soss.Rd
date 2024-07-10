@@ -36,6 +36,12 @@ include unique questions that may be of interest:
 \item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 }
 
+\strong{Weights}
+
+The \href{https://cran.r-project.org/package=survey}{\code{survey}} package can be used to incorporate sampling weights
+and obtain population-representative estimates by wave. After using \code{soss()} to obtain data for a given wave (see example below), use
+\code{dat <- svydesign(data = dat, ids = ~1, weights = ~weight)} to incorporate information about the survey design.
+
 \strong{Known issues}
 \itemize{
 \item Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify

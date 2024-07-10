@@ -42,39 +42,40 @@ For additional resources on the childfree package, please see [https://www.zacha
 If you have questions about the childfree package or would like a childfree package hex sticker, please contact the maintainer Zachary Neal by email ([zpneal\@msu.edu](mailto:zpneal@msu.edu)). Please report bugs in the backbone package at [https://github.com/zpneal/childfree/issues](https://github.com/zpneal/childfree/issues).
 
 ## Demographic and Health Surveys (DHS) {#dhs}
-This table summarizes the variables that are contained in dataframes generated from [**Demographic and Health Surveys**](https://dhsprogram.com/) data using `dhs()`.
+This table summarizes the variables that are contained in dataframes generated from [**Demographic and Health Surveys**](https://dhsprogram.com/) data using `dhs()`. Female respondents' variables begin with `v`, while male respondents' variables begin with `mv`.
 
 | Variable | Source | Format | Coding ______________________________ |
 | :--- | :--- | :--- | --- |
-| `cf_want` | `v201` <br> `v602` | Binary | 0 = Not childfree <br> 1 = Childfree |
-| `cf_ideal` | `v201` <br> `v613` | Binary | 0 = Not childfree <br> 1 = Childfree |
-| `famstat` | `v201` <br> `v602` <br> `v613` | Categorical | 1 = Parent-Unclassified <br> 2 = Parent-Fulfilled <br> 3 = Parent-Unfulfilled <br> 4 = Parent-Relunctant <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 9 = Childless-Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
-| `sex` | --- | Categorical | 1 = Female |
-| `age` | `v012` | Numeric | In years |
-| `education` | `v133` | Numeric | In years |
-| `partnered` | `v502` | Categorical | 1 = Single, never partnered <br> 2 = Currently partnered <br> 3 = Formerly partnered |
-| `residence` | `v102` | Ordinal | 1 = Rural <br> 4 = Urban |
-| `employed` | `v714` | Binary | 0 = Not employed <br> 1 = Employed |
-| `religion` | `v130` | Categorical | 1 = None, <br> 2 = Catholic / Orthodox <br> 3 = Muslim <br> 4 = Jewish <br> 5 = Protestant / Christian <br> 6 = Other <br> 7 = Buddhist <br> 8 = Hindu |
-| `id` | `caseid` | string |
-| `country` | `v000` | string |
-| `weight` | `v005` | string |
+| `cf_want` | `(m)v201` <br> `(m)v602` | Binary | 0 = Not childfree <br> 1 = Childfree |
+| `cf_ideal` | `(m)v201` <br> `(m)v613` | Binary | 0 = Not childfree <br> 1 = Childfree |
+| `famstat` | `(m)v201` <br> `(m)v602` <br> `(m)v613` | Categorical | 1 = Parent-Unclassified <br> 2 = Parent-Fulfilled <br> 3 = Parent-Unfulfilled <br> 4 = Parent-Relunctant <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 9 = Childless-Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
+| `sex` | --- | Categorical | 1 = Female <br> 2 = Male |
+| `age` | `(m)v012` | Numeric | In years |
+| `education` | `(m)v133` | Numeric | In years |
+| `partnered` | `(m)v502` | Categorical | 1 = Single, never partnered <br> 2 = Currently partnered <br> 3 = Formerly partnered |
+| `residence` | `(m)v102` | Ordinal | 1 = Rural <br> 4 = Urban |
+| `employed` | `(m)v714` | Binary | 0 = Not employed <br> 1 = Employed |
+| `religion` | `(m)v130` | Categorical | 1 = None, <br> 2 = Catholic / Orthodox <br> 3 = Muslim <br> 4 = Jewish <br> 5 = Protestant / Christian <br> 6 = Other <br> 7 = Buddhist <br> 8 = Hindu |
+| `id` | `(m)caseid` | string |
+| `country` | `(m)v000` | string |
+| `weight` | `(m)v005` | numeric |
 | `file` | user | string |
 | `survey` | "DHS" | string |
-| `wave` | `v000` | numeric |
-| `year` | `v007` | numeric |
-| `month` | `v006` | ordinal |
+| `wave` | `(m)v000` | numeric |
+| `year` | `(m)v007` | numeric |
+| `month` | `(m)v006` | ordinal |
 
 [back to Table of Contents](#toc)
 
 ## National Survey of Family Growth (NSFG) {#nsfg}
-This table summarizes the variables that are contained in dataframes generated from [**National Survey of Family Growth**](https://www.cdc.gov/nchs/nsfg/index.htm) data using `nsfg()`.
+This table summarizes the variables that are contained in dataframes generated from [**National Survey of Family Growth**](https://www.cdc.gov/nchs/nsfg/index.htm) data using `nsfg()`. Variables noted with (F) or (M) are used for female and male respondents, respectively.
 
 | Variable | Source | Format | Coding ______________________________ |
 | :--- | :--- | :--- | --- |
-| `cf_want` | `hasbabes` <br> `everadpt` <br> `seekadpt` <br> `rwant` | Binary | 0 = Not childfree <br> 1 = Childfree |
-| `famstat` | `hasbabes` <br> `everadpt` <br> `seekadpt` <br> `rwant` <br> `rstrstat` <br> `pstrstat` <br> `intend` <br> `jintend` | Categorical | 1 = Parent-Unclassified <br> 3 = Parent-Unfulfilled <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 8 = Childless - Social <br> 9 = Childless - Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
-| `sex` | --- | Categorical | 1 = Female |
+| `cf_want` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` | Binary | 0 = Not childfree <br> 1 = Childfree |
+| `famstat` | `hasbabes` (F) <br> `everadpt` (F) <br> `seekadpt` (F) <br> `anykids` (M) <br> `rwant` <br> `rstrstat` <br> `pstrstat` <br> `intend` <br> `jintend` | Categorical | 1 = Parent-Unclassified <br> 3 = Parent-Unfulfilled <br> 5 = Parent-Ambivalent <br> 6 = Not yet parent <br> 8 = Childless - Social <br> 9 = Childless - Biological <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
+| `sex` | --- | Categorical | 1 = Female <br> 2 = Male |
+| `lgbt` | `orient` | Binary | 1 = Straight <br> 2 = Gay/Lesbian <br> 3 = Bisexual <br> 4 = Something else |
 | `hispanic` | `rscrhisp` | Binary | 0 = Not hispanic <br> 1 = Hispanic |
 | `race` | `rscrrace` | Categorical | 1 = White <br> 2 = Black <br> 3 = Hawaiian <br> 4 = Asian <br> 5 = American Indian <br> 6 = Other |
 | `age` | `age_r` | Numeric | In years |
@@ -84,9 +85,12 @@ This table summarizes the variables that are contained in dataframes generated f
 | `employed` | `rwrkst` | Binary | 0 = Not employed <br> 1 = Employed |
 | `inschool` | `goschol` | Binary | 0 = Not in school <br> 1 = In school |
 | `religion` | `relcurr` | Categorical | 1 = None <br> 2 = Catholic / Orthodox <br> 5 = Protestant / Christian <br> 6 = Other |
+| `bother` | `chbother` | Ordinal | 1 = Not at all <br> 2 = A little <br> 3 = Some <br> 4 = A great deal |
 | `id` | `caseid` | string |
 | `country` | "United States" | string |
-| `weight` | `wgt2017_2019` <br> `wgt2015_2019` <br> `wtg2013_2015` <br> `wtg2011_2013` <br> `WGTQ1Q16` <br> `finalwgt` | string |
+| `weight` | `wgt2017_2019` <br> `wgt2015_2019` <br> `wtg2013_2015` <br> `wtg2011_2013` <br> `WGTQ1Q16` <br> `finalwgt` | numeric |
+| `cluster` | `secu` | numeric |
+| `stratum` | `sest` | numeric |
 | `file` | user | string |
 | `survey` | "NSFG" | string |
 | `wave` | user | string |
@@ -103,6 +107,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `cf_want` | `neal1` <br> `neal2` <br> `neal3` | Binary | 0 = Not childfree <br> 1 = Childfree |
 | `famstat` | `neal1` <br> `neal2` <br> `neal3` | Categorical | 1 = Parent-Unclassified <br> 6 = Not yet parent <br> 7 = Childless - Unclassified <br> 10 = Ambivalent non-parent <br> 11 = Undecided <br> 12 = Childfree |
 | `sex` | `cd1` | Categorical | 1 = Female <br> 2 = Male <br> 3 = Other |
+| `lgbt` | `neal11` <br> (wave 84 only) | Binary | 0 = Not LGBT <br> 1 = LGBT |
 | `hispanic` | `cd5a` | Binary | 0 = Not hispanic <br> 1 = Hispanic |
 | `race` | `cd4_1` <br> `cd4_2` <br> `cd4_3` <br> `cd4_4` <br> `cd4_5` <br> `cd4_6` | Categorical | 1 = White <br> 2 = Black <br> 3 = Hawaiian <br> 4 = Asian <br> 5 = American Indian <br> 6 = Other <br> 7 = Multiracial |
 | `age` | `cd2` | Numeric | In years |
@@ -115,7 +120,7 @@ This table summarizes the variables that are contained in dataframes generated f
 | `religion` | `cd6` | Categorical | 1 = None <br> 2 = Catholic / Orthodox <br> 3 = Muslim <br> 4 = Jewish <br> 5 = Protestant / Christian <br> 6 = Other |
 | `id` | `caseid` | string |
 | `country` | "United States" | string |
-| `weight` | `weight` | string |
+| `weight` | `weight` | numeric |
 | `file` | user | string |
 | `survey` | "SOSS" | string |
 | `wave` | user | string |
