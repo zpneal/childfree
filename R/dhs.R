@@ -1,4 +1,4 @@
-#' Read and recode UN Demographic and Health Surveys (DHS) individual data
+#' Read and recode Demographic and Health Surveys (DHS) individual data
 #'
 #' @param files vector: a character vector containing the paths for one or more Individual Recode DHS data files (see details)
 #' @param extra.vars vector: a character vector containing the names of variables to be retained from the raw data
