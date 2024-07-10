@@ -5,7 +5,6 @@
 [![](https://www.r-pkg.org/badges/version/childfree?color=orange)](https://cran.r-project.org/package=childfree)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/childfree?color=blue)](https://cran.r-project.org/package=childfree)
 [![](http://cranlogs.r-pkg.org/badges/last-month/childfree?color=green)](https://cran.r-project.org/package=childfree)
-[![status](https://tinyverse.netlify.com/badge/childfree)](https://CRAN.R-project.org/package=childfree)
 <!-- badges: end -->
 
 ## Welcome
