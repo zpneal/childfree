@@ -2,7 +2,7 @@
 % Please edit documentation in R/dhs.R
 \name{dhs}
 \alias{dhs}
-\title{Read and recode UN Demographic and Health Surveys (DHS) individual data}
+\title{Read and recode Demographic and Health Surveys (DHS) individual data}
 \usage{
 dhs(files, extra.vars = NULL, progress = TRUE)
 }
@@ -17,7 +17,7 @@ dhs(files, extra.vars = NULL, progress = TRUE)
 A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 }
 \description{
-Read and recode UN Demographic and Health Surveys (DHS) individual data
+Read and recode Demographic and Health Surveys (DHS) individual data
 }
 \details{
 The \href{https://www.dhsprogram.com/}{Demographic and Health Surveys} (DHS) program regularly collects
