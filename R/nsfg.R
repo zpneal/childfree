@@ -69,8 +69,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,3512,3512)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1463,1463)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1464,1464)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3522,3522)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3515,3515)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3522,3522)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3515,3515)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2006) {
       dat$hasbabes <- as.numeric(substring(raw,118,118)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -79,8 +79,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,4539,4539)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1902,1902)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1903,1903)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,4550,4550)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,4542,4542)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,4550,4550)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,4542,4542)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2011) {
       dat$hasbabes <- as.numeric(substring(raw,123,123)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -89,8 +89,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,3282,3282)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1754,1754)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1755,1755)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3293,3293)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3285,3285)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3293,3293)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3285,3285)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2013) {
       dat$hasbabes <- as.numeric(substring(raw,118,118)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -99,8 +99,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,3420,3420)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1683,1683)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1684,1684)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3252,3252)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3243,3243)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3252,3252)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3243,3243)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       }
     if (year==2015) {
       dat$hasbabes <- as.numeric(substring(raw,96,96)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -109,8 +109,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,2785,2785)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1237,1237)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1238,1238)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,2796,2796)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,2788,2788)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,2796,2796)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,2788,2788)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       }
     if (year==2017) {
       dat$hasbabes <- as.numeric(substring(raw,89,89)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -119,8 +119,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,2410,2410)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,836,836)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,837,837)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,2421,2421)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,2413,2413)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,2421,2421)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,2413,2413)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
 
     #Constructed variables
@@ -443,48 +443,48 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,2414,2414)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,114,114)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,220,220)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,2424,2424)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,2416,2416)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,2424,2424)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,2416,2416)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2006) {
       dat$anykids <- as.numeric(substring(raw,3375,3375)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3745,3745)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,163,163)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,314,314)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3755,3755)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3747,3747)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3755,3755)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3747,3747)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2011) {
       dat$anykids <- as.numeric(substring(raw,3370,3370)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3750,3750)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,179,179)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,328,328)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3760,3760)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3752,3752)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3760,3760)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3752,3752)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2013) {
       dat$anykids <- as.numeric(substring(raw,3189,3189)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3592,3592)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,180,180)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,327,327)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3602,3602)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3594,3594)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3602,3602)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3594,3594)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2015) {
       dat$anykids <- as.numeric(substring(raw,2902,2902)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3316,3316)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,152,152)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,280,280)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3326,3326)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3318,3318)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3326,3326)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3318,3318)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
     if (year==2017) {
       dat$anykids <- as.numeric(substring(raw,2859,2859)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3276,3276)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,167,167)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,290,290)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3286,3286)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3278,3278)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3286,3286)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3278,3278)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
 
     #Childfree (want)
