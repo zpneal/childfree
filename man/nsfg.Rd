@@ -43,7 +43,7 @@ are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{\verb
 unweighted <- nsfg(years = 2017)  #Unweighted data
 table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
 
-weighted <- nsfg(years = "2017", survey = TRUE)  #Weighted data
+weighted <- nsfg(years = 2017, survey = TRUE)  #Weighted data
 survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
 }
 }
