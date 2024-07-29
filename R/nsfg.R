@@ -122,55 +122,45 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$intend <- as.numeric(substring(raw,2421,2421)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$jintend <- as.numeric(substring(raw,2413,2413)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
-
+    
+    dat$everadpt[which(is.na(dat$everadpt))] <- 5  #Females under 18 not asked; impute no
+    dat$seekadpt[which(is.na(dat$seekadpt))] <- 5  #Females under 18 not asked; impute no
+    
     #Constructed variables
-    dat$anykids <- NA  #Does the respondent have biological or adopted children?
-    dat$anykids[which(dat$hasbabes==5 & (dat$everadpt!=1 | is.na(dat$everadpt)))] <- 0  #No
-    dat$anykids[which(dat$hasbabes==1 | dat$everadpt==1)] <- 1  #Yes
-
-    dat$planadpt <- NA  #Is the respondent trying (currently), or seeking (plans in the future), to adopt?
-    dat$planadpt[which((dat$everadpt==5 | is.na(dat$everadpt)) & (dat$seekadpt==5 | is.na(dat$seekadpt)))] <- 0  #No (Have not adopted & don't plan to)
-    dat$planadpt[which(dat$everadpt==1 | dat$seekadpt==5)] <- 0  #No (Have adopted, but don't plan to again)
-    dat$planadpt[which(dat$everadpt==3 | dat$seekadpt==1)] <- 1  #Yes (May adopt in the future)
-    dat$planadpt[which(dat$seekadpt==9 & dat$everadpt!=3)] <- 9  #Don't know (Not currently trying to adopt, don't know about future)
-
-    dat$wantbio <- NA  #Does the respondent want a(nother) biological child?
-    dat$wantbio[which(dat$rwant==5)] <- 0  #No
-    dat$wantbio[which(dat$rwant==1)] <- 1  #Yes
-    dat$wantbio[which(dat$rwant==9)] <- 9  #Don't know
-
+    dat$behavior <- NA
+    dat$behavior[which(dat$hasbabes==5 & (dat$everadpt==5 | dat$everadpt==3))] <- 0  #No, do not have biological or adopted children
+    dat$behavior[which(dat$hasbabes==1 | dat$everadpt==1)] <- 1  #Yes, have biological or adopted children
+    
+    dat$attitude <- NA
+    dat$attitude[which(dat$rwant==5 & dat$everadpt!=3 & dat$seekadpt==5)] <- 0  #No, do not want children
+    dat$attitude[which(dat$rwant==1 | dat$everadpt==3 | dat$seekadpt==1)] <- 1  #Yes, want children
+    dat$attitude[which((dat$rwant==9 | dat$seekadpt==9) & dat$rwant!=1 & dat$seekadpt!=1)] <- -1  #DK if want children
+    
+    dat$circumstance <- 0  #No known barriers
+    dat$circumstance[which(dat$rstrstat==1 | dat$rstrstat==2 | dat$pstrstat==1 | dat$pstrstat==2)] <- 1  #Infecund
+    dat$circumstance[which(dat$intend==5 | dat$jintend==5)] <- 2  #Other barrier, does not intend to have children
+    
     #Childfree (want)
     dat$cf_want <- NA
-    dat$cf_want[which(dat$anykids==0 & dat$wantbio==0 & dat$planadpt==0)] <- 1  #Childfree
-    dat$cf_want[which(dat$anykids==1 | dat$wantbio==1 | dat$wantbio==9 | dat$planadpt==1 | dat$planadpt==9)] <- 0  #Not childfree
+    dat$cf_want[which(dat$behavior==0 & dat$attitude==0)] <- 1  #Childfree
+    dat$cf_want[which(dat$behavior!=0 | dat$attitude!=0)] <- 0  #Not childfree
 
     #Childfree (expect) - Unknown because intention question only asked of single respondents if they wanted children
 
     #Family status
     dat$famstat <- NA
-    dat$famstat[which(dat$anykids==1)] <- 1  #Parent - Unclassified
+    dat$famstat[which(dat$behavior==1)] <- 1  #Parent - Unclassified
     #Parent - Fulfilled: Unknown because parents who do not want another child could also be reluctant
-    dat$famstat[which(dat$anykids==1 & (dat$wantbio==1 | dat$planadpt==1))] <- 3 #Parent - Unfulfilled
+    dat$famstat[which(dat$behavior==1 & dat$attitude==1)] <- 3  #Parent - Unfulfilled
     #Parent - Reluctant: Unknown because parents who do not want another child could also be fulfilled
-    dat$famstat[which(dat$anykids==1 & (dat$wantbio==9 | dat$planadpt==9))] <- 5 #Parent - Ambivalent
-
-    dat$famstat[which(dat$anykids==0 & (dat$wantbio==1 | dat$planadpt==1))] <- 6  #Not yet parent
-
+    dat$famstat[which(dat$behavior==1 & dat$attitude==-1)] <- 5  #Parent - Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1)] <- 6  #Not yet parent
     #Childless - Unclassified: Not used because all can be classified
-
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & dat$intend==5)] <- 8  #Childless - Social: Single respondent who wanted, but do not intend, to have children
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & dat$jintend==5)] <- 8  #Childless - Social: Partnered respondent who wanted, but do not intend, to have children
-
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & (dat$rstrstat==1 | dat$rstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but is sterile
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & (dat$pstrstat==1 | dat$pstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but who's partner is sterile
-
-    dat$famstat[which(dat$anykids==0 & (dat$wantbio==9 | dat$planadpt==9))] <- 11 #Undecided
-
-    dat$famstat[which(dat$anykids==0 & dat$intend==5 & (dat$wantbio==9 | dat$planadpt==9))] <- 10  #Ambivalent non-parent: Single respondent who does not intend, but does not know if wanted
-    dat$famstat[which(dat$anykids==0 & dat$jintend==5 & (dat$wantbio==9 | dat$planadpt==9))] <- 10  #Ambivalent non-parent: Partnered respondent who does not intend, but does not know if wanted
-
-    dat$famstat[which(dat$anykids==0 & dat$wantbio==0 & dat$planadpt==0)] <- 12 #Childfree
-
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==2)] <- 8  #Socially childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==1)] <- 9  #Biologically childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance!=0)] <- 10  #Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance==0)] <- 11  #Undecided
+    dat$famstat[which(dat$behavior==0 & dat$attitude==0)] <- 12  #Childfree
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
@@ -487,42 +477,45 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
       dat$jintend <- as.numeric(substring(raw,3278,3278)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
     }
 
+    #Constructed variables
+    dat$behavior <- NA
+    dat$behavior[which(dat$anykids==0)] <- 0  #No, do not have biological or adopted children
+    dat$behavior[which(dat$anykids==1)] <- 1  #Yes, have biological or adopted children
+    
+    dat$attitude <- NA
+    dat$attitude[which(dat$rwant==5)] <- 0  #No, do not want children
+    dat$attitude[which(dat$rwant==1)] <- 1  #Yes, want children
+    dat$attitude[which(dat$rwant==9)] <- -1  #DK if want children
+    
+    dat$circumstance <- 0  #No known barriers
+    dat$circumstance[which(dat$rstrstat==1 | dat$rstrstat==2 | dat$pstrstat==1 | dat$pstrstat==2)] <- 1  #Infecund
+    dat$circumstance[which(dat$intend==5 | dat$jintend==5)] <- 2  #Other barrier, does not intend to have children
+    
     #Childfree (want)
     dat$cf_want <- NA
-    dat$cf_want[which(dat$anykids==0 & dat$rwant==5)] <- 1  #Childfree
-    dat$cf_want[which(dat$anykids==1 | dat$rwant==1 | dat$rwant==9)] <- 0  #Not childfree
-
+    dat$cf_want[which(dat$behavior==0 & dat$attitude==0)] <- 1  #Childfree
+    dat$cf_want[which(dat$behavior!=0 | dat$attitude!=0)] <- 0  #Not childfree
+    
     #Childfree (expect) - Unknown because intention question only asked of single respondents if they wanted children
-
+    
     #Family status
     dat$famstat <- NA
-    dat$famstat[which(dat$anykids==1)] <- 1  #Parent - Unclassified
+    dat$famstat[which(dat$behavior==1)] <- 1  #Parent - Unclassified
     #Parent - Fulfilled: Unknown because parents who do not want another child could also be reluctant
-    dat$famstat[which(dat$anykids==1 & dat$rwant==1)] <- 3 #Parent - Unfulfilled
+    dat$famstat[which(dat$behavior==1 & dat$attitude==1)] <- 3  #Parent - Unfulfilled
     #Parent - Reluctant: Unknown because parents who do not want another child could also be fulfilled
-    dat$famstat[which(dat$anykids==1 & dat$rwant==9)] <- 5 #Parent - Ambivalent
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1)] <- 6  #Not yet parent
-
+    dat$famstat[which(dat$behavior==1 & dat$attitude==-1)] <- 5  #Parent - Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1)] <- 6  #Not yet parent
     #Childless - Unclassified: Not used because all can be classified
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & dat$intend==5)] <- 8  #Childless - Social: Single respondent who wanted, but do not intend, to have children
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & dat$jintend==5)] <- 8  #Childless - Social: Partnered respondent who wanted, but do not intend, to have children
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & (dat$rstrstat==1 | dat$rstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but is sterile
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & (dat$pstrstat==1 | dat$pstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but who's partner is sterile
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==9)] <- 11 #Undecided
-
-    dat$famstat[which(dat$anykids==0 & dat$intend==5 & dat$rwant==9)] <- 10  #Ambivalent non-parent: Single respondent who does not intend, but does not know if wanted
-    dat$famstat[which(dat$anykids==0 & dat$jintend==5 & dat$rwant==9)] <- 10  #Ambivalent non-parent: Partnered respondent who does not intend, but does not know if wanted
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==5)] <- 12 #Childfree
-
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==2)] <- 8  #Socially childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==1)] <- 9  #Biologically childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance!=0)] <- 10  #Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance==0)] <- 11  #Undecided
+    dat$famstat[which(dat$behavior==0 & dat$attitude==0)] <- 12  #Childfree
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
-
+    
     #### Demographics ####
     #Sex
     dat$sex <- 2
