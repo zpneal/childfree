@@ -156,8 +156,8 @@ nsfg <- function(years, survey = FALSE, progress = TRUE) {
     dat$famstat[which(dat$behavior==1 & dat$attitude==-1)] <- 5  #Parent - Ambivalent
     dat$famstat[which(dat$behavior==0 & dat$attitude==1)] <- 6  #Not yet parent
     #Childless - Unclassified: Not used because all can be classified
-    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==2)] <- 8  #Socially childless
-    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==1)] <- 9  #Biologically childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==2 & dat$everadpt==5 & dat$seekadpt==5)] <- 8  #Socially childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==1 & dat$everadpt==5 & dat$seekadpt==5)] <- 9  #Biologically childless
     dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance!=0)] <- 10  #Ambivalent
     dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance==0)] <- 11  #Undecided
     dat$famstat[which(dat$behavior==0 & dat$attitude==0)] <- 12  #Childfree
