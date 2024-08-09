@@ -277,7 +277,7 @@ dhs <- function(files, extra.vars = NULL, survey = FALSE, progress = TRUE) {
     #Weighting variables
     if (female) {dat$weight <- dat$v005/1000000} else {dat$weight <- dat$mv005/1000000}
     if (female) {dat$cluster <- dat$v021} else {dat$cluster <- dat$mv021}
-    if (female) {dat$strata <- dat$v023} else {dat$cluster <- dat$mv023}
+    if (female) {dat$strata <- dat$v023} else {dat$strata <- dat$mv023}
 
     #Wave (called "Recode" in the DHS)
     if (female) {
