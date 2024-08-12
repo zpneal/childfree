@@ -4,12 +4,14 @@
 \alias{nsfg}
 \title{Read and recode National Survey of Family Growth (NSFG) data}
 \usage{
-nsfg(years, survey = FALSE, progress = TRUE)
+nsfg(years, survey = FALSE, keep_source = FALSE, progress = TRUE)
 }
 \arguments{
 \item{years}{vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)}
 
 \item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \code{\link{survey}} design object if \code{TRUE}}
+
+\item{keep_source}{boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}}
 
 \item{progress}{boolean: display a progress bar}
 }
