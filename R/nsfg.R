@@ -129,24 +129,24 @@ nsfg <- function(years, survey = FALSE, keep_source = FALSE, progress = TRUE) {
       dat$jintend <- as.numeric(substring(raw,2413,2413)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$anykids <- NA
     }
-    
+
     dat$everadpt[which(is.na(dat$everadpt))] <- 5  #Females under 18 not asked; impute no
     dat$seekadpt[which(is.na(dat$seekadpt))] <- 5  #Females under 18 not asked; impute no
-    
+
     #Constructed variables
     dat$behavior <- NA
     dat$behavior[which(dat$hasbabes==5 & (dat$everadpt==5 | dat$everadpt==3))] <- 0  #No, do not have biological or adopted children
     dat$behavior[which(dat$hasbabes==1 | dat$everadpt==1)] <- 1  #Yes, have biological or adopted children
-    
+
     dat$attitude <- NA
     dat$attitude[which(dat$rwant==5 & dat$everadpt!=3 & dat$seekadpt==5)] <- 0  #No, do not want children
     dat$attitude[which(dat$rwant==1 | dat$everadpt==3 | dat$seekadpt==1)] <- 1  #Yes, want children
     dat$attitude[which((dat$rwant==9 | dat$seekadpt==9) & dat$rwant!=1 & dat$seekadpt!=1)] <- -1  #DK if want children
-    
+
     dat$circumstance <- 0  #No known barriers
     dat$circumstance[which(dat$rstrstat==1 | dat$rstrstat==2 | dat$pstrstat==1 | dat$pstrstat==2)] <- 1  #Infecund
     dat$circumstance[which(dat$intend==5 | dat$jintend==5)] <- 2  #Other barrier, does not intend to have children
-    
+
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(dat$behavior==0 & dat$attitude==0)] <- 1  #Childfree
@@ -405,10 +405,19 @@ nsfg <- function(years, survey = FALSE, keep_source = FALSE, progress = TRUE) {
 
     #### Clean up ####
     #Reduce data
-    dat <- dat[,c("cf_want", "famstat",  #Family status
-                  "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
-                  "religion", "bother",  #Attitude
-                  "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    if (keep_source) {
+      dat <- dat[,c("cf_want", "famstat", "hasbabes", "everadpt", "seekadpt", "anykids", "rwant", "rstrstat", "pstrstat", "intend", "jintend",  #Family status
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "religion", "bother", #Attitude
+                    "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    }
+
+    if (!keep_source) {
+      dat <- dat[,c("cf_want", "famstat",  #Family status
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "religion", "bother", #Attitude
+                    "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    }
 
     #Start data file, or append to existing data file
     if (year==min(years)) {data <- dat} else {data <- rbind(data, dat)}
@@ -506,23 +515,23 @@ nsfg <- function(years, survey = FALSE, keep_source = FALSE, progress = TRUE) {
     dat$behavior <- NA
     dat$behavior[which(dat$anykids==0)] <- 0  #No, do not have biological or adopted children
     dat$behavior[which(dat$anykids==1)] <- 1  #Yes, have biological or adopted children
-    
+
     dat$attitude <- NA
     dat$attitude[which(dat$rwant==5)] <- 0  #No, do not want children
     dat$attitude[which(dat$rwant==1)] <- 1  #Yes, want children
     dat$attitude[which(dat$rwant==9)] <- -1  #DK if want children
-    
+
     dat$circumstance <- 0  #No known barriers
     dat$circumstance[which(dat$rstrstat==1 | dat$rstrstat==2 | dat$pstrstat==1 | dat$pstrstat==2)] <- 1  #Infecund
     dat$circumstance[which(dat$intend==5 | dat$jintend==5)] <- 2  #Other barrier, does not intend to have children
-    
+
     #Childfree (want)
     dat$cf_want <- NA
     dat$cf_want[which(dat$behavior==0 & dat$attitude==0)] <- 1  #Childfree
     dat$cf_want[which(dat$behavior!=0 | dat$attitude!=0)] <- 0  #Not childfree
-    
+
     #Childfree (expect) - Unknown because intention question only asked of single respondents if they wanted children
-    
+
     #Family status
     dat$famstat <- NA
     dat$famstat[which(dat$behavior==1)] <- 1  #Parent - Unclassified
@@ -540,7 +549,7 @@ nsfg <- function(years, survey = FALSE, keep_source = FALSE, progress = TRUE) {
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
-    
+
     #### Demographics ####
     #Sex
     dat$sex <- 2
@@ -786,7 +795,7 @@ nsfg <- function(years, survey = FALSE, keep_source = FALSE, progress = TRUE) {
                     "religion", "bother", #Attitude
                     "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
     }
-    
+
     if (!keep_source) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
                     "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
