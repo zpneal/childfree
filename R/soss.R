@@ -34,17 +34,22 @@
 #'   * The provided sampling weights are designed to be used in the analyses of individual waves. Combining data from multiple
 #'     waves may require using adjusted weights.
 #'
-#' @return A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+#' @return A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}.
+#' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' unweighted <- soss(waves = 86)  #Unweighted data
+#' unweighted <- soss(waves = 86)  #Request unweighted data
+#' if (!is.null(unweighted)) {  #If data was available...
 #' table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
+#' }
 #'
-#' weighted <- soss(waves = 86, survey = TRUE)  #Weighted data
+#' weighted <- soss(waves = 86, survey = TRUE)  #Request weighted data
+#' if (!is.null(weighted)) {  #If data was available...
 #' survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+#' }
 #' }
 soss <- function(waves, extra.vars = NULL, survey = FALSE, progress = TRUE) {
 
@@ -60,15 +65,37 @@ soss <- function(waves, extra.vars = NULL, survey = FALSE, progress = TRUE) {
   #Loop over each supplied data file
   for (wave in waves) {
 
-    #Increment progress bar
-    if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+    #Check if data is available, if it is then download
+    if (wave==79) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/soss79b.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/soss79b.sav")
+    }
 
-    #Import raw data
-    if (wave==79) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/soss79b.sav")}
-    if (wave==82) {dat <- rio::import("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")}
-    if (wave==84) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")}
-    if (wave==85) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")}
-    if (wave==86) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")}
+    if (wave==82) {
+      if (!RCurl::url.exists("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")
+    }
+
+    if (wave==84) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")
+    }
+
+    if (wave==85) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")
+    }
+
+    if (wave==86) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")
+    }
+
     colnames(dat) <- tolower(colnames(dat))  #Make all variables lowercase
 
     #### Family Status ####

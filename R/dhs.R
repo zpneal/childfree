@@ -34,16 +34,21 @@
 #'     with the downloaded data files.
 #'
 #' @return A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+#' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' unweighted <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))  #Unweighted (example) data
+#' unweighted <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))  #Request unweighted data
+#' if (!is.null(unweighted)) {  #If data was available...
 #' round(table(unweighted$famstat)/nrow(unweighted),3)  #Fraction of respondents w/ each family status
+#' }
 #'
-#' weighted <- dhs(files = c("ZZIR62FL.SAV"), survey = TRUE)  #Weighted (example) data
+#' weighted <- dhs(files = c("ZZIR62FL.SAV"), survey = TRUE)  #Request weighted (example) data
+#' if (!is.null(weighted)) {  #If dtaa was available...
 #' survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+#' }
 #' }
 dhs <- function(files, extra.vars = NULL, survey = FALSE, progress = TRUE) {
 
@@ -57,15 +62,16 @@ dhs <- function(files, extra.vars = NULL, survey = FALSE, progress = TRUE) {
   #Loop over each supplied data file
   for (file in 1:length(files)) {
 
-    #Increment progress bar
-    if (progress) {utils::setTxtProgressBar(pb,file)}
-
     #Import raw data
     if (files[file]=="ZZIR62FL.SAV") {  #Model file from https://dhsprogram.com/data/Download-Model-Datasets.cfm
+      if (!RCurl::url.exists("https://osf.io/download/hk23e")) {message("You are offline or sample DHS data is not available now. Try again later"); data <- NULL; return(data)}
       temp <- tempfile()
       utils::download.file(url = "https://osf.io/download/hk23e", destfile = temp)
       dat <- rio::import(temp, format = "sav")
-    } else {dat <- rio::import(files[file])}
+    } else {
+      if (progress) {utils::setTxtProgressBar(pb,file)}
+      dat <- rio::import(files[file])
+      }
     colnames(dat) <- tolower(colnames(dat))  #Make all variables lowercase
 
     #Check type of file
