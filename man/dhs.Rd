@@ -17,6 +17,7 @@ dhs(files, extra.vars = NULL, survey = FALSE, progress = TRUE)
 }
 \value{
 A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
 Read and recode Demographic and Health Surveys (DHS) individual data
@@ -53,10 +54,14 @@ with the downloaded data files.
 }
 \examples{
 \donttest{
-unweighted <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))  #Unweighted (example) data
+unweighted <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))  #Request unweighted data
+if (!is.null(unweighted)) {  #If data was available...
 round(table(unweighted$famstat)/nrow(unweighted),3)  #Fraction of respondents w/ each family status
+}
 
-weighted <- dhs(files = c("ZZIR62FL.SAV"), survey = TRUE)  #Weighted (example) data
+weighted <- dhs(files = c("ZZIR62FL.SAV"), survey = TRUE)  #Request weighted (example) data
+if (!is.null(weighted)) {  #If dtaa was available...
 survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+}
 }
 }

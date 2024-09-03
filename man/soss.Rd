@@ -16,7 +16,8 @@ soss(waves, extra.vars = NULL, survey = FALSE, progress = TRUE)
 \item{progress}{boolean: display a progress bar}
 }
 \value{
-A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}.
+If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
 Read and recode Michigan State of the State (SOSS) data
@@ -56,10 +57,14 @@ waves may require using adjusted weights.
 }
 \examples{
 \donttest{
-unweighted <- soss(waves = 86)  #Unweighted data
+unweighted <- soss(waves = 86)  #Request unweighted data
+if (!is.null(unweighted)) {  #If data was available...
 table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
+}
 
-weighted <- soss(waves = 86, survey = TRUE)  #Weighted data
+weighted <- soss(waves = 86, survey = TRUE)  #Request weighted data
+if (!is.null(weighted)) {  #If data was available...
 survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+}
 }
 }

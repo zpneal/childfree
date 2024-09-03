@@ -17,6 +17,7 @@ nsfg(years, survey = FALSE, keep_source = FALSE, progress = TRUE)
 }
 \value{
 A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
 Read and recode National Survey of Family Growth (NSFG) data
@@ -42,10 +43,14 @@ are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{\verb
 }
 \examples{
 \donttest{
-unweighted <- nsfg(years = 2017)  #Unweighted data
+unweighted <- nsfg(years = 2017)  #Request unweighted data
+if (!is.null(unweighted)) {  #If data was available...
 table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
+}
 
-weighted <- nsfg(years = 2017, survey = TRUE)  #Weighted data
+weighted <- nsfg(years = 2017, survey = TRUE)  #Request weighted data
+if (!is.null(weighted)) {  #If data was available...
 survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+}
 }
 }
