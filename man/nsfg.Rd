@@ -9,14 +9,14 @@ nsfg(years, survey = FALSE, keep_source = FALSE, progress = TRUE)
 \arguments{
 \item{years}{vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)}
 
-\item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \code{\link{survey}} design object if \code{TRUE}}
+\item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}}
 
 \item{keep_source}{boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}}
 
 \item{progress}{boolean: display a progress bar}
 }
 \value{
-A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
 If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
@@ -28,7 +28,7 @@ regularly collects fertility and other health information from a population-repr
 United States. Between 1973 and 2002, the NSFG was conducted periodically. Starting in 2002, the NSFG transitioned to
 continuous data collection, releasing data in multi-year waves (e.g., 2006-2010, 2011-2013). The \code{nsfg()} function reads
 the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
-statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the \code{\link{survey}}
+statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
 package.
 
 \strong{Notes}

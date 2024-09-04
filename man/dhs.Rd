@@ -11,12 +11,12 @@ dhs(files, extra.vars = NULL, survey = FALSE, progress = TRUE)
 
 \item{extra.vars}{vector: a character vector containing the names of variables to be retained from the raw data}
 
-\item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \code{\link{survey}} design object if \code{TRUE}}
+\item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}}
 
 \item{progress}{boolean: display a progress bar}
 }
 \value{
-A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
 If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
@@ -29,8 +29,8 @@ health data from population-representative samples in many countries using stand
 files are available in SPSS, SAS, and Stata formats from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/},
 however access requires a \href{https://dhsprogram.com/data/Access-Instructions.cfm}{free application}. The \code{dhs()} function
 reads one or more of these files, extracts and recodes selected variables useful for studying childfree adults and other
-family statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the
-\code{\link{survey}} package.
+family statuses, then returns either an unweighted data frame, or a weighted \link[survey]{svydesign} object that can be analyzed using the
+\code{survey} package.
 
 Although access to DHS data requires an application, the DHS program provides a \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model dataset}
 for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains fictitious women's data,
