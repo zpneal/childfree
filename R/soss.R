@@ -2,7 +2,7 @@
 #'
 #' @param waves vector: a numeric vector containing the SOSS waves to include (currently available: 79, 82, 84, 85, 86)
 #' @param extra.vars vector: a character vector containing the names of variables to be retained from the raw data
-#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \code{\link{survey}} design object if \code{TRUE}
+#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -12,7 +12,7 @@
 #'    includes sampling weights to obtain a sample that is representative of the state's population with respect
 #'    to age, gender, race, and education. The `soss()` function reads the raw data from IPPSR's website, extracts
 #'    and recodes selected variables useful for studying childfree adults and other family statuses, then returns
-#'    either an unweighted data frame, or a weighted design object that can be analyzed using the \code{\link{survey}}
+#'    either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
 #'    package. Questions necessary for identifying childfree adults have been asked in five waves, which each
 #'    include unique questions that may be of interest:
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
@@ -21,12 +21,6 @@
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
-#' **Weights**
-#'
-#' The \href{https://cran.r-project.org/package=survey}{`survey`} package can be used to incorporate sampling weights
-#'    and obtain population-representative estimates by wave. After using `soss()` to obtain data for a given wave (see example below), use
-#'    `dat <- svydesign(data = dat, ids = ~1, weights = ~weight)` to incorporate information about the survey design.
-#'
 #' **Notes**
 #'   * Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
@@ -34,7 +28,7 @@
 #'   * The provided sampling weights are designed to be used in the analyses of individual waves. Combining data from multiple
 #'     waves may require using adjusted weights.
 #'
-#' @return A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}.
+#' @return A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}.
 #' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export

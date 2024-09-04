@@ -2,7 +2,7 @@
 #'
 #' @param files vector: a character vector containing the paths for one or more Individual Recode DHS data files (see details)
 #' @param extra.vars vector: a character vector containing the names of variables to be retained from the raw data
-#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \code{\link{survey}} design object if \code{TRUE}
+#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -12,8 +12,8 @@
 #'    files are available in SPSS, SAS, and Stata formats from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/},
 #'    however access requires a \href{https://dhsprogram.com/data/Access-Instructions.cfm}{free application}. The `dhs()` function
 #'    reads one or more of these files, extracts and recodes selected variables useful for studying childfree adults and other
-#'    family statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the
-#'    \code{\link{survey}} package.
+#'    family statuses, then returns either an unweighted data frame, or a weighted \link[survey]{svydesign} object that can be analyzed using the
+#'    \code{survey} package.
 #'
 #' Although access to DHS data requires an application, the DHS program provides a \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model dataset}
 #'    for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains fictitious women's data,
@@ -33,7 +33,7 @@
 #'     available \href{https://dhsprogram.com/data/Guide-to-DHS-Statistics/Analyzing_DHS_Data.htm}{here} and in the documentation provided
 #'     with the downloaded data files.
 #'
-#' @return A data frame or weighted \code{\link{survey}} design object containing variables described in the codebook available using \code{vignette("codebooks")}
+#' @return A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
 #' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export
