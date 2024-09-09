@@ -59,6 +59,8 @@ This table summarizes the variables that are contained in dataframes generated f
 | `id` | `(m)caseid` | string |
 | `country` | `(m)v000` | string |
 | `weight` | `(m)v005` | numeric |
+| `cluster` | `(m)v021` | numeric |
+| `strata` | `(m)v023` | numeric |
 | `file` | user | string |
 | `survey` | "DHS" | string |
 | `wave` | `(m)v000` | numeric |

@@ -1,34 +1,45 @@
 #' Read and recode National Survey of Family Growth (NSFG) data
 #'
 #' @param years vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)
+#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}
+#' @param keep_source boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}
 #' @param progress boolean: display a progress bar
 #'
 #' @details
 #' The U.S. Centers for Disease Control \href{https://www.cdc.gov/nchs/nsfg/index.htm}{National Survey of Family Growth} (NSFG)
 #'    regularly collects fertility and other health information from a population-representative sample of adults in the
 #'    United States. Between 1973 and 2002, the NSFG was conducted periodically. Starting in 2002, the NSFG transitioned to
-#'    continuous data collection, releasing data in three-year waves (e.g., the 2013-2015, 2015-2017). The `nsfg()` function reads
+#'    continuous data collection, releasing data in multi-year waves (e.g., 2006-2010, 2011-2013). The `nsfg()` function reads
 #'    the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
-#'    statuses, then returns a single data frame.
+#'    statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
+#'    package.
 #'
-#' **Weights**
-#'
-#' The \href{https://cran.r-project.org/package=survey}{`survey`} package can be used to incorporate sampling weights
-#'    and obtain population-representative estimates by wave. After using `nsfg()` to obtain data for a given wave (see example below), use
-#'    `dat <- svydesign(data = dat, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)` to incorporate information about
-#'    the survey design.
-#'
-#' **Known issues**
+#' **Notes**
 #'   * Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 #'     When a respondent chose this option, their actual race is unknown.
+#'   * The NSFG manual explains that "sample sizes for a single year are too small to provide estimates with adequate levels of precision,"
+#'     and therefore recommends avoiding analysis of data from single years. Instead, these data are designed to be analyzed by wave using
+#'     the provided sampling weights. The \code{nsfg()} function provides weights for analysis of single waves, however alternate weights
+#'     are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{`from the CDC`} for users who wish to combine multiple waves.
 #'
-#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
+#' @return A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
+#' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export
 #'
 #' @examples
-#' \donttest{data <- nsfg(years = 2017)}
-nsfg <- function(years, progress = TRUE) {
+#' \donttest{
+#' unweighted <- nsfg(years = 2017)  #Request unweighted data
+#' if (!is.null(unweighted)) {  #If data was available...
+#' table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
+#' }
+#'
+#' weighted <- nsfg(years = 2017, survey = TRUE)  #Request weighted data
+#' if (!is.null(weighted)) {  #If data was available...
+#' survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+#' }
+#' }
+nsfg <- function(years, survey = FALSE, keep_source = FALSE, progress = TRUE) {
 
   if (!all(years %in%c(2002, 2006, 2011, 2013, 2015, 2017))) {stop("Only the following NSFG years are available: 2002, 2006, 2011, 2013, 2015, 2017")}  #Check for valid years
   years <- sort(years)  #Put years in order
@@ -40,16 +51,42 @@ nsfg <- function(years, progress = TRUE) {
   #### FEMALE RESPONDENT LOOP ####
   for (year in years) {
 
-    #Increment progress bar
-    if (progress) {utils::setTxtProgressBar(pb,year.num)}
+    #Check if data is available, if it is then download
+    if (year==2002) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")
+      }
 
-    #Import raw data
-    if (year==2002) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")}
-    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemResp.dat")}
-    if (year==2011) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat")}
-    if (year==2013) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat")}
-    if (year==2015) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat")}
-    if (year==2017) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_FemRespData.dat")}
+    if (year==2006) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemResp.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemResp.dat")
+      }
+
+    if (year==2011) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat")
+      }
+
+    if (year==2013) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat")
+      }
+
+    if (year==2015) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat")
+      }
+
+    if (year==2017) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_FemRespData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_FemRespData.dat")
+      }
 
     #Initialize dataframe with id variable
     if (year==2002) {dat <- data.frame(id = as.character(substring(raw,1,12)))}
@@ -64,8 +101,9 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,3512,3512)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1463,1463)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1464,1464)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3522,3522)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3515,3515)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3522,3522)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3515,3515)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$anykids <- NA
     }
     if (year==2006) {
       dat$hasbabes <- as.numeric(substring(raw,118,118)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -74,8 +112,9 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,4539,4539)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1902,1902)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1903,1903)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,4550,4550)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,4542,4542)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,4550,4550)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,4542,4542)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$anykids <- NA
     }
     if (year==2011) {
       dat$hasbabes <- as.numeric(substring(raw,123,123)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -84,8 +123,9 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,3282,3282)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1754,1754)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1755,1755)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3293,3293)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3285,3285)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3293,3293)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3285,3285)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$anykids <- NA
     }
     if (year==2013) {
       dat$hasbabes <- as.numeric(substring(raw,118,118)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -94,8 +134,9 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,3420,3420)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1683,1683)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1684,1684)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3252,3252)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3243,3243)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3252,3252)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3243,3243)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$anykids <- NA
       }
     if (year==2015) {
       dat$hasbabes <- as.numeric(substring(raw,96,96)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -104,8 +145,9 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,2785,2785)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,1237,1237)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,1238,1238)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,2796,2796)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,2788,2788)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,2796,2796)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,2788,2788)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$anykids <- NA
       }
     if (year==2017) {
       dat$hasbabes <- as.numeric(substring(raw,89,89)) #Any live births: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
@@ -114,58 +156,49 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,2410,2410)) #Wants a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,836,836)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,837,837)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,2421,2421)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,2413,2413)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,2421,2421)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,2413,2413)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$anykids <- NA
     }
 
+    dat$everadpt[which(is.na(dat$everadpt))] <- 5  #Females under 18 not asked; impute no
+    dat$seekadpt[which(is.na(dat$seekadpt))] <- 5  #Females under 18 not asked; impute no
+
     #Constructed variables
-    dat$anykids <- NA  #Does the respondent have biological or adopted children?
-    dat$anykids[which(dat$hasbabes==5 & (dat$everadpt!=1 | is.na(dat$everadpt)))] <- 0  #No
-    dat$anykids[which(dat$hasbabes==1 | dat$everadpt==1)] <- 1  #Yes
+    dat$behavior <- NA
+    dat$behavior[which(dat$hasbabes==5 & (dat$everadpt==5 | dat$everadpt==3))] <- 0  #No, do not have biological or adopted children
+    dat$behavior[which(dat$hasbabes==1 | dat$everadpt==1)] <- 1  #Yes, have biological or adopted children
 
-    dat$planadpt <- NA  #Is the respondent trying (currently), or seeking (plans in the future), to adopt?
-    dat$planadpt[which((dat$everadpt==5 | is.na(dat$everadpt)) & (dat$seekadpt==5 | is.na(dat$seekadpt)))] <- 0  #No (Have not adopted & don't plan to)
-    dat$planadpt[which(dat$everadpt==1 | dat$seekadpt==5)] <- 0  #No (Have adopted, but don't plan to again)
-    dat$planadpt[which(dat$everadpt==3 | dat$seekadpt==1)] <- 1  #Yes (May adopt in the future)
-    dat$planadpt[which(dat$seekadpt==9 & dat$everadpt!=3)] <- 9  #Don't know (Not currently trying to adopt, don't know about future)
+    dat$attitude <- NA
+    dat$attitude[which(dat$rwant==5 & dat$everadpt!=3 & dat$seekadpt==5)] <- 0  #No, do not want children
+    dat$attitude[which(dat$rwant==1 | dat$everadpt==3 | dat$seekadpt==1)] <- 1  #Yes, want children
+    dat$attitude[which((dat$rwant==9 | dat$seekadpt==9) & dat$rwant!=1 & dat$seekadpt!=1)] <- -1  #DK if want children
 
-    dat$wantbio <- NA  #Does the respondent want a(nother) biological child?
-    dat$wantbio[which(dat$rwant==5)] <- 0  #No
-    dat$wantbio[which(dat$rwant==1)] <- 1  #Yes
-    dat$wantbio[which(dat$rwant==9)] <- 9  #Don't know
+    dat$circumstance <- 0  #No known barriers
+    dat$circumstance[which(dat$rstrstat==1 | dat$rstrstat==2 | dat$pstrstat==1 | dat$pstrstat==2)] <- 1  #Infecund
+    dat$circumstance[which(dat$intend==5 | dat$jintend==5)] <- 2  #Other barrier, does not intend to have children
 
     #Childfree (want)
     dat$cf_want <- NA
-    dat$cf_want[which(dat$anykids==0 & dat$wantbio==0 & dat$planadpt==0)] <- 1  #Childfree
-    dat$cf_want[which(dat$anykids==1 | dat$wantbio==1 | dat$wantbio==9 | dat$planadpt==1 | dat$planadpt==9)] <- 0  #Not childfree
+    dat$cf_want[which(dat$behavior==0 & dat$attitude==0)] <- 1  #Childfree
+    dat$cf_want[which(dat$behavior!=0 | dat$attitude!=0)] <- 0  #Not childfree
 
     #Childfree (expect) - Unknown because intention question only asked of single respondents if they wanted children
 
     #Family status
     dat$famstat <- NA
-    dat$famstat[which(dat$anykids==1)] <- 1  #Parent - Unclassified
+    dat$famstat[which(dat$behavior==1)] <- 1  #Parent - Unclassified
     #Parent - Fulfilled: Unknown because parents who do not want another child could also be reluctant
-    dat$famstat[which(dat$anykids==1 & (dat$wantbio==1 | dat$planadpt==1))] <- 3 #Parent - Unfulfilled
+    dat$famstat[which(dat$behavior==1 & dat$attitude==1)] <- 3  #Parent - Unfulfilled
     #Parent - Reluctant: Unknown because parents who do not want another child could also be fulfilled
-    dat$famstat[which(dat$anykids==1 & (dat$wantbio==9 | dat$planadpt==9))] <- 5 #Parent - Ambivalent
-
-    dat$famstat[which(dat$anykids==0 & (dat$wantbio==1 | dat$planadpt==1))] <- 6  #Not yet parent
-
+    dat$famstat[which(dat$behavior==1 & dat$attitude==-1)] <- 5  #Parent - Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1)] <- 6  #Not yet parent
     #Childless - Unclassified: Not used because all can be classified
-
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & dat$intend==5)] <- 8  #Childless - Social: Single respondent who wanted, but do not intend, to have children
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & dat$jintend==5)] <- 8  #Childless - Social: Partnered respondent who wanted, but do not intend, to have children
-
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & (dat$rstrstat==1 | dat$rstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but is sterile
-    dat$famstat[which(dat$anykids==0 & dat$planadpt==0 & dat$wantbio==1 & (dat$pstrstat==1 | dat$pstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but who's partner is sterile
-
-    dat$famstat[which(dat$anykids==0 & (dat$wantbio==9 | dat$planadpt==9))] <- 11 #Undecided
-
-    dat$famstat[which(dat$anykids==0 & dat$intend==5 & (dat$wantbio==9 | dat$planadpt==9))] <- 10  #Ambivalent non-parent: Single respondent who does not intend, but does not know if wanted
-    dat$famstat[which(dat$anykids==0 & dat$jintend==5 & (dat$wantbio==9 | dat$planadpt==9))] <- 10  #Ambivalent non-parent: Partnered respondent who does not intend, but does not know if wanted
-
-    dat$famstat[which(dat$anykids==0 & dat$wantbio==0 & dat$planadpt==0)] <- 12 #Childfree
-
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==2 & dat$everadpt==5 & dat$seekadpt==5)] <- 8  #Socially childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==1 & dat$everadpt==5 & dat$seekadpt==5)] <- 9  #Biologically childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance!=0)] <- 10  #Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance==0)] <- 11  #Undecided
+    dat$famstat[which(dat$behavior==0 & dat$attitude==0)] <- 12  #Childfree
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
@@ -197,7 +230,7 @@ nsfg <- function(years, progress = TRUE) {
       dat$orient <- dat$a + dat$b  #Combine versions a and b
     }
     dat$lgbt <- factor(dat$orient, levels = c(1,2,3,4), labels = c("Straight", "Gay/Lesbian", "Bisexual", "Something else"))
-    
+
     #Race
     if (year==2002) {
       dat$race <- as.numeric(substring(raw,17,17))
@@ -403,10 +436,19 @@ nsfg <- function(years, progress = TRUE) {
 
     #### Clean up ####
     #Reduce data
-    dat <- dat[,c("cf_want", "famstat",  #Family status
-                  "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
-                  "religion", "bother",  #Attitude
-                  "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    if (keep_source) {
+      dat <- dat[,c("cf_want", "famstat", "hasbabes", "everadpt", "seekadpt", "anykids", "rwant", "rstrstat", "pstrstat", "intend", "jintend",  #Family status
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "religion", "bother", #Attitude
+                    "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    }
+
+    if (!keep_source) {
+      dat <- dat[,c("cf_want", "famstat",  #Family status
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "religion", "bother", #Attitude
+                    "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    }
 
     #Start data file, or append to existing data file
     if (year==min(years)) {data <- dat} else {data <- rbind(data, dat)}
@@ -416,16 +458,42 @@ nsfg <- function(years, progress = TRUE) {
   #### MALE RESPONDENT LOOP ####
   for (year in years) {
 
-    #Increment progress bar
-    if (progress) {utils::setTxtProgressBar(pb,year.num)}
-
     #Import raw data
-    if (year==2002) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002Male.dat")}
-    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_Male.dat")}
-    if (year==2011) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_MaleData.dat")}
-    if (year==2013) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_MaleData.dat")}
-    if (year==2015) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_MaleData.dat")}
-    if (year==2017) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_MaleData.dat")}
+    if (year==2002) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002Male.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002Male.dat")
+      }
+
+    if (year==2006) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_Male.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_Male.dat")
+      }
+
+    if (year==2011) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_MaleData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_MaleData.dat")
+      }
+
+    if (year==2013) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_MaleData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_MaleData.dat")
+      }
+
+    if (year==2015) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_MaleData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_MaleData.dat")
+      }
+
+    if (year==2017) {
+      if (!RCurl::url.exists("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_MaleData.dat")) {message("You are offline or NSFG data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,year.num)}
+      raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_MaleData.dat")
+      }
 
     #Initialize dataframe with id variable
     if (year==2002) {dat <- data.frame(id = as.character(substring(raw,1,12)))}
@@ -438,82 +506,103 @@ nsfg <- function(years, progress = TRUE) {
       dat$rwant <- as.numeric(substring(raw,2414,2414)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,114,114)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,220,220)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,2424,2424)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,2416,2416)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,2424,2424)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,2416,2416)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$hasbabes <- NA
+      dat$everadpt <- NA
+      dat$seekadpt <- NA
     }
     if (year==2006) {
       dat$anykids <- as.numeric(substring(raw,3375,3375)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3745,3745)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,163,163)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,314,314)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3755,3755)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3747,3747)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3755,3755)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3747,3747)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$hasbabes <- NA
+      dat$everadpt <- NA
+      dat$seekadpt <- NA
     }
     if (year==2011) {
       dat$anykids <- as.numeric(substring(raw,3370,3370)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3750,3750)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,179,179)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,328,328)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3760,3760)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3752,3752)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3760,3760)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3752,3752)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$hasbabes <- NA
+      dat$everadpt <- NA
+      dat$seekadpt <- NA
     }
     if (year==2013) {
       dat$anykids <- as.numeric(substring(raw,3189,3189)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3592,3592)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,180,180)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,327,327)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3602,3602)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3594,3594)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3602,3602)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3594,3594)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$hasbabes <- NA
+      dat$everadpt <- NA
+      dat$seekadpt <- NA
     }
     if (year==2015) {
       dat$anykids <- as.numeric(substring(raw,2902,2902)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3316,3316)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,152,152)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,280,280)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3326,3326)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3318,3318)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3326,3326)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3318,3318)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$hasbabes <- NA
+      dat$everadpt <- NA
+      dat$seekadpt <- NA
     }
     if (year==2017) {
       dat$anykids <- as.numeric(substring(raw,2859,2859)) #Any biological or adopted children: 0 = No, 1 = Yes
       dat$rwant <- as.numeric(substring(raw,3276,3276)) #Wants a(nother) baby: 1 = Yes, 5 = No, 8 = Refused, 9 = Don't know
       dat$rstrstat <- as.numeric(substring(raw,167,167)) #Respondent's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
       dat$pstrstat <- as.numeric(substring(raw,290,290)) #Partner's sterility status: 0 = Not sterile, 1 = Surgically, 2 = Nonsurgically, 8 = Refused, 9 = Don't know
-      dat$intend <- as.numeric(substring(raw,3286,3286)) #Not partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
-      dat$jintend <- as.numeric(substring(raw,3278,3278)) #Partnered & fertile, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$intend <- as.numeric(substring(raw,3286,3286)) #Not partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$jintend <- as.numeric(substring(raw,3278,3278)) #Partnered & fecund, Intends to have a(nother) baby: 1 = Yes, 5 = No, 7 = Not asked, 8 = Refused, 9 = Don't know
+      dat$hasbabes <- NA
+      dat$everadpt <- NA
+      dat$seekadpt <- NA
     }
+
+    #Constructed variables
+    dat$behavior <- NA
+    dat$behavior[which(dat$anykids==0)] <- 0  #No, do not have biological or adopted children
+    dat$behavior[which(dat$anykids==1)] <- 1  #Yes, have biological or adopted children
+
+    dat$attitude <- NA
+    dat$attitude[which(dat$rwant==5)] <- 0  #No, do not want children
+    dat$attitude[which(dat$rwant==1)] <- 1  #Yes, want children
+    dat$attitude[which(dat$rwant==9)] <- -1  #DK if want children
+
+    dat$circumstance <- 0  #No known barriers
+    dat$circumstance[which(dat$rstrstat==1 | dat$rstrstat==2 | dat$pstrstat==1 | dat$pstrstat==2)] <- 1  #Infecund
+    dat$circumstance[which(dat$intend==5 | dat$jintend==5)] <- 2  #Other barrier, does not intend to have children
 
     #Childfree (want)
     dat$cf_want <- NA
-    dat$cf_want[which(dat$anykids==0 & dat$rwant==5)] <- 1  #Childfree
-    dat$cf_want[which(dat$anykids==1 | dat$rwant==1 | dat$rwant==9)] <- 0  #Not childfree
+    dat$cf_want[which(dat$behavior==0 & dat$attitude==0)] <- 1  #Childfree
+    dat$cf_want[which(dat$behavior!=0 | dat$attitude!=0)] <- 0  #Not childfree
 
     #Childfree (expect) - Unknown because intention question only asked of single respondents if they wanted children
 
     #Family status
     dat$famstat <- NA
-    dat$famstat[which(dat$anykids==1)] <- 1  #Parent - Unclassified
+    dat$famstat[which(dat$behavior==1)] <- 1  #Parent - Unclassified
     #Parent - Fulfilled: Unknown because parents who do not want another child could also be reluctant
-    dat$famstat[which(dat$anykids==1 & dat$rwant==1)] <- 3 #Parent - Unfulfilled
+    dat$famstat[which(dat$behavior==1 & dat$attitude==1)] <- 3  #Parent - Unfulfilled
     #Parent - Reluctant: Unknown because parents who do not want another child could also be fulfilled
-    dat$famstat[which(dat$anykids==1 & dat$rwant==9)] <- 5 #Parent - Ambivalent
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1)] <- 6  #Not yet parent
-
+    dat$famstat[which(dat$behavior==1 & dat$attitude==-1)] <- 5  #Parent - Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1)] <- 6  #Not yet parent
     #Childless - Unclassified: Not used because all can be classified
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & dat$intend==5)] <- 8  #Childless - Social: Single respondent who wanted, but do not intend, to have children
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & dat$jintend==5)] <- 8  #Childless - Social: Partnered respondent who wanted, but do not intend, to have children
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & (dat$rstrstat==1 | dat$rstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but is sterile
-    dat$famstat[which(dat$anykids==0 & dat$rwant==1 & (dat$pstrstat==1 | dat$pstrstat==2))] <- 9  #Childless - Biological: Respondent who wanted, but who's partner is sterile
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==9)] <- 11 #Undecided
-
-    dat$famstat[which(dat$anykids==0 & dat$intend==5 & dat$rwant==9)] <- 10  #Ambivalent non-parent: Single respondent who does not intend, but does not know if wanted
-    dat$famstat[which(dat$anykids==0 & dat$jintend==5 & dat$rwant==9)] <- 10  #Ambivalent non-parent: Partnered respondent who does not intend, but does not know if wanted
-
-    dat$famstat[which(dat$anykids==0 & dat$rwant==5)] <- 12 #Childfree
-
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==2)] <- 8  #Socially childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==1 & dat$circumstance==1)] <- 9  #Biologically childless
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance!=0)] <- 10  #Ambivalent
+    dat$famstat[which(dat$behavior==0 & dat$attitude==-1 & dat$circumstance==0)] <- 11  #Undecided
+    dat$famstat[which(dat$behavior==0 & dat$attitude==0)] <- 12  #Childfree
     dat$famstat <- factor(dat$famstat, levels = c(1:12),
                           labels = c("Parent - Unclassified", "Parent - Fulfilled", "Parent - Unfulfilled", "Parent - Reluctant", "Parent - Ambivalent",
                                      "Not yet parent", "Childless - Unclassified", "Childless - Social", "Childless - Biological", "Ambivalent non-parent", "Undecided", "Childfree"))
@@ -757,10 +846,19 @@ nsfg <- function(years, progress = TRUE) {
 
     #### Clean up ####
     #Reduce data
-    dat <- dat[,c("cf_want", "famstat",  #Family status
-                  "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
-                  "religion", "bother", #Attitude
-                  "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    if (keep_source) {
+      dat <- dat[,c("cf_want", "famstat", "hasbabes", "everadpt", "seekadpt", "anykids", "rwant", "rstrstat", "pstrstat", "intend", "jintend",  #Family status
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "religion", "bother", #Attitude
+                    "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    }
+
+    if (!keep_source) {
+      dat <- dat[,c("cf_want", "famstat",  #Family status
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "religion", "bother", #Attitude
+                    "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
+    }
 
     #Append to existing data file from female respondent loop
     data <- rbind(data, dat)
@@ -769,6 +867,15 @@ nsfg <- function(years, progress = TRUE) {
 
   #Finalize
   if (progress) {close(pb)}  #Close progress bar
-  class(data) <- c("data.frame", "childfree")
-  return(data)  #Export data
+
+  if (!survey) {
+    class(data) <- c("data.frame", "childfree")
+    return(data)
+  }
+
+  if (survey) {
+    data <- survey::svydesign(data = data, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)
+    class(data) <- c("survey.design2", "survey.design", "childfree")
+    return(data)
+  }
 }

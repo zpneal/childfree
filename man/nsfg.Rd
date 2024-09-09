@@ -4,15 +4,20 @@
 \alias{nsfg}
 \title{Read and recode National Survey of Family Growth (NSFG) data}
 \usage{
-nsfg(years, progress = TRUE)
+nsfg(years, survey = FALSE, keep_source = FALSE, progress = TRUE)
 }
 \arguments{
 \item{years}{vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)}
 
+\item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}}
+
+\item{keep_source}{boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}}
+
 \item{progress}{boolean: display a progress bar}
 }
 \value{
-A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
+A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
+If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
 Read and recode National Survey of Family Growth (NSFG) data
@@ -21,23 +26,31 @@ Read and recode National Survey of Family Growth (NSFG) data
 The U.S. Centers for Disease Control \href{https://www.cdc.gov/nchs/nsfg/index.htm}{National Survey of Family Growth} (NSFG)
 regularly collects fertility and other health information from a population-representative sample of adults in the
 United States. Between 1973 and 2002, the NSFG was conducted periodically. Starting in 2002, the NSFG transitioned to
-continuous data collection, releasing data in three-year waves (e.g., the 2013-2015, 2015-2017). The \code{nsfg()} function reads
+continuous data collection, releasing data in multi-year waves (e.g., 2006-2010, 2011-2013). The \code{nsfg()} function reads
 the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
-statuses, then returns a single data frame.
+statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
+package.
 
-\strong{Weights}
-
-The \href{https://cran.r-project.org/package=survey}{\code{survey}} package can be used to incorporate sampling weights
-and obtain population-representative estimates by wave. After using \code{nsfg()} to obtain data for a given wave (see example below), use
-\code{dat <- svydesign(data = dat, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)} to incorporate information about
-the survey design.
-
-\strong{Known issues}
+\strong{Notes}
 \itemize{
 \item Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 When a respondent chose this option, their actual race is unknown.
+\item The NSFG manual explains that "sample sizes for a single year are too small to provide estimates with adequate levels of precision,"
+and therefore recommends avoiding analysis of data from single years. Instead, these data are designed to be analyzed by wave using
+the provided sampling weights. The \code{nsfg()} function provides weights for analysis of single waves, however alternate weights
+are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{\verb{from the CDC}} for users who wish to combine multiple waves.
 }
 }
 \examples{
-\donttest{data <- nsfg(years = 2017)}
+\donttest{
+unweighted <- nsfg(years = 2017)  #Request unweighted data
+if (!is.null(unweighted)) {  #If data was available...
+table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
+}
+
+weighted <- nsfg(years = 2017, survey = TRUE)  #Request weighted data
+if (!is.null(weighted)) {  #If data was available...
+survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+}
+}
 }

@@ -2,6 +2,7 @@
 #'
 #' @param waves vector: a numeric vector containing the SOSS waves to include (currently available: 79, 82, 84, 85, 86)
 #' @param extra.vars vector: a character vector containing the names of variables to be retained from the raw data
+#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -10,8 +11,9 @@
 #'    University (MSU). Each wave is collected from a sample of 1000 adults in the US state of Michigan, and
 #'    includes sampling weights to obtain a sample that is representative of the state's population with respect
 #'    to age, gender, race, and education. The `soss()` function reads the raw data from IPPSR's website, extracts
-#'    and recodes selected variables useful for studying childfree adults and other family statuses, then returns a
-#'    single data frame. Questions necessary for identifying childfree adults were asked in five waves, which each
+#'    and recodes selected variables useful for studying childfree adults and other family statuses, then returns
+#'    either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
+#'    package. Questions necessary for identifying childfree adults have been asked in five waves, which each
 #'    include unique questions that may be of interest:
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
@@ -19,24 +21,31 @@
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
-#' **Weights**
-#'
-#' The \href{https://cran.r-project.org/package=survey}{`survey`} package can be used to incorporate sampling weights
-#'    and obtain population-representative estimates by wave. After using `soss()` to obtain data for a given wave (see example below), use
-#'    `dat <- svydesign(data = dat, ids = ~1, weights = ~weight)` to incorporate information about the survey design.
-#'
-#' **Known issues**
+#' **Notes**
 #'   * Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
-#'   * Wave 82 originally included a 500 person oversample of parents. These respondents are omitted if `wave == 82`.
+#'   * Wave 82 originally included a 500 person oversample of parents, but they are excluded from \code{nsfg(wave==82)}.
+#'   * The provided sampling weights are designed to be used in the analyses of individual waves. Combining data from multiple
+#'     waves may require using adjusted weights.
 #'
-#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
+#' @return A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}.
+#' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export
 #'
 #' @examples
-#' data <- soss(waves = 84, extra.vars = c("neal1"))
-soss <- function(waves, extra.vars = NULL, progress = TRUE) {
+#' \donttest{
+#' unweighted <- soss(waves = 86)  #Request unweighted data
+#' if (!is.null(unweighted)) {  #If data was available...
+#' table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
+#' }
+#'
+#' weighted <- soss(waves = 86, survey = TRUE)  #Request weighted data
+#' if (!is.null(weighted)) {  #If data was available...
+#' survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+#' }
+#' }
+soss <- function(waves, extra.vars = NULL, survey = FALSE, progress = TRUE) {
 
   if (!all(waves %in%c(79,82,84,85,86))) {stop("Only the following SOSS waves are available: 79, 82, 84, 85, 86")}  #Check for valid waves
   waves <- sort(waves)  #Put waves in order
@@ -50,15 +59,37 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
   #Loop over each supplied data file
   for (wave in waves) {
 
-    #Increment progress bar
-    if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+    #Check if data is available, if it is then download
+    if (wave==79) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/soss79b.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/soss79b.sav")
+    }
 
-    #Import raw data
-    if (wave==79) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/soss79b.sav")}
-    if (wave==82) {dat <- rio::import("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")}
-    if (wave==84) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")}
-    if (wave==85) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")}
-    if (wave==86) {dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")}
+    if (wave==82) {
+      if (!RCurl::url.exists("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")
+    }
+
+    if (wave==84) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")
+    }
+
+    if (wave==85) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")
+    }
+
+    if (wave==86) {
+      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
+      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")
+    }
+
     colnames(dat) <- tolower(colnames(dat))  #Make all variables lowercase
 
     #### Family Status ####
@@ -328,6 +359,15 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
   #Finalize
   if (progress) {close(pb)}  #Close progress bar
-  class(data) <- c("data.frame", "childfree")
-  return(data)  #Export data
+
+  if (!survey) {
+    class(data) <- c("data.frame", "childfree")
+    return(data)
+  }
+
+  if (survey) {
+    data <- survey::svydesign(data = data, ids = ~1, weights = ~weight)
+    class(data) <- c("survey.design2", "survey.design", "childfree")
+    return(data)
+  }
 }
