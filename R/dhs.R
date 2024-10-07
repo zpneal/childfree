@@ -95,7 +95,7 @@ dhs <- function(files, extra.vars = NULL, survey = FALSE, progress = TRUE) {
     #Ideal number of children
     if (female) {dat$ideal <- dat$v613} else {dat$ideal <- dat$mv613}
     dat$ideal[which(dat$ideal==98)] <- -1  #Special code for "Don't Know"
-    dat$ideal[which(dat$ideal>30)] <- NA  #Treat all values above 30 as missing (includes some undocumented country-specific special codes)
+    dat$ideal[which(dat$ideal>=90)] <- NA  #Treat all 90s values as missing (undocumented country-specific special codes)
 
     #Childfree (want)
     dat$cf_want <- NA
