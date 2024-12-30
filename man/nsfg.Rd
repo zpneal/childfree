@@ -4,19 +4,17 @@
 \alias{nsfg}
 \title{Read and recode National Survey of Family Growth (NSFG) data}
 \usage{
-nsfg(years, survey = FALSE, keep_source = FALSE, progress = TRUE)
+nsfg(years, keep_source = FALSE, progress = TRUE)
 }
 \arguments{
 \item{years}{vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017)}
-
-\item{survey}{boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}}
 
 \item{keep_source}{boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}}
 
 \item{progress}{boolean: display a progress bar}
 }
 \value{
-A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
+A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 }
 \description{
@@ -28,11 +26,19 @@ regularly collects fertility and other health information from a population-repr
 United States. Between 1973 and 2002, the NSFG was conducted periodically. Starting in 2002, the NSFG transitioned to
 continuous data collection, releasing data in multi-year waves (e.g., 2006-2010, 2011-2013). The \code{nsfg()} function reads
 the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
-statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
-package.
+statuses, then returns an unweighted data frame.
+
+\strong{Sampling weights}
+The NSFG is collected using a complex survey design. The \code{survey} package can be used to perform analyses that take these
+design features into account, and make it possible to obtain population-representative estimates. In most cases, a \link[survey]{svydesign}
+object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
+Additional information about analyzing DHS data using weights is available \href{https://www.cdc.gov/nchs/nsfg/index.htm}{here}.
 
 \strong{Notes}
 \itemize{
+\item For the purposes of identifying childfree respondents, and determining respondents' family status, "children" includes
+both biological and non-biological (adopted, foster, step) children. This means, for example, that a respondent with
+only step-children would still be classified as a parent.
 \item Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 When a respondent chose this option, their actual race is unknown.
 \item The NSFG manual explains that "sample sizes for a single year are too small to provide estimates with adequate levels of precision,"
@@ -43,14 +49,9 @@ are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{\verb
 }
 \examples{
 \donttest{
-unweighted <- nsfg(years = 2017)  #Request unweighted data
-if (!is.null(unweighted)) {  #If data was available...
-table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
-}
-
-weighted <- nsfg(years = 2017, survey = TRUE)  #Request weighted data
-if (!is.null(weighted)) {  #If data was available...
-survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+dat <- nsfg(years = 2017)  #Request data for 2017-2019 wave
+if (!is.null(dat)) {  #If data was available...
+table(dat$famstat) / nrow(dat)  #Fraction of respondents with each family status
 }
 }
 }
