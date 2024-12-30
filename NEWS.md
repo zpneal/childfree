@@ -5,7 +5,7 @@ output: html_document
 
 ## childfree 0.0.4
 
-* 
+* replaced direct support for `survey` with documentation about how to use the `survey` package
 
 ## childfree 0.0.3
 
