@@ -2,7 +2,6 @@
 #'
 #' @param files vector: a character vector containing the paths for one or more Individual Recode DHS data files (see details)
 #' @param extra.vars vector: a character vector containing the names of variables to be retained from the raw data
-#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -12,14 +11,22 @@
 #'    files are available in SPSS, SAS, and Stata formats from \href{https://www.dhsprogram.com/}{https://www.dhsprogram.com/},
 #'    however access requires a \href{https://dhsprogram.com/data/Access-Instructions.cfm}{free application}. The `dhs()` function
 #'    reads one or more of these files, extracts and recodes selected variables useful for studying childfree adults and other
-#'    family statuses, then returns either an unweighted data frame, or a weighted \link[survey]{svydesign} object that can be analyzed using the
-#'    \code{survey} package.
+#'    family statuses, then returns an unweighted data frame.
 #'
 #' Although access to DHS data requires an application, the DHS program provides a \href{https://dhsprogram.com/data/Download-Model-Datasets.cfm}{model dataset}
 #'    for practice. The example provided below uses the model data file "ZZIR62FL.SAV", which contains fictitious women's data,
 #'    but has the same structure as a real DHS data file. The example can be run without prior application for data access.
 #'
-#' **Known issues**
+#' **Sampling weights**
+#' The DHS is collected using a complex survey design. The \code{survey} package can be used to perform analyses that take these
+#'    design features into account, and make it possible to obtain population-representative estimates. In most cases, a \link[survey]{svydesign}
+#'    object for a single country and wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
+#'    Additional information about analyzing DHS data using weights is available \href{https://dhsprogram.com/data/Guide-to-DHS-Statistics/Analyzing_DHS_Data.htm}{here}
+#'    and in the documentation provided with the downloaded data files.
+#'
+#' **Notes**
+#'   * For the purposes of identifying childfree respondents, and determining respondents' family status, "children" includes
+#'     only biological children. This means, for example, that a respondent with only step-children would *not* be classified as a parent.
 #'   * The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV, GAMR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV, TRMR41FL.SAV)
 #'     contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT, GAMR41FL.SAS7BDAT, TRIR41FL.SAS7BDAT, TRMR41FL.SAS7BDAT) instead.
 #'   * In some cases, DHS makes available individual recode data files for specific regions. For example, women's data from individual states
@@ -28,29 +35,20 @@
 #'   * Variables containing women's responses in the individual recode files begin with `v`, while variables containing men's responses in the
 #'     men recode files begin with `mv`. When applying `dhs()` to both female and male data, these are automatically harmonized. However, if
 #'     extra variables are requested using the `extra.vars` option, be sure to specify both names (e.g. `extra.vars = c("v201", "mv201")`).
-#'   * If \code{survey = TRUE}, then \code{(m)v021} and \code{(m)v023} are used as the cluster and strata indicators, respectively. This is
-#'     appropriate for most surveys, however there are a few exceptions. Additional information about analyzing DHS data using weights is
-#'     available \href{https://dhsprogram.com/data/Guide-to-DHS-Statistics/Analyzing_DHS_Data.htm}{here} and in the documentation provided
-#'     with the downloaded data files.
 #'
-#' @return A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}
+#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 #' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' unweighted <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))  #Request unweighted data
-#' if (!is.null(unweighted)) {  #If data was available...
-#' round(table(unweighted$famstat)/nrow(unweighted),3)  #Fraction of respondents w/ each family status
-#' }
-#'
-#' weighted <- dhs(files = c("ZZIR62FL.SAV"), survey = TRUE)  #Request weighted (example) data
-#' if (!is.null(weighted)) {  #If dtaa was available...
-#' survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+#' dat <- dhs(files = c("ZZIR62FL.SAV"), extra.vars = c("v201"))  #Request data for fictitous country
+#' if (!is.null(dat)) {  #If data was available...
+#' table(dat$famstat)/nrow(dat)  #Fraction of respondents with each family status
 #' }
 #' }
-dhs <- function(files, extra.vars = NULL, survey = FALSE, progress = TRUE) {
+dhs <- function(files, extra.vars = NULL, progress = TRUE) {
 
   if (length(files) > 1 & "ZZIR62FL.SAV" %in% files) {stop("Model data (file ZZIR62FL.SAV) should not be combined with files containing real data.")}
 
@@ -345,16 +343,7 @@ dhs <- function(files, extra.vars = NULL, survey = FALSE, progress = TRUE) {
 
   #Finalize
   if (progress) {close(pb)}  #Close progress bar
-
-  if (!survey) {
-    class(data) <- c("data.frame", "childfree")
-    return(data)
-  }
-
-  if (survey) {
-    data <- survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)
-    class(data) <- c("survey.design2", "survey.design", "childfree")
-    return(data)
-  }
+  class(data) <- c("data.frame", "childfree")
+  return(data)
 
 }
