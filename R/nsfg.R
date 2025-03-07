@@ -1,6 +1,7 @@
 #' Read and recode National Survey of Family Growth (NSFG) data
 #'
 #' @param years vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017, 2022)
+#' @param nonbio boolean: should non-biological children be included
 #' @param keep_source boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}
 #' @param progress boolean: display a progress bar
 #'
@@ -19,6 +20,13 @@
 #'    object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
 #'    Additional information about analyzing DHS data using weights is available \href{https://www.cdc.gov/nchs/nsfg/index.htm}{here}.
 #'
+#' **Non-biological children**
+#' When \code{nonbio == TRUE} (default), non-biological children (e.g., adopted children, foster children, etc.) are treated the same as
+#'    biological children when determining a respondent's family status. This matches the approach described by the ABC Framework
+#'    (Neal & Neal, 2024), and should generally be used.However, non-biological children can be ignored by setting \code{nonbio = FALSE},
+#'    which may be useful when comparing NSFG estimates to estimates derived from other data where information about non-biological children
+#'    is not available.
+#'
 #' **Notes**
 #'   * Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 #'     When a respondent chose this option, their actual race is unknown.
@@ -26,14 +34,11 @@
 #'     or former same-sex partnerships is not available.
 #'   * The NSFG manual explains that "sample sizes for a single year are too small to provide estimates with adequate levels of precision,"
 #'     and therefore recommends avoiding analysis of data from single years. Instead, these data are designed to be analyzed by wave.
-#'   * To obtain results are representative of the US adult population, analyses should be performed using the \code{survey} package,
-#'     which can take into account the complex survey design. For analysis of a single wave, first generate a dataframe using \code{nsfg()}
-#'     (e.g., \code{dat <- nsfg()}), then construct a survey object using \code{survey::svydesign(data = dat, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)}.
-#'     For analysis of multiple waves, alternative sampling weights are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{`from the CDC`}.
 #'
 #' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}
 #'
-#' @references {Neal, J. W. and Neal, Z. P. (2025). Tracking types of non-parents in the United States. *Journal of Marriage and Family*. \doi{10.1111/jomf.13097}}
+#' @references NSFG Classification: {Neal, J. W. and Neal, Z. P. (2025). Tracking types of non-parents in the United States. *Journal of Marriage and Family*. \doi{10.1111/jomf.13097}}
+#' @references ABC Framework: {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. \doi{10.1177/10664807231198869}}
 #' @export
 #'
 #' @examples
@@ -41,7 +46,7 @@
 #' unweighted <- nsfg(years = 2017)  #Unweighted data
 #' table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
 #' }
-nsfg <- function(years, keep_source = FALSE, progress = TRUE) {
+nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
 
   if (!all(years %in%c(2002, 2006, 2011, 2013, 2015, 2017, 2022))) {stop("Only the following NSFG years are available: 2002, 2006, 2011, 2013, 2015, 2017, 2022")}  #Check for valid years
   years <- sort(years)  #Put years in order
@@ -161,6 +166,13 @@ nsfg <- function(years, keep_source = FALSE, progress = TRUE) {
 
     dat$seekadpt[which(is.na(dat$seekadpt))] <- 5  #Females under 18 not asked; impute no
 
+    #If requested, exclude non-biological children
+    if (!nonbio) {
+      dat$otherkid <- 5
+      dat$otachil <- 5
+      dat$seekadpt <- 5
+    }
+    
     #Age in years (using AGER)
     if (year==2002) {dat$age <- as.numeric(substring(raw,3749,3750))}
     if (year==2006) {dat$age <- as.numeric(substring(raw,4853,4854))}
@@ -600,6 +612,13 @@ nsfg <- function(years, keep_source = FALSE, progress = TRUE) {
       dat$intent <- raw$INTENT #Intent for children: 1 = Yes, 2 = No, 3 = Don't know
     }
 
+    #If requested, exclude non-biological children
+    if (!nonbio) {
+      dat$otherkid <- 5
+      dat$otachil <- 5
+      dat$seekadpt <- 5
+    }
+    
     #Age in years (using AGER)
     if (year==2002) {dat$age <- as.numeric(substring(raw,2622,2623))}
     if (year==2006) {dat$age <- as.numeric(substring(raw,4007,4008))}
