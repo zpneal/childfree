@@ -167,7 +167,7 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     dat$seekadpt[which(is.na(dat$seekadpt))] <- 5  #Females under 18 not asked; impute no
 
     #If requested, exclude non-biological children
-    if (!nonbio) {
+    if (nonbio == FALSE) {
       dat$otherkid <- 5
       dat$otachil <- 5
       dat$seekadpt <- 5
@@ -613,7 +613,7 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     }
 
     #If requested, exclude non-biological children
-    if (!nonbio) {
+    if (nonbio == FALSE) {
       dat$otherkid <- 5
       dat$otachil <- 5
       dat$seekadpt <- 5
