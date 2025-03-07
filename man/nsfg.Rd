@@ -4,10 +4,12 @@
 \alias{nsfg}
 \title{Read and recode National Survey of Family Growth (NSFG) data}
 \usage{
-nsfg(years, keep_source = FALSE, progress = TRUE)
+nsfg(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE)
 }
 \arguments{
 \item{years}{vector: a numeric vector containing the starting year of NSFG waves to include (2002, 2006, 2011, 2013, 2015, 2017, 2022)}
+
+\item{nonbio}{boolean: should non-biological children be included}
 
 \item{keep_source}{boolean: keep the raw variables used to construct \code{want_cf} and \code{famstat}}
 
@@ -34,6 +36,13 @@ design features into account, and make it possible to obtain population-represen
 object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
 Additional information about analyzing DHS data using weights is available \href{https://www.cdc.gov/nchs/nsfg/index.htm}{here}.
 
+\strong{Non-biological children}
+When \code{nonbio == TRUE} (default), non-biological children (e.g., adopted children, foster children, etc.) are treated the same as
+biological children when determining a respondent's family status. This matches the approach described by the ABC Framework
+(Neal & Neal, 2024), and should generally be used.However, non-biological children can be ignored by setting \code{nonbio = FALSE},
+which may be useful when comparing NSFG estimates to estimates derived from other data where information about non-biological children
+is not available.
+
 \strong{Notes}
 \itemize{
 \item Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
@@ -42,10 +51,6 @@ When a respondent chose this option, their actual race is unknown.
 or former same-sex partnerships is not available.
 \item The NSFG manual explains that "sample sizes for a single year are too small to provide estimates with adequate levels of precision,"
 and therefore recommends avoiding analysis of data from single years. Instead, these data are designed to be analyzed by wave.
-\item To obtain results are representative of the US adult population, analyses should be performed using the \code{survey} package,
-which can take into account the complex survey design. For analysis of a single wave, first generate a dataframe using \code{nsfg()}
-(e.g., \code{dat <- nsfg()}), then construct a survey object using \code{survey::svydesign(data = dat, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)}.
-For analysis of multiple waves, alternative sampling weights are available \href{https://www.cdc.gov/nchs/nsfg/nsfg_combining_data.htm}{\verb{from the CDC}}.
 }
 }
 \examples{
@@ -55,5 +60,7 @@ table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each
 }
 }
 \references{
-{Neal, J. W. and Neal, Z. P. (2025). Tracking types of non-parents in the United States. \emph{Journal of Marriage and Family}. \doi{10.1111/jomf.13097}}
+NSFG Classification: {Neal, J. W. and Neal, Z. P. (2025). Tracking types of non-parents in the United States. \emph{Journal of Marriage and Family}. \doi{10.1111/jomf.13097}}
+
+ABC Framework: {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. \emph{The Family Journal, 32}, 121-130. \doi{10.1177/10664807231198869}}
 }
