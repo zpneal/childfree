@@ -27,8 +27,7 @@ regularly collects fertility and other health information from a population-repr
 United States. Between 1973 and 2002, the NSFG was conducted periodically. Starting in 2006, the NSFG transitioned to
 continuous data collection, releasing data in multi-year waves (e.g., 2006-2010, 2011-2013). The \code{nsfg()} function reads
 the raw data from CDC's website, extracts and recodes selected variables useful for studying childfree adults and other family
-statuses, then returns either an unweighted data frame, or a weighted design object that can be analyzed using the \code{\link{survey}}
-package.
+statuses, then returns an unweighted data frame.
 
 \strong{Sampling weights}
 
