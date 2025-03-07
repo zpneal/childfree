@@ -15,19 +15,21 @@
 #'    package.
 #'
 #' **Sampling weights**
+#'
 #' The NSFG is collected using a complex survey design. The \code{survey} package can be used to perform analyses that take these
 #'    design features into account, and make it possible to obtain population-representative estimates. In most cases, a \link[survey]{svydesign}
 #'    object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
 #'    Additional information about analyzing DHS data using weights is available \href{https://www.cdc.gov/nchs/nsfg/index.htm}{here}.
 #'
 #' **Non-biological children**
+#'
 #' When \code{nonbio == TRUE} (default), non-biological children (e.g., adopted children, foster children, etc.) are treated the same as
 #'    biological children when determining a respondent's family status. This matches the approach described by the ABC Framework
 #'    (Neal & Neal, 2024), and should generally be used.However, non-biological children can be ignored by setting \code{nonbio = FALSE},
 #'    which may be useful when comparing NSFG estimates to estimates derived from other data where information about non-biological children
 #'    is not available.
 #'
-#' **Notes**
+#' **Additional notes**
 #'   * Starting in 2006, "hispanic" was a response option for race, however "hispanic" is not a racial category, but an ethnicity.
 #'     When a respondent chose this option, their actual race is unknown.
 #'   * Partnership status only describes a respondent's status with respect to an opposite-sex partner. Information about current
@@ -172,7 +174,7 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
       dat$otachil <- 5
       dat$seekadpt <- 5
     }
-    
+
     #Age in years (using AGER)
     if (year==2002) {dat$age <- as.numeric(substring(raw,3749,3750))}
     if (year==2006) {dat$age <- as.numeric(substring(raw,4853,4854))}
@@ -618,7 +620,7 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
       dat$otachil <- 5
       dat$seekadpt <- 5
     }
-    
+
     #Age in years (using AGER)
     if (year==2002) {dat$age <- as.numeric(substring(raw,2622,2623))}
     if (year==2006) {dat$age <- as.numeric(substring(raw,4007,4008))}
