@@ -38,15 +38,20 @@ which each include unique questions that may be of interest:
 }
 
 \strong{Sampling weights}
+
 The SOSS includes sampling weights that can be incorporated into analyses using the \code{survey} package to obtain
 population-representative estimates. A \link[survey]{svydesign} object for a single wave can be created
 using \code{survey::svydesign(data = data, ids = ~1, weights = ~weight)}.
 
-\strong{Notes}
+\strong{Non-biological children}
+
+Non-biological children (e.g., adopted children, foster children, etc.) are treated the same as biological children when
+determining a respondent's family status. This matches the approach described by the ABC Framework (Neal & Neal, 2024).
+However, it can lead to discrepancies when comparing SOSS estimates to estimates derived from other data where information
+about non-biological children is not available.
+
+\strong{Additional notes}
 \itemize{
-\item For the purposes of identifying childfree respondents, and determining respondents' family status, "children" includes
-both biological and non-biological (adopted, foster, step) children. This means, for example, that a respondent with
-only step-children would still be classified as a parent.
 \item Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
 \item Wave 82 originally included a 500 person oversample of parents, but they are excluded from \code{nsfg(wave==82)}.
@@ -61,4 +66,7 @@ if (!is.null(dat)) {  #If data was available...
 table(dat$famstat) / nrow(dat)  #Fraction of respondents with each family status
 }
 }
+}
+\references{
+ABC Framework: {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. \emph{The Family Journal, 32}, 121-130. \doi{10.1177/10664807231198869}}
 }

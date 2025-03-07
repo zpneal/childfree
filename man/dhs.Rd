@@ -34,16 +34,22 @@ for practice. The example provided below uses the model data file "ZZIR62FL.SAV"
 but has the same structure as a real DHS data file. The example can be run without prior application for data access.
 
 \strong{Sampling weights}
+
 The DHS is collected using a complex survey design. The \code{survey} package can be used to perform analyses that take these
 design features into account, and make it possible to obtain population-representative estimates. In most cases, a \link[survey]{svydesign}
 object for a single country and wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
 Additional information about analyzing DHS data using weights is available \href{https://dhsprogram.com/data/Guide-to-DHS-Statistics/Analyzing_DHS_Data.htm}{here}
 and in the documentation provided with the downloaded data files.
 
-\strong{Notes}
+\strong{Non-biological children}
+
+Information about non-biological children (e.g., adopted children, foster children, etc.) is not available in the DHS, which means
+that a respondent with only non-biological children would be classified as a non-parent. This is not exactly match the approach
+described by the ABC Framework (Neal & Neal, 2024), and may lead to discrepancies when comparing DHS estimates to estimates derived
+from other data where information about non-biological children is available.
+
+\strong{Additional notes}
 \itemize{
-\item For the purposes of identifying childfree respondents, and determining respondents' family status, "children" includes
-only biological children. This means, for example, that a respondent with only step-children would \emph{not} be classified as a parent.
 \item The SPSS-formatted files containing data from Gabon Recode 4 (GAIR41FL.SAV, GAMR41FL.SAV) and Turkey Recode 4 (TRIR41FL.SAV, TRMR41FL.SAV)
 contain encoding errors. Use the SAS-formatted files (GAIR41FL.SAS7BDAT, GAMR41FL.SAS7BDAT, TRIR41FL.SAS7BDAT, TRMR41FL.SAS7BDAT) instead.
 \item In some cases, DHS makes available individual recode data files for specific regions. For example, women's data from individual states
@@ -61,4 +67,7 @@ if (!is.null(dat)) {  #If data was available...
 table(dat$famstat)/nrow(dat)  #Fraction of respondents with each family status
 }
 }
+}
+\references{
+ABC Framework: {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. \emph{The Family Journal, 32}, 121-130. \doi{10.1177/10664807231198869}}
 }
