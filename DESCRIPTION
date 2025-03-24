@@ -1,6 +1,6 @@
 Package: childfree
 Title: Access and Harmonize Childfree Demographic Data
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(
 	person("Zachary", "Neal", email = "zpneal@msu.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3076-4995")),
 	person("Jennifer Watling", "Neal", email = "jneal@msu.edu", role = c("aut"), comment = c(ORCID = "0000-0002-7749-8121")))
@@ -13,10 +13,9 @@ Depends: R (>= 2.10)
 Imports:
    rio,
    utils,
-   survey,
    RCurl
 Suggests:
    knitr,
 VignetteBuilder: knitr
-URL: https://www.zacharyneal.com/childfree, https://www.jennawneal.com/childfree-adults, https://github.com/zpneal/childfree
+URL: https://www.zacharyneal.com/childfree-home, https://github.com/zpneal/childfree
 BugReports: https://github.com/zpneal/childfree/issues

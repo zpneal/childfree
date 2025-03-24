@@ -2,7 +2,6 @@
 #'
 #' @param waves vector: a numeric vector containing the SOSS waves to include (currently available: 79, 82, 84, 85, 86)
 #' @param extra.vars vector: a character vector containing the names of variables to be retained from the raw data
-#' @param survey boolean: returns an unweighted data.frame if \code{FALSE}, or a weighted \link[survey]{svydesign} object if \code{TRUE}
 #' @param progress boolean: display a progress bar
 #'
 #' @details
@@ -12,40 +11,48 @@
 #'    includes sampling weights to obtain a sample that is representative of the state's population with respect
 #'    to age, gender, race, and education. The `soss()` function reads the raw data from IPPSR's website, extracts
 #'    and recodes selected variables useful for studying childfree adults and other family statuses, then returns
-#'    either an unweighted data frame, or a weighted design object that can be analyzed using the \code{survey}
-#'    package. Questions necessary for identifying childfree adults have been asked in five waves, which each
-#'    include unique questions that may be of interest:
+#'    an unweighted data frame. Questions necessary for identifying childfree adults have been asked in five waves,
+#'    which each include unique questions that may be of interest:
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-84-spring-2022}{Wave 84} (April 2022) - Trust in scientists, Autonomous vehicles, Morality
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
 #'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
-#' **Notes**
+#' **Sampling weights**
+#'
+#' The SOSS includes sampling weights that can be incorporated into analyses using the \code{survey} package to obtain
+#'    population-representative estimates. A \link[survey]{svydesign} object for a single wave can be created
+#'    using \code{survey::svydesign(data = data, ids = ~1, weights = ~weight)}.
+#'
+#' **Non-biological children**
+#'
+#' Non-biological children (e.g., adopted children, foster children, etc.) are treated the same as biological children when
+#'    determining a respondent's family status. This matches the approach described by the ABC Framework (Neal & Neal, 2024).
+#'    However, it can lead to discrepancies when comparing SOSS estimates to estimates derived from other data where information
+#'    about non-biological children is not available.
+#'
+#' **Additional notes**
 #'   * Wave 79 did not include a "do not know" option for selected questions. Therefore, it is not possible to identify
 #'     "undecided" or "ambivalent non-parent" respondents. This may lead other family status categories to be inflated.
 #'   * Wave 82 originally included a 500 person oversample of parents, but they are excluded from \code{nsfg(wave==82)}.
 #'   * The provided sampling weights are designed to be used in the analyses of individual waves. Combining data from multiple
 #'     waves may require using adjusted weights.
 #'
-#' @return A data frame or weighted \link[survey]{svydesign} object containing variables described in the codebook available using \code{vignette("codebooks")}.
+#' @return A data frame containing variables described in the codebook available using \code{vignette("codebooks")}.
 #' If you are offline, or if the requested data are otherwise unavailable, NULL is returned.
 #'
+#' @references ABC Framework: {Neal, Z. P. and Neal, J. W. (2024). A framework for studying adults who neither have nor want children. *The Family Journal, 32*, 121-130. \doi{10.1177/10664807231198869}}
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' unweighted <- soss(waves = 86)  #Request unweighted data
-#' if (!is.null(unweighted)) {  #If data was available...
-#' table(unweighted$famstat) / nrow(unweighted)  #Fraction of respondents with each family status
-#' }
-#'
-#' weighted <- soss(waves = 86, survey = TRUE)  #Request weighted data
-#' if (!is.null(weighted)) {  #If data was available...
-#' survey::svymean(~famstat, weighted, na.rm = TRUE)  #Estimated prevalence of each family status
+#' dat <- soss(waves = 86)  #Request data for December 2022
+#' if (!is.null(dat)) {  #If data was available...
+#' table(dat$famstat) / nrow(dat)  #Fraction of respondents with each family status
 #' }
 #' }
-soss <- function(waves, extra.vars = NULL, survey = FALSE, progress = TRUE) {
+soss <- function(waves, extra.vars = NULL, progress = TRUE) {
 
   if (!all(waves %in%c(79,82,84,85,86))) {stop("Only the following SOSS waves are available: 79, 82, 84, 85, 86")}  #Check for valid waves
   waves <- sort(waves)  #Put waves in order
@@ -359,15 +366,7 @@ soss <- function(waves, extra.vars = NULL, survey = FALSE, progress = TRUE) {
 
   #Finalize
   if (progress) {close(pb)}  #Close progress bar
+  class(data) <- c("data.frame", "childfree")
+  return(data)
 
-  if (!survey) {
-    class(data) <- c("data.frame", "childfree")
-    return(data)
-  }
-
-  if (survey) {
-    data <- survey::svydesign(data = data, ids = ~1, weights = ~weight)
-    class(data) <- c("survey.design2", "survey.design", "childfree")
-    return(data)
-  }
 }
