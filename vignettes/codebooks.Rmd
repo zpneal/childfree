@@ -86,6 +86,13 @@ This table summarizes the variables that are contained in dataframes generated f
 | `residence` | `metro` | Ordinal | 1 = Rural <br> 3 = Suburb <br> 4 = Urban |
 | `employed` | `rwrkst` | Binary | 0 = Not employed <br> 1 = Employed |
 | `inschool` | `goschol` | Binary | 0 = Not in school <br> 1 = In school |
+| `health` | `genhealt` | Ordinal | 1 = Poor <br> 2 = Fair <br> 3 = Good <br> 4 = Very Good <br> 5 = Excellent |
+| `momeduc` | `educmom` | Ordinal | 1 = Less than high school <br> 2 = High school <br> 3 = Some college <br> 4 = BA or higher |
+| `nuclear` | `intctfam` | Binary | 0 = Not nuclear <br> 1 = Both biological/adopted parents present from birth-18 |
+| `mom` | `womrasdu` | Categorical | 1 = Raised by biological mother <br> 2 = Raised by other woman <br> 3 = No mother figure |
+| `dad` | `manrasdu` | Categorical | 1 = Raised by biological father <br> 2 = Raised by other man <br> 3 = No father figure |
+| `maltreatment` | `emotabuse` <br> `physabuse` <br> `revemotneg` <br> `revphysneg` <br> `witnessipv` | Binary | 0 = Rarely or never <br> 1 = Sometimes experienced physical/emotional abuse/neglect or witnessed violence in home  |
+| `dysfunction` | `livdrugs` <br> `livdepress` <br> `sepjail` | Binary | 0 = No, 1 = Parent had substance abuse, mental health, or criminal justice issues |
 | `religion` | `religion` | Categorical | 1 = None <br> 2 = Catholic / Orthodox <br> 5 = Protestant / Christian <br> 6 = Other |
 | `bother` | `chbother` | Ordinal | 1 = Not at all <br> 2 = A little <br> 3 = Some <br> 4 = A great deal |
 | `id` | `caseid` | string |
