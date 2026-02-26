@@ -20,7 +20,7 @@ knitr::opts_knit$set(global.par = TRUE)
 
 # Table of Contents {#toc}
 
-[<img src='../man/figures/logo.png' align="right" height="250" />](https://www.zacharyneal.com/childfree)
+[<img src='../man/figures/logo.png' align="right" height="250" />](https://thechildfree.org)
 
 1. [Introduction](#introduction)
     a. [Welcome](#welcome)
@@ -42,7 +42,7 @@ The `childfree` package can be cited as:
 
 **Neal, Z. P. and Neal, J. W. (2024). childfree: An R package to access and harmonize childfree demographic data. *Comprehensive R Archive Network*. [https://cran.r-project.org/package=childfree](https://cran.r-project.org/package=childfree)**
 
-For additional resources on the childfree package, please see [https://www.zacharyneal.com/childfree](https://www.zacharyneal.com/childfree).
+For additional resources on the childfree package, please see [https://thechildfree.org](https://thechildfree.org).
 
 If you have questions about the childfree package or would like a childfree package hex sticker, please contact the maintainer Zachary Neal by email ([zpneal\@msu.edu](mailto:zpneal@msu.edu)). Please report bugs in the backbone package at [https://github.com/zpneal/childfree/issues](https://github.com/zpneal/childfree/issues).
 
