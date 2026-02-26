@@ -17,5 +17,5 @@ Imports:
 Suggests:
    knitr,
 VignetteBuilder: knitr
-URL: https://www.zacharyneal.com/childfree-home, https://github.com/zpneal/childfree
+URL: https://thechildfree.org/
 BugReports: https://github.com/zpneal/childfree/issues
