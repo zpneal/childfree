@@ -5,7 +5,7 @@ output: html_document
 
 ## childfree 0.0.5
 
-* added childhood experience variables to `nsfg`
+* added additional variables to `nsfg`
 
 ## childfree 0.0.4
 
