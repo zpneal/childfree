@@ -8,7 +8,7 @@
 <!-- badges: end -->
 
 ## Welcome
-Welcome to the `childfree` package\! The childfree package accesses demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals. For more information about childfree individuals, visit [https://www.thechildfree.org](https://www.thechildfree.org).
+Welcome to the `childfree` package\! The childfree package accesses demographic data from a variety of public data sources, extracting and harmonizing variables useful for the study of childfree individuals. For more information about childfree individuals, visit [https://thechildfree.org](https://thechildfree.org).
 
 The `childfree` package can be cited as:
 
