@@ -8,7 +8,7 @@ Description: Reads demographic data from a variety of public data sources, extra
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends: R (>= 2.10)
 Imports:
    rio,
