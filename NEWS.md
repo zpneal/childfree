@@ -3,6 +3,10 @@ title: "NEWS"
 output: html_document
 ---
 
+## childfree 0.0.6
+
+* 
+
 ## childfree 0.0.5
 
 * added additional variables to `nsfg`
