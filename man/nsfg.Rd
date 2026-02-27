@@ -33,7 +33,7 @@ statuses, then returns an unweighted data frame.
 
 The NSFG is collected using a complex survey design. The \code{survey} package can be used to perform analyses that take these
 design features into account, and make it possible to obtain population-representative estimates. In most cases, a \link[survey]{svydesign}
-object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
+object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)}.
 Additional information about analyzing DHS data using weights is available \href{https://www.cdc.gov/nchs/nsfg/index.htm}{here}.
 
 \strong{Non-biological children}

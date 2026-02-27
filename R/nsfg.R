@@ -17,7 +17,7 @@
 #'
 #' The NSFG is collected using a complex survey design. The \code{survey} package can be used to perform analyses that take these
 #'    design features into account, and make it possible to obtain population-representative estimates. In most cases, a \link[survey]{svydesign}
-#'    object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~strata, weights = ~weight, nest = TRUE)}.
+#'    object for a single wave can be created using \code{survey::svydesign(data = data, ids = ~cluster, strata = ~stratum, weights = ~weight, nest = TRUE)}.
 #'    Additional information about analyzing DHS data using weights is available \href{https://www.cdc.gov/nchs/nsfg/index.htm}{here}.
 #'
 #' **Non-biological children**
@@ -386,6 +386,80 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     dat$inschool[which(dat$goschol==1)] <- 1  #In school
     dat$inschool[which(dat$goschol==5)] <- 0  #Not in school
 
+    #Self-rated health (using GENHEALT)
+    if (year==2002) {dat$health <- NA}
+    if (year==2006) {dat$health <- as.numeric(substring(raw, 4815, 4815))}
+    if (year==2011) {dat$health <- as.numeric(substring(raw, 3544, 3544))}
+    if (year==2013) {dat$health <- as.numeric(substring(raw, 3493, 3493))}
+    if (year==2015) {dat$health <- as.numeric(substring(raw, 3029, 3029))}
+    if (year==2017) {dat$health <- as.numeric(substring(raw, 2684, 2684))}
+    if (year==2022) {dat$health <- raw$GENHEALT}
+    dat$health[which(dat$health>5)] <- NA  #Missing codes
+    dat$health <- 6 - dat$health  #Reverse code
+    dat$health <- factor(dat$health, levels = c(1:5), labels = c("Poor", "Fair", "Good", "Very good", "Excellent"), ordered = TRUE)
+
+    #### Childhood ####
+    #Mother's education (using EDUCMOM)
+    if (year==2002) {dat$momeduc <- as.numeric(substring(raw,3763,3764))}
+    if (year==2006) {dat$momeduc <- as.numeric(substring(raw,4878,4879))}
+    if (year==2011) {dat$momeduc <- as.numeric(substring(raw,3775,3776))}
+    if (year==2013) {dat$momeduc <- as.numeric(substring(raw,3731,3732))}
+    if (year==2015) {dat$momeduc <- as.numeric(substring(raw,3250,3251))}
+    if (year==2017) {dat$momeduc <- as.numeric(substring(raw,2844,2845))}
+    if (year==2022) {dat$momeduc <- raw$EDUCMOM}
+    dat$momeduc[which(dat$momeduc>4)] <- NA  #Missing codes
+    dat$momeduc <- factor(dat$momeduc, levels = c(1:4), labels = c("Less than high school", "High school", "Some college", "BA or higher"), ordered = TRUE)
+
+    #Nuclear two-parent household at birth (using INTCTFAM)
+    if (year==2002) {dat$nuclear <- as.numeric(substring(raw,3761,3761))}
+    if (year==2006) {dat$nuclear <- as.numeric(substring(raw,4876,4876))}
+    if (year==2011) {dat$nuclear <- as.numeric(substring(raw,3773,3773))}
+    if (year==2013) {dat$nuclear <- as.numeric(substring(raw,3729,3729))}
+    if (year==2015) {dat$nuclear <- as.numeric(substring(raw,3248,3248))}
+    if (year==2017) {dat$nuclear <- as.numeric(substring(raw,2842,2842))}
+    if (year==2022) {dat$nuclear <- raw$INTCTFAM}
+    dat$nuclear[which(dat$nuclear==2)] <- 0  #Not nuclear
+    dat$nuclear[which(dat$nuclear!=0 & dat$nuclear!=1)] <- NA
+
+    #Woman who raised you (using WOMRASDU)
+    if (year==2002) {dat$mom <- as.numeric(substring(raw,60,60))}
+    if (year==2006) {dat$mom <- as.numeric(substring(raw,88,88))}
+    if (year==2011) {dat$mom <- as.numeric(substring(raw,91,91))}
+    if (year==2013) {dat$mom <- as.numeric(substring(raw,91,91))}
+    if (year==2015) {dat$mom <- as.numeric(substring(raw,69,69))}
+    if (year==2017) {dat$mom <- as.numeric(substring(raw,69,69))}
+    if (year==2022) {dat$mom <- raw$WOMRASDU}
+    dat$mom[which(dat$mom>3)] <- NA  #Missing code
+    dat$mom[which(dat$nuclear==1)] <- 1  #If from nuclear family, woman who raised was biological
+    dat$mom <- factor(dat$mom, levels = c(1:3), labels = c("Biological", "Other", "None"), ordered = FALSE)
+
+    #Man who raised you (using MANRASDU)
+    if (year==2002) {dat$dad <- as.numeric(substring(raw,68,68))}
+    if (year==2006) {dat$dad <- as.numeric(substring(raw,96,96))}
+    if (year==2011) {dat$dad <- as.numeric(substring(raw,97,97))}
+    if (year==2013) {dat$dad <- as.numeric(substring(raw,97,97))}
+    if (year==2015) {dat$dad <- as.numeric(substring(raw,75,75))}
+    if (year==2017) {dat$dad <- as.numeric(substring(raw,75,75))}
+    if (year==2022) {dat$dad <- raw$MANRASDU}
+    dat$dad[which(dat$dad>4)] <- NA  #Missing code
+    dat$dad[which(dat$dad==4)] <- 2  #Combine "stepfather" and "other" in one category
+    dat$dad[which(dat$nuclear==1)] <- 1  #If from nuclear family, man who raised was biological
+    dat$dad <- factor(dat$dad, levels = c(1:3), labels = c("Biological", "Other", "None"), ordered = FALSE)
+
+    #Adverse Childhood Experiences (ACEs) indicators
+    if (year == 2022) {
+      dat$maltreatment <- NA  #Sometimes experienced emotional or physical abuse, had unmet needs, did not feel loved, or witnessed IPV
+      dat$maltreatment[which(raw$EMOTABUSE<=2 & raw$PHYSABUSE<=2 & raw$REVEMOTNEG>=4 & raw$REVPHYSNEG>=4 & raw$WITNESSIPV<=2)] <- 0
+      dat$maltreatment[which(raw$EMOTABUSE>=3 | raw$PHYSABUSE>=3 | raw$REVEMOTNEG<=3 | raw$REVPHYSNEG<=3 | raw$WITNESSIPV>=3)] <- 1
+
+      dat$dysfunction <- NA  #Had parent with substance use, mental health, or criminal justice issues
+      dat$dysfunction[which(raw$LIVDRUGS==5 & raw$LIVDEPRESS==5 & raw$SEPJAIL==5)] <- 0
+      dat$dysfunction[which(raw$LIVDRUGS==1 | raw$LIVDEPRESS==1 | raw$SEPJAIL==1)] <- 1
+    } else {
+      dat$maltreatment <- NA
+      dat$dysfunction <- NA
+    }
+
     #### Attitude ####
     #Religion (using RELIGION)
     if (year==2002) {rel <- as.numeric(substring(raw,4822,4822))}  #1 none, 2 catholic, 3 protestant, 4 other
@@ -486,14 +560,16 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     #Reduce data
     if (keep_source) {
       dat <- dat[,c("cf_want", "famstat", "parity", "otherkid", "seekadpt", "anykids", "otachil", "rwant", "rstrstat", "pstrstat", "intent",  #Family status
-                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool", "health",  #Demographics
+                    "momeduc", "nuclear", "mom", "dad", "maltreatment", "dysfunction", #Childhood
                     "religion", "bother", #Attitude
                     "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
     }
 
     if (!keep_source) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool", "health",  #Demographics
+                    "momeduc", "nuclear", "mom", "dad", "maltreatment", "dysfunction", #Childhood
                     "religion", "bother", #Attitude
                     "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
     }
@@ -832,6 +908,84 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     dat$inschool[which(dat$goschol==1)] <- 1  #In school
     dat$inschool[which(dat$goschol==5)] <- 0  #Not in school
 
+    #Self-rated health (using GENHEALT)
+    if (year==2002) {dat$health <- NA}
+    if (year==2006) {dat$health <- as.numeric(substring(raw, 3969, 3969))}
+    if (year==2011) {dat$health <- as.numeric(substring(raw, 3983, 3983))}
+    if (year==2013) {dat$health <- as.numeric(substring(raw, 3827, 3827))}
+    if (year==2015) {dat$health <- as.numeric(substring(raw, 3542, 3542))}
+    if (year==2017) {dat$health <- as.numeric(substring(raw, 3516, 3516))}
+    if (year==2022) {dat$health <- raw$GENHEALT}
+    dat$health[which(dat$health>5)] <- NA  #Missing codes
+    dat$health <- 6 - dat$health  #Reverse code
+    dat$health <- factor(dat$health, levels = c(1:5), labels = c("Poor", "Fair", "Good", "Very good", "Excellent"), ordered = TRUE)
+
+    #### Childhood ####
+    #Mother's education (using EDUCMOM)
+    if (year==2002) {dat$momeduc <- as.numeric(substring(raw,2636,2637))}
+    if (year==2006) {dat$momeduc <- as.numeric(substring(raw,4031,4032))}
+    if (year==2011) {dat$momeduc <- as.numeric(substring(raw,4251,4252))}
+    if (year==2013) {dat$momeduc <- as.numeric(substring(raw,4098,4099))}
+    if (year==2015) {dat$momeduc <- as.numeric(substring(raw,3714,3715))}
+    if (year==2017) {dat$momeduc <- as.numeric(substring(raw,2844,2845))}
+    if (year==2022) {dat$momeduc <- raw$EDUCMOM}
+    dat$momeduc[which(dat$momeduc>4)] <- NA  #Missing codes
+    dat$momeduc <- factor(dat$momeduc, levels = c(1:4), labels = c("Less than high school", "High school", "Some college", "BA or higher"), ordered = TRUE)
+
+    #Nuclear two-parent household at birth (using INTCTFAM)
+    if (year==2002) {dat$nuclear <- as.numeric(substring(raw,2634,2634))}
+    if (year==2006) {dat$nuclear <- as.numeric(substring(raw,4029,4029))}
+    if (year==2011) {dat$nuclear <- as.numeric(substring(raw,4249,4249))}
+    if (year==2013) {dat$nuclear <- as.numeric(substring(raw,4096,4096))}
+    if (year==2015) {dat$nuclear <- as.numeric(substring(raw,3802,3802))}
+    if (year==2017) {dat$nuclear <- as.numeric(substring(raw,3712,3712))}
+    if (year==2022) {dat$nuclear <- raw$INTCTFAM}
+    dat$nuclear[which(dat$nuclear==2)] <- 0  #Not nuclear
+    dat$nuclear[which(dat$nuclear!=0 & dat$nuclear!=1)] <- NA
+
+    #Woman who raised you (using WOMRASDU)
+    if (year==2002) {dat$mom <- as.numeric(substring(raw,55,55))}
+    if (year==2006) {dat$mom <- as.numeric(substring(raw,85,85))}
+    if (year==2011) {dat$mom <- as.numeric(substring(raw,86,86))}
+    if (year==2013) {dat$mom <- as.numeric(substring(raw,86,86))}
+    if (year==2015) {dat$mom <- as.numeric(substring(raw,64,64))}
+    if (year==2017) {dat$mom <- as.numeric(substring(raw,64,64))}
+    if (year==2022) {dat$mom <- raw$WOMRASDU}
+    dat$mom[which(dat$mom>3)] <- NA  #Missing code
+    dat$mom[which(dat$nuclear==1)] <- 1  #If from nuclear family, woman who raised was biological
+    dat$mom <- factor(dat$mom, levels = c(1:3), labels = c("Biological", "Other", "None"), ordered = FALSE)
+
+    #Man who raised you (using MANRASDU)
+    if (year==2002) {dat$dad <- as.numeric(substring(raw,63,63))}
+    if (year==2006) {dat$dad <- as.numeric(substring(raw,93,93))}
+    if (year==2011) {dat$dad <- as.numeric(substring(raw,92,92))}
+    if (year==2013) {dat$dad <- as.numeric(substring(raw,92,92))}
+    if (year==2015) {dat$dad <- as.numeric(substring(raw,70,70))}
+    if (year==2017) {dat$dad <- as.numeric(substring(raw,70,70))}
+    if (year==2022) {dat$dad <- raw$MANRASDU}
+    dat$dad[which(dat$dad>4)] <- NA  #Missing code
+    dat$dad[which(dat$dad==4)] <- 2  #Combine "stepfather" and "other" in one category
+    dat$dad[which(dat$nuclear==1)] <- 1  #If from nuclear family, man who raised was biological
+    dat$dad <- factor(dat$dad, levels = c(1:3), labels = c("Biological", "Other", "None"), ordered = FALSE)
+
+    #Adverse Childhood Experiences (ACEs) indicators
+    if (year == 2022) {
+      #dat$maltreatment <- NA  #Sometimes experienced emotional or physical abuse, had unmet needs, did not feel loved, or witnessed IPV
+      #dat$maltreatment[which(raw$EMOTABUSE<=2 & raw$PHYSABUSE<=2 & raw$REVEMOTNEG>=4 & raw$REVPHYSNEG>=4 & raw$WITNESSIPV<=2)] <- 0
+      #dat$maltreatment[which(raw$EMOTABUSE>=3 | raw$PHYSABUSE>=3 | raw$REVEMOTNEG<=3 | raw$REVPHYSNEG<=3 | raw$WITNESSIPV>=3)] <- 1
+
+      dat$maltreatment <- NA  #Often experienced emotional or physical abuse, had unmet needs, did not feel loved, or witnessed IPV
+      dat$maltreatment[which(raw$EMOTABUSE<=3 & raw$PHYSABUSE<=3 & raw$REVEMOTNEG>=3 & raw$REVPHYSNEG>=3 & raw$WITNESSIPV<=3)] <- 0
+      dat$maltreatment[which(raw$EMOTABUSE>=4 | raw$PHYSABUSE>=4 | raw$REVEMOTNEG<=2 | raw$REVPHYSNEG<=2 | raw$WITNESSIPV>=4)] <- 1
+
+      dat$dysfunction <- NA  #Had parent with substance use, mental health, or criminal justice issues
+      dat$dysfunction[which(raw$LIVDRUGS==5 & raw$LIVDEPRESS==5 & raw$SEPJAIL==5)] <- 0
+      dat$dysfunction[which(raw$LIVDRUGS==1 | raw$LIVDEPRESS==1 | raw$SEPJAIL==1)] <- 1
+    } else {
+      dat$maltreatment <- NA
+      dat$dysfunction <- NA
+    }
+
     #### Attitude ####
     #Religion (using RELIGION)
     if (year==2002) {rel <- as.numeric(substring(raw,2877,2877))}  #1 none, 2 catholic, 3 protestant, 4 other
@@ -932,14 +1086,16 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     #Reduce data
     if (keep_source) {
       dat <- dat[,c("cf_want", "famstat", "parity", "otherkid", "seekadpt", "anykids", "otachil", "rwant", "rstrstat", "pstrstat", "intent",  #Family status
-                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool", "health",  #Demographics
+                    "momeduc", "nuclear", "mom", "dad", "maltreatment", "dysfunction", #Childhood
                     "religion", "bother", #Attitude
                     "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
     }
 
     if (!keep_source) {
       dat <- dat[,c("cf_want", "famstat",  #Family status
-                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool",  #Demographics
+                    "sex", "lgbt", "race", "hispanic", "age", "education", "partnered", "residence", "employed", "inschool", "health",  #Demographics
+                    "momeduc", "nuclear", "mom", "dad", "maltreatment", "dysfunction", #Childhood
                     "religion", "bother", #Attitude
                     "id", "country", "weight", "cluster", "stratum", "file", "survey", "wave", "year", "month")]  #Design
     }
