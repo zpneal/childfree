@@ -16,6 +16,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 knitr::opts_knit$set(global.par = TRUE)
+old.timeout <- getOption("timeout")
+options(timeout = 500)
 ```
 
 # Table of Contents {#toc}
@@ -168,5 +170,9 @@ we see that it contains the record of a 60 year old non-hispanic white female. S
 Specifying `extra.vars = c("neal1", "neal2", "neal3")` requests that the function also include these three variables, which are not extracted and recoded by default. The three variables requested in this example are the raw source variables from which `soss()` determines each respondent's family status: `neal1` contains a code indicating whether the respondent has children (2 = no), `neal2` contains a code indicating whether the respondent is planning to have children (2 = no), and `neal3` contains a code indicating whether the respondent want(ed) to have children (2 = no). In practice, using the `extra.vars` option can be useful to retain other information collected by IPPSR, but that is not automatically included.
 
 [back to Table of Contents](#toc)
+
+```{r}
+options(timeout = old.timeout)
+```
 
 # References
