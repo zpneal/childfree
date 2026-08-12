@@ -63,21 +63,54 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     if (progress) {utils::setTxtProgressBar(pb,year.num)}
 
     #Import raw data
-    if (year==2002) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat")}
-    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemResp.dat")}
-    if (year==2011) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat")}
-    if (year==2013) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat")}
-    if (year==2015) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat")}
-    if (year==2017) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_FemRespData.dat")}
-    if (year==2022) {
+    if (year==2002) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002FemResp.dat"
       temp <- tempfile()
-      nullcon <- file(nullfile(), open = "wb")
-      sink(nullcon, type = "message")
-      utils::download.file("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/NSFG/NSFG-2022-2023-FemRespPUFData.zip",temp)  #Download file
-      sink(type = "message")
-      close(nullcon)
-      raw <- utils::read.csv(unz(temp, "NSFG_2022_2023_FemRespPUFData.csv"), header = TRUE)
-      rm(temp)
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+      }
+    if (year==2006) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_FemResp.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+      }
+    if (year==2011) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_FemRespData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2013) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_FemRespData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2015) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_FemRespData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2017) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_FemRespData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2022) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/NSFG/NSFG-2022-2023-FemRespPUFData.zip"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- utils::read.csv(unz(temp, "NSFG_2022_2023_FemRespPUFData.csv"), header = TRUE)}
       }
 
     #Initialize dataframe with id variable
@@ -586,21 +619,54 @@ nsfg <- function(years, nonbio = TRUE, keep_source = FALSE, progress = TRUE) {
     if (progress) {utils::setTxtProgressBar(pb,year.num)}
 
     #Import raw data
-    if (year==2002) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002Male.dat")}
-    if (year==2006) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_Male.dat")}
-    if (year==2011) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_MaleData.dat")}
-    if (year==2013) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_MaleData.dat")}
-    if (year==2015) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_MaleData.dat")}
-    if (year==2017) {raw <- readLines("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_MaleData.dat")}
-    if (year==2022) {
+    if (year==2002) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2002Male.dat"
       temp <- tempfile()
-      nullcon <- file(nullfile(), open = "wb")
-      sink(nullcon, type = "message")
-      utils::download.file("https://ftp.cdc.gov/pub/Health_Statistics/NCHS/NSFG/NSFG-2022-2023-MaleRespPUFData.zip",temp)  #Download file
-      sink(type = "message")
-      close(nullcon)
-      raw <- utils::read.csv(unz(temp, "NSFG_2022_2023_MaleRespPUFData.csv"), header = TRUE)
-      rm(temp)
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+      }
+    if (year==2006) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2006_2010_Male.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2011) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2011_2013_MaleData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2013) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2013_2015_MaleData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2015) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2015_2017_MaleData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2017) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NSFG/2017_2019_MaleData.dat"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- readLines(temp)}
+    }
+    if (year==2022) {
+      url <- "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/NSFG/NSFG-2022-2023-MaleRespPUFData.zip"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {raw <- utils::read.csv(unz(temp, "NSFG_2022_2023_MaleRespPUFData.csv"), header = TRUE)}
     }
 
     #Initialize dataframe with id variable
