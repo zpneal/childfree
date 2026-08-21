@@ -5,7 +5,7 @@
 #' @param progress boolean: display a progress bar
 #'
 #' @details
-#' The \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss}{State of the State Survey} (SOSS) is
+#' The \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss}{State of the State Survey} (SOSS) is
 #'    regularly collected by the Institute for Public Policy and Social Research (IPPSR) at Michigan State
 #'    University (MSU). Each wave is collected from a sample of 1000 adults in the US state of Michigan, and
 #'    includes sampling weights to obtain a sample that is representative of the state's population with respect
@@ -13,11 +13,11 @@
 #'    and recodes selected variables useful for studying childfree adults and other family statuses, then returns
 #'    an unweighted data frame. Questions necessary for identifying childfree adults have been asked in five waves,
 #'    which each include unique questions that may be of interest:
-#'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
-#'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
-#'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-84-spring-2022}{Wave 84} (April 2022) - Trust in scientists, Autonomous vehicles, Morality
-#'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
-#'    * \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
+#'    * \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
+#'    * \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
+#'    * \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-84-spring-2022}{Wave 84} (April 2022) - Trust in scientists, Autonomous vehicles, Morality
+#'    * \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
+#'    * \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 #'
 #' **Sampling weights**
 #'
@@ -66,35 +66,48 @@ soss <- function(waves, extra.vars = NULL, progress = TRUE) {
   #Loop over each supplied data file
   for (wave in waves) {
 
+    #Increment progress bar
+    if (progress) {utils::setTxtProgressBar(pb,wave.num)}
+
     #Check if data is available, if it is then download
     if (wave==79) {
-      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/soss79b.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
-      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
-      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/soss79b.sav")
+      url <- "https://ippsr.msu.edu/sites/default/files/soss79b.sav"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {dat <- rio::import(temp, format = "sav")}
     }
 
     if (wave==82) {
-      if (!RCurl::url.exists("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
-      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
-      dat <- rio::import("https://ippsr.msu.edu/sites/default/files/soss/soss82.sav")
+      url <- "https://ippsr.msu.edu/sites/default/files/soss/soss82.sav"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {dat <- rio::import(temp, format = "sav")}
     }
 
     if (wave==84) {
-      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
-      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
-      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav")
+      url <- "https://ippsr.msu.edu/sites/default/files/SOSS%2084%20WEIGHTED%20DATASET_5.4.22.sav"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {dat <- rio::import(temp, format = "sav")}
     }
 
     if (wave==85) {
-      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
-      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
-      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav")
+      url <- "https://ippsr.msu.edu/sites/default/files/SOSS%2085_WEIGHTED_OUTPUT.sav"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {dat <- rio::import(temp, format = "sav")}
     }
 
     if (wave==86) {
-      if (!RCurl::url.exists("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")) {message("You are offline or SOSS data is not available now. Try again later"); data <- NULL; return(data)}
-      if (progress) {utils::setTxtProgressBar(pb,wave.num)}
-      dat <- rio::import("http://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav")
+      url <- "https://ippsr.msu.edu/sites/default/files/SOSS86_weighted_OUTPUT.sav"
+      temp <- tempfile()
+      raw <- tryCatch(utils::download.file(url, destfile = temp, quiet = TRUE),
+                      error = function(e) {message("Download timed out; Try `options(timeout = 300)`"); return(NULL)})
+      if (is.null(raw)) {data <- NULL; return(data)} else {dat <- rio::import(temp, format = "sav")}
     }
 
     colnames(dat) <- tolower(colnames(dat))  #Make all variables lowercase

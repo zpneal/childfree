@@ -21,7 +21,7 @@ If you are offline, or if the requested data are otherwise unavailable, NULL is 
 Read and recode Michigan State of the State (SOSS) data
 }
 \details{
-The \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss}{State of the State Survey} (SOSS) is
+The \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss}{State of the State Survey} (SOSS) is
 regularly collected by the Institute for Public Policy and Social Research (IPPSR) at Michigan State
 University (MSU). Each wave is collected from a sample of 1000 adults in the US state of Michigan, and
 includes sampling weights to obtain a sample that is representative of the state's population with respect
@@ -30,11 +30,11 @@ and recodes selected variables useful for studying childfree adults and other fa
 an unweighted data frame. Questions necessary for identifying childfree adults have been asked in five waves,
 which each include unique questions that may be of interest:
 \itemize{
-\item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
-\item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
-\item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-84-spring-2022}{Wave 84} (April 2022) - Trust in scientists, Autonomous vehicles, Morality
-\item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
-\item \href{http://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
+\item \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-79b-spring-2020}{Wave 79} (May 2020) - Neighborhoods, Health care, COVID, Personality
+\item \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-82-fall-2021}{Wave 82} (September 2021) - Trust in government, Critical Race Theory
+\item \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-84-spring-2022}{Wave 84} (April 2022) - Trust in scientists, Autonomous vehicles, Morality
+\item \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-85-fall-2022}{Wave 85} (September 2022) - Reproductive rights, Race equity
+\item \href{https://ippsr.msu.edu/survey-research/state-state-survey-soss/soss-data/soss-86-winter-2022}{Wave 86} (December 2022) - Education, Infrastructure
 }
 
 \strong{Sampling weights}
