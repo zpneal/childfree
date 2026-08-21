@@ -3,6 +3,10 @@ title: "NEWS"
 output: html_document
 ---
 
+## childfree 0.0.7
+
+* 
+
 ## childfree 0.0.6
 
 * updated `nsfg` to handle timed-out downloads
